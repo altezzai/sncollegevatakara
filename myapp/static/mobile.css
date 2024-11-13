@@ -1,0 +1,247 @@
+@media (max-width: 1000px) {
+  body {
+    margin-top: 70px;
+  }
+  navbar {
+    padding: 0 var(--conPadSmall);
+  }
+  .bm {
+    display: block;
+  }
+  .l {
+    flex-direction: column;
+    position: fixed;
+    background-color: var(--primary);
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 0;
+    max-width: 500px;
+    justify-content: flex-start;
+    overflow-y: auto;
+    transition: width 0.2s ease-out;
+  }
+  .open {
+    width: 80vw;
+  }
+  .group {
+    width: 100%;
+    border: 1px solid var(--primary-light);
+    margin: 0;
+    padding: 10px;
+    height: max-content;
+    justify-content: flex-start;
+  }
+
+  .group .flex {
+    padding: 10px 0;
+  }
+  .group .dropdown.drop1 {
+    height: 100%;
+  }
+  .group .dropdown {
+    display: block;
+    position: initial;
+    visibility: visible;
+    opacity: 1;
+    translate: 0;
+    height: 0;
+    overflow: hidden;
+    border: none;
+    transition: height 0.2s ease-in-out;
+    width: 100%;
+  }
+
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+    text-wrap: wrap;
+    gap: 10px;
+    /* overflow: hidden; */
+  }
+
+  .option img {
+    display: none;
+  }
+  /* .option:hover:has(.sec-dropdown) {
+    height: 100%;
+    overflow: auto;
+  } */
+
+  .option:has(.drop2) {
+    background-color: rgb(242, 242, 242);
+  }
+
+  .option .sec-dropdown {
+    position: initial;
+    opacity: 1;
+    visibility: visible;
+    translate: 0;
+    max-height: 0;
+    border: none;
+    width: 100%;
+    transition: max-height 0.2s ease-in-out;
+    display: none;
+  }
+
+  .option:hover .sec-dropdown {
+    border-radius: 10px;
+  }
+  .option .drop2 {
+    /* --course-count: 13; */
+    border-radius: 10px;
+    /* height: calc(50px * var(--course-count)); */
+    max-height: 1000px;
+  }
+  /* .dropdown-hope {
+    --course-count: 2;
+    height: calc(50px * var(--course-count));
+  } */
+
+  .container.pad-top.flex-align-start {
+    flex-direction: column;
+  }
+
+  .part {
+    max-width: 100%;
+    margin-top: 30px;
+  }
+  .part.pad-right {
+    padding-right: 0;
+    width: 100%;
+  }
+  .part.pad-right img {
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .group .dropdown .option {
+    width: 100%;
+  }
+
+  .group:hover .nav {
+    color: var(--sec);
+  }
+
+  .nav {
+    font-size: 1rem;
+    color: white;
+  }
+
+  .detailsbox {
+    flex-direction: column;
+    /* align-items: center; */
+  }
+  .detailsbox .image img {
+    height: 30vh;
+  }
+
+  .flexnum {
+    order: -1;
+  }
+  .container {
+    padding: 20px;
+    padding-top: 0;
+    width: 100%;
+  }
+  .list1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .footcon {
+    flex-wrap: wrap;
+  }
+  .data {
+    width: 200px;
+  }
+
+  .data iframe {
+    width: 100%;
+  }
+}
+@media (max-width: 600px) {
+  .mw.mw {
+    min-width: 300px;
+  }
+
+  .navcon {
+    width: 100%;
+  }
+  .part a {
+    font-size: 0.9rem;
+  }
+
+  .ncon {
+    flex-direction: column;
+  }
+
+  .part {
+    max-width: 100%;
+    width: 100%;
+    /* align-items: center; */
+    align-items: flex-start;
+  }
+
+  .news-box {
+    width: 100%;
+    height: max-content;
+  }
+  .part .heading {
+    font-size: 1.2rem;
+    align-self: flex-start;
+  }
+  .banner .heading {
+    font-size: 1.1rem;
+  }
+
+  .small-container p {
+    font-size: 0.9rem;
+  }
+
+  .list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .flex-c {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .flex-c .basis {
+    justify-content: flex-start;
+    padding: 10px;
+  }
+  .bold-head {
+    font-size: 1rem;
+  }
+  .head,
+  .light {
+    font-size: 0.8rem;
+  }
+
+  .footer {
+    padding-left: var(--conPadSmall);
+  }
+
+  .footbox {
+    width: 100%;
+  }
+  .grid {
+    /* grid-template-columns: repeat(2, 1fr); */
+    place-items: center;
+  }
+
+  .imgcon {
+    height: 200px;
+  }
+
+  .phcon {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .detailsbox .text {
+    padding-inline: 20px;
+  }
+}

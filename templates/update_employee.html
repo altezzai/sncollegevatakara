@@ -1,0 +1,52 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<body>
+    <body class="edit-body">
+        <div class="edit-formcon">
+        <h2>Update Employee</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="name">Name:</label>
+            <input class="inp" type="text" id="name" name="name" value="{{ employee.name }}" required />
+
+            <label for="position">Position:</label>
+            <select class="inp" id="position" name="position">
+                <option value="Head Of Department" {% if employee.position == "Head Of Department" %}selected{% endif %}>Head Of Department</option>
+                <option value="Professor" {% if employee.position == "Professor" %}selected{% endif %}>Professor</option>
+                <option value="Assistant Professor" {% if employee.position == "Assistant Professor" %}selected{% endif %}>Assistant Professor</option>
+                <option value="Visiting Faculty" {% if employee.position == "Visiting Faculty" %}selected{% endif %}>Visiting Faculty</option>
+                <option value="Office Staff" {% if employee.position == "Office Staff" %}selected{% endif %}>Office Staff</option>
+            </select>
+            <label for="department">Department:</label>
+<select class="inp" id="department" name="department">
+    <option value="COMPUTER APPLICATION" {% if employee.department == "COMPUTER APPLICATION" %}selected{% endif %}>COMPUTER APPLICATION</option>
+    <option value="MANAGEMENT STUDIES" {% if employee.department == "MANAGEMENT STUDIES" %}selected{% endif %}>MANAGEMENT STUDIES</option>
+    <option value="COMMERCE & MANAGEMENT STUDIES" {% if employee.department == "COMMERCE & MANAGEMENT STUDIES" %}selected{% endif %}>COMMERCE</option>
+    <option value="PHYSICS" {% if employee.department == "PHYSICS" %}selected{% endif %}>PHYSICS</option>
+    <option value="CHEMISTRY" {% if employee.department == "CHEMISTRY" %}selected{% endif %}>CHEMISTRY</option>
+    <option value="MATHEMATICS" {% if employee.department == "MATHEMATICS" %}selected{% endif %}>MATHEMATICS</option>
+    <option value="STATISTICS" {% if employee.department == "STATISTICS" %}selected{% endif %}>STATISTICS</option>
+    <option value="COMPUTER SCIENCE" {% if employee.department == "COMPUTER SCIENCE" %}selected{% endif %}>COMPUTER SCIENCE</option>
+    <option value="BOTANY" {% if employee.department == "BOTANY" %}selected{% endif %}>BOTANY</option>
+    <option value="ZOOLOGY" {% if employee.department == "ZOOLOGY" %}selected{% endif %}>ZOOLOGY</option>
+    <option value="PSYCHOLOGY" {% if employee.department == "PSYCHOLOGY" %}selected{% endif %}>PSYCHOLOGY</option>
+    <option value="ENGLISH" {% if employee.department == "ENGLISH" %}selected{% endif %}>ENGLISH</option>
+    <option value="PHYSICAL EDUCATION" {% if employee.department == "PHYSICAL EDUCATION" %}selected{% endif %}>PHYSICAL EDUCATION</option>
+    <option value="MALAYALAM" {% if employee.department == "MALAYALAM" %}selected{% endif %}>MALAYALAM</option>
+    <option value="HINDI" {% if employee.department == "HINDI" %}selected{% endif %}>HINDI</option>
+</select>
+
+
+            <label for="photo">Photo:</label>
+            <img class="imgpreview" src="{{ employee.photo.url }}" alt="{{ employee.name }} Photo" width="100">
+            <input class="inp" type="file" id="photo" name="photo" accept="image/*" />
+
+
+            <label for="qualification">Qualification:</label>
+            <textarea  class="tarea inp" id="qualification" name="qualification" rows="4" required>{{ employee.qualification }}</textarea>
+
+            <button type="Submit" value="Submit">Submit</button>
+        </form>
+        <a href="{% url 'employee_list' %}" class="btn-edit btn">Back to List</a>
+
+    </div>
+    {% endblock %}

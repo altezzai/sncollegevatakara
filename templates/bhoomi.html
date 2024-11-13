@@ -1,0 +1,51 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">BHOO MITHRA SENA CLUB</div>
+</div>
+
+<div class="container">
+  <div class="sec-container column-flex">
+    <div class="flex gap full flex-c">
+      <div class="small-container flex-just-start phcon">
+        <div class="photoCon">
+          <img
+            src="{% static 'assets/bhoomico.jpg'%}"
+            class="img-club"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="small-container flex-just-start">
+        <div class="head">Sruthi KTK</div>
+        <div class="light">CO-ORDINATOR</div>
+      </div>
+      <a
+        href="tel:+919048718758"
+        class="small-container basis flex"
+        style="text-decoration: none; color: black"
+      >
+        <img src="{% static 'assets/phone.svg'%}" class="img-small" alt="" />
+        <div class="head center">+91 90487 18758</div>
+      </a>
+    </div>
+    <div class="small-container">
+      <pre>
+        Sruthi KTK, Dept of Botany is the convenor of Bhoomithrasena Club.Sri. Sourav.M.P (B.Com Finance) is the secretary of the club.
+        Environmental protection is the main motto of the club. The club functions with the collaboration of Directorate of environment and
+        climate change, Kerala.
+        The other active clubs functioning in the college comprises of Film Society, Blood donors club, Tourism club and Red Ribbon Club.
+
+      </pre>
+    </div>
+    <div class="small-container imgbox">
+      {% comment %} <img src="{% static 'assets/img.jpg' %}" alt="" />
+      <img src="{% static 'assets/img.jpg' %}" alt="" />
+      <img src="{% static 'assets/img.jpg' %}" alt="" />
+      <img src="{% static 'assets/img.jpg' %}" alt="" />
+      <img src="{% static 'assets/img.jpg' %}" alt="" />
+      <img src="{% static 'assets/img.jpg' %}" alt="" /> {% endcomment %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

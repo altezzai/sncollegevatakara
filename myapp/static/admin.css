@@ -1,0 +1,241 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;500;700&display=swap");
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins";
+}
+:root {
+  --primary: #0f3c71;
+  --primary-light: #1b5292;
+  --sec: #aebbff;
+  --third: #f1f1ff;
+}
+body {
+  height: 100vh;
+  background-color: #d0e6ff;
+  padding-inline: 20px;
+}
+
+body,
+.contain-admin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contain-admin {
+  padding: 30px;
+  background-color: white;
+  border-radius: 20px;
+  width: 500px;
+  max-width: 500px;
+  height: 400px;
+}
+
+.contain-admin form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 15px;
+}
+form h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+form input {
+  background-color: var(--third);
+  height: 60px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+input::placeholder {
+  color: #8b9eff;
+}
+
+form button {
+  width: 90px;
+  margin-top: 10px;
+  border: none;
+  font-weight: bold;
+  color: white;
+  background-color: var(--primary);
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: var(--primary-light);
+}
+
+.admin-body {
+  background-color: #d0e6ff;
+  margin-top: 80px;
+  justify-content: unset;
+  height: auto;
+}
+
+.admin-container {
+  background-color: white;
+  margin-block: 30px;
+  padding: 20px;
+  border-radius: 20px;
+  width: 100%;
+}
+.admin-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.btn-add {
+  background-color: var(--primary);
+  color: white;
+  margin: 10px;
+}
+.btn-add:hover {
+  background-color: var(--primary-light);
+}
+
+.btn-edit {
+  background-color: var(--third);
+  color: black;
+  min-width: 5rem;
+  width: fit-content;
+  text-align: center;
+  justify-content: center;
+  margin: 10px;
+}
+.btn-edit:hover {
+  background-color: #b7c3ff;
+}
+
+.btn-delete {
+  background-color: rgb(255, 105, 105);
+  color: white;
+  width: 5rem;
+  margin: 10px;
+}
+.btn-delete:hover {
+  background-color: rgb(255, 71, 71);
+}
+
+tbody {
+  overflow-y: auto;
+}
+tbody tr:nth-child(even) {
+  background-color: rgb(241, 241, 241);
+}
+tr td,
+tr th {
+  padding: 5px;
+}
+tr td {
+  vertical-align: top;
+}
+.photo-list {
+  width: 150px;
+}
+table {
+  border: 2px solid black;
+  overflow: hidden;
+  border-radius: 10px;
+  padding: 10px;
+}
+thead tr {
+  background-color: #aebbff;
+  /* /////////////////////////////////////////////////// */
+}
+thead th {
+  padding: 5px;
+}
+
+thead tr th:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+thead tr th:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.table-con {
+  overflow: auto;
+  width: 100%;
+}
+
+.edit-formcon {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: white;
+  padding: 20px;
+  margin-block: 20px;
+  max-width: 700px;
+  border-radius: 10px;
+}
+.edit-body {
+  padding-block: 30px;
+  height: unset;
+}
+
+form .tarea {
+  background-color: var(--third);
+  display: block;
+  height: 400px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  overflow: scroll;
+}
+
+.inp {
+  margin-bottom: 25px;
+  margin-top: 5px;
+}
+
+.rb {
+  height: 20px;
+  width: 20px;
+}
+
+.rboutcon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+}
+
+.rbcon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.imgpreview {
+  display: block;
+}
+
+.edit-formcon select {
+  background-color: var(--third);
+  height: 60px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+}

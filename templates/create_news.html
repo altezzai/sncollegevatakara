@@ -1,0 +1,35 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+
+<body class="edit-body">
+  <div class="edit-formcon">
+    <h1>Create News Article</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="title">Title:</label>
+      <input class="inp" type="text" id="title" name="title" required />
+      <label for="description">Description:</label>
+      <textarea
+        class="inp tarea"
+        id="description"
+        name="description"
+        required
+      ></textarea>
+      <label for="photos">Photos (multiple):</label>
+      <label for="photos">Photo</label>
+      <input
+        type="file"
+        id="photos"
+        name="photos"
+        accept="image/*"
+        multiple
+        required
+      />
+      <label for="date">Date:</label>
+      <input type="date" id="date" name="date" value="{% now 'Y-m-d' %}" required />
+
+      <button type="submit">Create</button>
+    </form>
+    <a href="{% url 'news_list' %}" class="btn-edit btn">Back to List</a>
+  </div>
+  {% endblock %}
+</body>

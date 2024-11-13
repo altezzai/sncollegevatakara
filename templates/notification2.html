@@ -1,0 +1,34 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">Notifications</div>
+</div>
+
+<div class="container">
+  <div class="sec-container">
+    <div class="filter">
+      <div class="filterCon">
+        <a
+          href="{% url 'notification' %}"
+          {% if cat == 'all' %}class="selected"{% endif %}
+          >ALL</a
+        >
+        <a href="{% url 'notificationfilter' upg='ug' %}" {% if cat == 'ug' %}class="selected"{% endif %}>UG</a>
+        <a href="{% url 'notificationfilter' upg='pg' %}" {% if cat == 'pg' %}class="selected"{% endif %}>PG</a>
+        <a href="{% url 'notificationfilter' upg='both' %}" {% if cat == 'both' %}class="selected"{% endif %}>BOTH</a>
+      </div>
+    </div>
+    {% for notification in notifications %}
+    <a
+      href="{% url 'notification2' notification.id %}"
+      class="small-container flex-just-start list"
+    >
+      <img class="img-small" src="{% static 'assets/bell.svg' %}" alt="" />
+
+      {{ notification.title }}</a
+    >
+
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

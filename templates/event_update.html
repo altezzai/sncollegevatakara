@@ -1,0 +1,74 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<body class="edit-body">
+  <div class="edit-formcon">
+    <h2>Event Edit</h2>
+    <form id="employeeForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="title">Title:</label>
+      <input
+        class="inp"
+        type="text"
+        id="title"
+        name="title"
+        value="{{ event.title }}"
+        required
+      />
+
+      <label for="time">Time:</label>
+      <input
+        class="inp"
+        type="time"
+        id="time"
+        name="time"
+        value="{{ event.time|time:'H:i' }}"
+        required
+      />
+
+      <label for="date">Date:</label>
+      <input
+        class="inp"
+        type="date"
+        id="date"
+        name="date"
+        value="{{ event.date|date:'Y-m-d' }}"
+        required
+      />
+
+      <label for="description">Description:</label>
+      <textarea
+        class="tarea inp"
+        id="description"
+        name="description"
+        rows="4"
+        required
+      >
+{{ event.description }}</textarea
+      >
+
+      <label for="venue">Venue:</label>
+      <input
+        class="inp"
+        type="text"
+        id="venue"
+        name="venue"
+        value="{{ event.venue }}"
+        required
+      />
+
+      <label for="url">URL:</label>
+      <input
+        class="inp"
+        type="url"
+        id="url"
+        name="url"
+        value="{{ event.url }}"
+      />
+      <br /><br />
+      <button type="Submit" value="Submit" onclick="submitForm()">
+        Update Event
+      </button>
+    </form>
+    <a href="{% url 'event_list' %}" class="btn-edit btn">Back to List</a>
+  </div>
+  {% endblock %}
+</body>

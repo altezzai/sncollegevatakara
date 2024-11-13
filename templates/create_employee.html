@@ -1,0 +1,61 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<body class="edit-body">
+  <div class="edit-formcon">
+    <h2>Employee Form</h2>
+    <form id="employeeForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="name">Name:</label>
+      <input class="inp" type="text" id="name" name="name" required />
+
+      <label for="position">Position:</label>
+      <select class="inp" id="position" name="position">
+        <option value="Assistant Professor">Assistant Professor</option>
+        <option value="Head Of Department">Head Of Department</option>
+        <option value="Professor">Professor</option>
+        <option value="Visiting Faculty">Visiting Faculty</option>
+        <option value="Office Staff">Office Staff</option>
+      </select>
+      <label for="position">Department:</label>
+      <select class="inp" id="position" name="department">
+        <option value="COMPUTER APPLICATION">COMPUTER APPLICATION</option>
+        <option value="MANAGEMENT STUDIES">MANAGEMENT STUDIES</option>
+        <option value="COMMERCE & MANAGEMENT STUDIES">
+          COMMERCE
+        </option>
+        <option value="PHYSICS">PHYSICS</option>
+        <option value="CHEMISTRY">CHEMISTRY</option>
+        <option value="MATHEMATICS">MATHEMATICS</option>
+        <option value="STATISTICS">STATISTICS</option>
+        <option value="COMPUTER SCIENCE">COMPUTER SCIENCE</option>
+        <option value="BOTANY">BOTANY</option>
+        <option value="ZOOLOGY">ZOOLOGY</option>
+        <option value="PSYCHOLOGY">PSYCHOLOGY</option>
+        <option value="ENGLISH">ENGLISH</option>
+        <option value="PHYSICAL EDUCATION">PHYSICAL EDUCATION</option>
+        <option value="MALAYALAM">MALAYALAM</option>
+        <option value="HINDI">HINDI</option>
+      </select>
+      <label for="photo">Photo:</label>
+      <input
+        class="inp"
+        type="file"
+        id="photo"
+        name="photo"
+        accept="image/*"
+        required
+      />
+
+      <label for="qualification">Qualification:</label>
+      <textarea
+        id="qualification"
+        name="qualification"
+        rows="4"
+        required
+        class="inp tarea"
+      ></textarea>
+      <button type="Submit" value="Submit">Submit</button>
+    </form>
+    <a href="{% url 'employee_list' %}" class="btn-edit btn">Back to List</a>
+  </div>
+  {% endblock %}
+</body>

@@ -1,0 +1,48 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">Upcoming Events</div>
+</div>
+<div class="container pad-top pad-bottom flex-align-start">
+  <div class="part pad-right out">
+    <div class="flex">
+      <div class="date out">
+        <div class="day">{{evt.date.day}}</div>
+        <div class="month">{{ evt.date|date:"M" }}</div>
+        <div class="year">{{evt.date.year}}</div>
+      </div>
+      <div class="bold-head">{{ evt.title }}</div>
+    </div>
+    <div class="otherinfo out">
+      <div>{{ evt.time }}</div>
+      <div>{{ evt.venue }}</div>
+    </div>
+    <div class="article pad-top">{{ evt.description }}</div>
+    <div class="bold-head"> Registration Link :</div><a href="{{ evt.url }}+
+    ">{{ evt.url }}</a>
+  </div>
+
+  <div class="part">
+    <div class="heading">Upcoming Events</div>
+    <div class="event-group ev">
+      {% for event in events %}
+      <a href="{% url 'events' event.id %}" class="event-box">
+        <div class="date line">
+          <div class="day">{{event.date.day}}</div>
+          <div class="month">{{ event.date|date:"M" }}</div>
+          <div class="year">{{event.date.year}}</div>
+        </div>
+        <div class="info">
+          <div class="headingSmall">{{ event.title }}</div>
+          <div class="otherinfo">
+            <div>{{ event.time }}</div>
+            <div>{{ event.venue }}</div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+      
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

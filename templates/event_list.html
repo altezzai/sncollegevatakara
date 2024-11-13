@@ -1,0 +1,43 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<div class="admin-container">
+  <div class="admin-title">
+    <h2>Event List</h2>
+    <a class="btn-add btn" href="{% url 'event_create' %}"
+      ><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
+    </a>
+  </div>
+  <div class="table-con">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Time</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.title }}</td>
+          <td>{{ event.time }}</td>
+          <td>{{ event.date }}</td>
+          <td>{{ event.venue }}</td>
+          <td>{{ event.description }}</td>
+          <td>
+            <a class="btn-edit btn" href="{% url 'event_update' event.id %}"
+              >Edit</a
+            >
+            <a class="btn-delete btn" href="{% url 'event_delete' event.id %}"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

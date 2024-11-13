@@ -1,0 +1,51 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<body class="edit-body">
+  <div class="edit-formcon">
+    <h2>Create Notification</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="category" class="radio-label">Category:</label>
+      <div class="inp rboutcon">
+        <div class="rbcon">
+          <input class="rb" type="radio" name="category" value="ug" id="ug"checked="checked"/>
+          <label for="ug">Undergraduate</label>
+        </div>
+        <div class="rbcon">
+          <input class="rb" type="radio" name="category" value="pg" id="pg" />
+          <label for="pg">Postgraduate</label>
+        </div>
+        <div class="rbcon">
+          <input
+            class="rb"
+            type="radio"
+            name="category"
+            value="both"
+            id="both"
+          />
+          <label for="both">Both</label>
+        </div>
+      </div>
+
+      <label for="title">Title:</label>
+      <input class="inp" type="text" name="title" required />
+
+      <label for="description">Description:</label>
+      <textarea
+        class="inp tarea"
+        name="description"
+        rows="4"
+        required
+      ></textarea>
+
+      <label for="file" class="file-label">File:</label>
+      <label for="file" class="file-input-label">Choose a file...</label>
+      <input class="inp" type="file" name="file" id="file" />
+
+      <button type="submit" class="btn">Create</button>
+    </form>
+    <a href="{% url 'list_notifications' %}" class="btn-edit btn"
+      >Back to List</a
+    >
+  </div>
+  {% endblock %}
+</body>

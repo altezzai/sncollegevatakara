@@ -1,0 +1,53 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<div class="admin-container">
+  <div class="admin-title">
+    <h2>News List</h2>
+    <a class="btn-add btn" href="{% url 'create_news' %}"
+      ><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
+    </a>
+  </div>
+  <div class="table-con">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Photos</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in news_articles %}
+        <tr>
+          <td>{{ article.title }}</td>
+          <td>{{ article.description }}</td>
+          <td>{{ article.date }}</td>
+          <td>
+            {% for image in article.images.all %}
+            <img
+              src="{{ image.image.url }}"
+              alt="{{ article.title }}"
+              width="100"
+            />
+            {% endfor %}
+          </td>
+          <td>
+            <a class="btn-edit btn" href="{% url 'update_news' article.id %}"
+              >Edit</a
+            >
+            <a class="btn-delete btn" href="{% url 'delete_news' article.id %}"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No news available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

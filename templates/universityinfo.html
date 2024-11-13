@@ -1,0 +1,80 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">University Informations</div>
+</div>
+
+<div class="container">
+  <div class="sec-container column-flex">
+    <div class="small-container">
+      <div class="bold-head">Nodal Officer</div>
+    </div>
+    <div class="flex gap full flex-c">
+      <div class="small-container flex-just-start phcon">
+        <div class="photoCon">
+          <img
+            src="{% static 'assets/nodelofficer.jpg'%}"
+            class="img-club"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="small-container flex-just-start">
+        <div class="head">Vysakh O K</div>
+        <div class="light">ASSISTANT PROFESSOR(Dept of Computer Science)</div>
+      </div>
+      <a
+        href="tel:+91
+        9633413561"
+        class="small-container basis flex"
+        style="text-decoration: none; color: black"
+      >
+        <img src="{% static 'assets/phone.svg' %}" class="img-small" alt="" />
+        <div class="head center">+91 96334 13561</div>
+      </a>
+    </div>
+  </div>
+  <div class="sec-container column-flex">
+    <div class="small-container">
+      <div class="bold-head">Links</div>
+    </div>
+
+    <div class="small-container flex list">
+      <div class="flex">
+        <div class="c">Calicut University :</div>
+      </div>
+      <a class="btn outline" href="https://www.uoc.ac.in">
+        https://www.uoc.ac.in
+      </a>
+    </div>
+    <div class="small-container flex list">
+      <div class="flex">
+        <div class="c">Admission Details :</div>
+      </div>
+      <a
+        class="btn outline"
+        href="https://admission.uoc.ac.in/SeatVacancy?pages=UG"
+      >
+        https://admission.uoc.ac.in/SeatVacancy?pages=UG
+      </a>
+    </div>
+  </div>
+  {% comment %}
+  <div class="sec-container column-flex">
+    <div class="small-container">
+      <div class="bold-head">E-grantz 3.0</div>
+    </div>
+    <div class="flex gap full">
+      <div class="small-container flex-just-start">
+        <div class="head">VIGNESH KUMAR</div>
+        <div class="light">ASSISTANT PROFESSOR</div>
+      </div>
+      <div class="small-container basis flex">
+        <img src="{% static 'assets/phone.svg' %}" class="img-small" alt="" />
+        <div class="head center">+91 8505 234 456</div>
+      </div>
+    </div>
+  </div>
+  {% endcomment %}
+</div>
+
+{% endblock %}

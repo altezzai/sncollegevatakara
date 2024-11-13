@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'assets/logoFavicon.png' %}"
+    />
+
+    <script src="{% static 'script.js' %}" defer></script>
+    <title>Sree Narayana College</title>
+    <link rel="stylesheet" href="{% static 'styles.css'%}" />
+    <link rel="stylesheet" href="{% static 'mobile.css'%}" />
+  </head>
+
+  <body>
+    <div class="navcon">
+      <navbar class="flex n">
+        <a href="{% url 'index' %}">
+          <img src="{% static 'assets/logo.png' %}" class="logo" alt="" />
+        </a>
+        <img
+          src="{% static 'assets/bm.svg' %}"
+          alt=""
+          class="bm"
+          onclick="opennav()"
+        />
+        <div class="l">
+          <div class="close" onclick="closenav()">
+            <img src="{% static 'assets/close.svg' %}" alt="" />
+          </div>
+          <div class="group flex">
+            <div class="flex">
+              <a href="{% url 'index' %}" class="nav">Home</a>
+            </div>
+          </div>
+          <div class="group flex">
+            <div class="flex">
+              <a href="{% url 'about' %}" class="nav">About Us</a>
+            </div>
+          </div>
+          <div class="group flex">
+            <div class="flex" onclick="togglelist(aca,'drop1')">
+              <div class="nav">Academics</div>
+            </div>
+            <div class="dropdown" id="aca">
+              <div class="option" onclick="togglelist(cour,'drop2')">
+                <div>FYUGP Syllabus</div>
+                <img
+                  class="arrow"
+                  src="{% static 'assets/rightarrow.svg' %}"
+                  alt=""
+                />
+                <div class="sec-dropdown dropdown-hope" id="cour">
+                  <a href="{% url 'FYUGP' %}" class="option">
+                    <div>Major Courses</div>
+                  </a>
+                  <a
+                    href="{% static 'assets/syllabus/FYUGP-MINOR COURSES OFFERED.pdf'%}"
+                    class="option"
+                    download
+                  >
+                    <div>Minor Courses</div>
+                    <img
+                      style="background: white"
+                      src="{% static 'assets/download_black.svg' %}"
+                      alt=""
+                    />
+                  </a>
+                </div>
+              </div>
+              <a href="{% url 'courses' %}" class="option">
+                <div>Courses and Syllabus</div>
+              </a>
+              <div class="option" onclick="togglelist(fac,'drop2')">
+                <div>Faculty</div>
+                <img
+                  class="arrow"
+                  src="{% static 'assets/rightarrow.svg' %}"
+                  alt=""
+                />
+                <div class="sec-dropdown" id="fac">
+                        <a
+                    href="{% url 'faculty' dept='COMPUTER APPLICATION' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF COMPUTER APPLICATION</div>
+                  </a>
+                         <a
+                    href="{% url 'faculty' dept='MANAGEMENT STUDIES' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF MANAGEMENT STUDIES</div>
+                  </a>
+                  <a
+                    href="{% url 'faculty' dept='COMMERCE & MANAGEMENT STUDIES' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF COMMERCE & MANAGEMENT STUDIES</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='PHYSICS' %}" class="option">
+                    <div>DEPARTMENT OF PHYSICS</div>
+                  </a>
+                  <a
+                    href="{% url 'faculty' dept='MATHEMATICS' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF MATHEMATICS</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='CHEMISTRY' %}" class="option">
+                    <div>DEPARTMENT OF CHEMISTRY</div>
+                  </a>
+                  <a
+                    href="{% url 'faculty' dept='STATISTICS' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF STATISTICS</div>
+                  </a>
+                  <a
+                    href="{% url 'faculty' dept='COMPUTER SCIENCE' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF COMPUTER SCIENCE</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='BOTANY' %}" class="option">
+                    <div>DEPARTMENT OF BOTANY</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='ZOOLOGY' %}" class="option">
+                    <div>DEPARTMENT OF ZOOLOGY</div>
+                  </a>
+                  <a
+                    href="{% url 'faculty' dept='PSYCHOLOGY' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF PSYCHOLOGY</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='ENGLISH' %}" class="option">
+                    <div>DEPARTMENT OF ENGLISH</div>
+                  </a>
+                  <a
+                    href="{% url 'faculty' dept='PHYSICAL EDUCATION' %}"
+                    class="option"
+                  >
+                    <div>DEPARTMENT OF PHYSICAL EDUCATION</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='MALAYALAM' %}" class="option">
+                    <div>DEPARTMENT OF MALAYALAM</div>
+                  </a>
+                  <a href="{% url 'faculty' dept='HINDI' %}" class="option">
+                    <div>DEPARTMENT OF HINDI</div>
+                  </a>
+                </div>
+              </div>
+
+              <!-- #### -->
+            </div>
+          </div>
+          <div class="group flex">
+            <div class="flex" onclick="togglelist(club,'drop1')">
+              <div class="nav">Clubs & Associations</div>
+            </div>
+            <div class="dropdown" id="club">
+              <a href="{% url 'club' %}" class="option">
+                <div>National Service Scheme</div>
+              </a>
+              <a href="{% url 'bhoomi' %}" class="option">
+                <div>BHOO MITHRA SENA CLUB</div>
+              </a>
+              <a href="{% url 'fitness' %}" class="option">
+                <div>COLLEGE FITNESS PROGRAMME</div>
+              </a>
+              <a href="{% url 'staffcouncil' %}" class="option">
+                <div>STAFF COUNCIL</div>
+              </a>
+              <!-- #### -->
+            </div>
+          </div>
+          <div class="group flex">
+            <div class="flex" onclick="togglelist(stcr,'drop1')">
+              <div class="nav">Student Corner</div>
+              <!-- <img src="{% static 'assets/downarrow.svg" alt=""> -->
+            </div>
+            <div class="dropdown" id="stcr">
+              <a href="{% url 'applicatonforms' %}" class="option">
+                <div>Application Forms</div>
+              </a>
+              <a href="{% url 'scholarship' %}" class="option">
+                <div>Scholarship Details</div>
+              </a>
+              <a href="{% url 'placement' %}" class="option">
+                <div>Placement & Career guidance</div>
+              </a>
+              <a href="{% url 'universityinfo' %}" class="option">
+                <div>University Info</div>
+              </a>
+              <a href="{% url 'iqac' %}" class="option">
+                <div>IQAC</div>
+              </a>
+
+              <a href="https://www.leetbox.in/" class="option">
+                <div>PYQ Site</div>
+              </a>
+               <a
+                    href="{% static 'assets/ICC_head.pdf'%}"
+                    class="option"
+                    download
+                  >
+                    <div>ICC Head</div>
+                    <img
+                      style="background: white"
+                      src="{% static 'assets/download_black.svg' %}"
+                      alt=""
+                    />
+                  </a>
+              <!-- #### -->
+            </div>
+          </div>
+          <div class="group flex">
+            <div class="flex">
+              <a href="{% url 'notification' %}" class="nav">Notifications</a>
+            </div>
+          </div>
+        </div>
+      </navbar>
+    </div>
+    {% block content %}{% endblock %}
+    <section class="footer">
+      <div class="foothead">
+        <img
+          src="{% static 'assets/logo_text_white.png' %}"
+          class="logo"
+          alt=""
+        />
+      </div>
+      <div class="footcon flex">
+        <div class="footbox">
+          <!-- <div> -->
+          <div class="shead">Address</div>
+          <div class="data">
+            sreenarayana college<br />
+            Keezhal<br />
+            Pathiyarakkara<br />
+            Vatakara<br />
+            Kozhikode<br />
+            kerala<br />
+            673105<br />
+          </div>
+          <!-- </div> -->
+          {% comment %}
+          <div>
+            <div class="shead">Quick Links</div>
+            <div class="data">
+              <a href="">About</a>
+              <a href="">Academics</a>
+              <a href="">Consultancy</a>
+              <a href="">Journals</a>
+            </div>
+          </div>
+          {% endcomment %}
+        </div>
+        <div class="footbox">
+          <!-- <div> -->
+          <div class="shead">Reach Us</div>
+          <div class="data">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2025.705405686843!2d75.63154853566012!3d11.583946347755496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba68690641d30bd%3A0x48e6f980fe271c9f!2sSN%20College%20Vatakara!5e1!3m2!1sen!2sin!4v1699323276470!5m2!1sen!2sin"
+              width="400"
+              height="250"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+          <!-- </div> -->
+        </div>
+        <div class="footbox">
+          <!-- <div> -->
+          <div class="shead">Contact</div>
+          <div class="data">
+            <a
+              href="mailto: sncvatakara@gmail.com"
+              style="text-decoration: none; color: white"
+              >sncvatakara@gmail.com
+            </a>
+            <a
+              href="tel:+918078992816"
+              style="text-decoration: none; color: white"
+              >+91 80789 92816
+            </a>
+          </div>
+          <!-- </div> -->
+        </div>
+        <div class="footbox">
+          <!-- <div> -->
+          <div class="shead">Usefull Links</div>
+          <div class="data">
+            <a href="https://www.ugc.gov.in/" target="”_blank”">UGC</a>
+            <a href="https://www.uoc.ac.in/" target="”_blank”"
+              >Calicut University</a
+            >
+            <a href="https://www.keralapsc.gov.in/" target="”_blank”"
+              >Kerala PSc</a
+            >
+            <a href="https://kerala.gov.in/" target="”_blank”"
+              >Govt.of kerala</a
+            >
+            {% comment %} <a href="">DCE Scholarship</a> {% endcomment %}
+            <a href="https://www.education.gov.in/" target="”_blank”">MHRD</a>
+            <a href="http://www.naac.gov.in/index.php/en/" target="”_blank”"
+              >NAAC</a
+            >
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </section>
+    {% comment %}
+    <div class="socials">
+      <div class="head">Find us at</div>
+      <div class="slinksk flex">
+        <a href="" class="link"
+          ><img src="{% static 'assets/facebook.png' %}" alt=""
+        /></a>
+        <a href="" class="link"
+          ><img src="{% static 'assets/instagram.png' %}" alt=""
+        /></a>
+        <a href="" class="link"
+          ><img src="{% static 'assets/youtube.png' %}" alt=""
+        /></a>
+        <a href="" class="link"
+          ><img src="{% static 'assets/twitter.png' %}" alt=""
+        /></a>
+      </div>
+      {% endcomment %}
+    </div>
+  </body>
+</html>

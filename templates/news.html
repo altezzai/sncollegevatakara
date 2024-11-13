@@ -1,0 +1,35 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">News & Updates</div>
+</div>
+<div class="container pad-top pad-bottom flex-align-start">
+  <div class="part pad-right">
+    <div class="newsimgcon">
+      {% for image in news.images.all %}
+      <img
+        src="{{ image.image.url }}"
+        alt="{{ article.title }}"
+        class="img-big mySlides fade"
+      />
+      {% endfor %}
+      <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+      <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+    <div class="date-box">{{ news.date }}</div>
+    <div class="bold-head">{{ news.title }}</div>
+    <pre class="article">{{ news.description }}</pre>
+  </div>
+  <div class="part extra">
+    <div class="heading">Recent News & Updates</div>
+    <div class="event-group ev">
+      {% for article in newses %}
+      <a href="{% url 'news' article.id %}" class="news-box w-600">
+        <div class="text">{{ article.title }}</div>
+        <div class="date-box">Sat, {{ article.date }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<script src="{% static 'slides.js' %}" defer></script>
+{% endblock %}

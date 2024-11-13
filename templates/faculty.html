@@ -1,0 +1,50 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">DEPARTMENT OF {{ depart }}</div>
+</div>
+
+{% comment %}
+<div class="container">
+  <div class="sec-container">
+    {% for employee in employees %}
+    <div class="small-container flex-just-start list1">
+      <img
+        class="img-pot"
+        src="{{ employee.photo.url }}"
+        alt="{{ employee.name }} "
+      />
+      <div class="flex-just-c-sb">
+        <div class="flex-just-c-sb">
+          <div class="bold-head">{{ employee.position }}</div>
+          <div><h3>{{ employee.name }}</h3></div>
+        </div>
+        <div class="flex-just-c-sb">
+          <pre>{{ employee.qualification}}</pre>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endcomment %}
+<div class="container">
+  <div class="sec-container grid">
+    {% for employee in employees %}
+    <a href="#" class="news-box facbox">
+      <div class="imgcon">
+        <img
+          src="{{ employee.photo.url }}"
+          alt="{{ employee.name }} "
+          class="news-img"
+        />
+      </div>
+      <div class="bold-head">{{ employee.position }}</div>
+      <div class="date-box">{{ employee.name }}</div>
+      <div class="flex-just-c-sb">
+        <pre>{{ employee.qualification}}</pre>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

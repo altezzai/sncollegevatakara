@@ -1,0 +1,53 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">National Service Scheme</div>
+</div>
+
+<div class="container">
+  <div class="sec-container column-flex">
+    <div class="flex gap full flex-c">
+      <div class="small-container flex-just-start phcon">
+        <div class="photoCon">
+          <img src="{% static 'assets/nssco.jpg'%}" class="img-club" alt="" />
+        </div>
+      </div>
+      <div class="small-container flex-just-start">
+        <div class="head">AMITH M A</div>
+        <div class="light">STAFF CO-ORDINATOR</div>
+      </div>
+      <a
+        href="tel:+918505234456"
+        class="small-container basis flex"
+        style="text-decoration: none; color: black"
+      >
+        <img src="{% static 'assets/phone.svg'%}" class="img-small" alt="" />
+        <div class="head center">+91 8505 234 456</div>
+      </a>
+    </div>
+    <div class="small-container">
+      <article>
+        The aim of the National Service Scheme is education through community
+        service. It offers the youth a wonderful opportunity to help the poor
+        and the downtrooden. It creates a strong social awareness among the
+        students and imparts personality development to its members through
+        study and work, camps, social service activities and other useful and
+        productive work. The volunteers enrolled info N.S.S after the screening
+        process have to undergo a minimum of 240 hours work in two consecutive
+        academic years. This college has one NSS unit. For this compulsory
+        special camping programme for 7 days during X’mas holidays will be
+        there. Besides this activities like cleaning the college campus and its
+        surroundings, gardening etc, are taken up by the NSS volunteers
+      </article>
+    </div>
+    <div class="small-container imgbox">
+      <img src="{% static 'assets/nss/snnss1.jpg' %}" alt="" />
+      <img src="{% static 'assets/nss/snnss2.jpg' %}" alt="" />
+      <img src="{% static 'assets/nss/snnss5.jpg' %}" alt="" />
+      <img src="{% static 'assets/nss/snnss4.jpg' %}" alt="" />
+      <img src="{% static 'assets/nss/snnss7.jpg' %}" alt="" />
+      <img src="{% static 'assets/nss/snnss6.jpg' %}" alt="" />
+    </div>
+  </div>
+</div>
+
+{% endblock %}

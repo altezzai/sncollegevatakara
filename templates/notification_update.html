@@ -1,0 +1,48 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+    <body class="edit-body">
+      <div class="edit-formcon">
+      <h2>Update Notification</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="category" class="radio-label">Category:</label>
+        
+        <!-- <input  type="radio" name="category" value="ug" {% if notification.category == "ug" %}checked {%endif%}>    ug
+        {% if notification.category == ug %} ( Current setting ) {% else %} {% endif %}</input> -->
+        <div class=" inp rboutcon">
+
+          <div class=" rbcon">
+            <input class="rb"  type="radio" name="category" value="ug" id="ug" {% if notification.category == "ug" %}checked {%endif%}></input>
+            <label for="ug">UG</label>
+          </div>
+          <div class=" rbcon">
+            <input class="rb" type="radio" name="category" value="pg" id="pg" {% if notification.category == "pg" %}checked {%endif%}> </input>
+            <label for="pg">PG</label>
+          </div>
+          <div class=" rbcon">
+            <input class="rb" type="radio" name="category" value="both" id="pg" {% if notification.category == "both" %}checked {%endif%}> </input>
+            <label for="both">BOTH</label>
+          </div>
+          </div>
+        <label for="title">Title:</label>
+        <input
+        class="inp"
+          type="text"
+          name="title"
+          value="{{ notification.title }}"
+          required
+        />
+
+        <label  for="description">Description:</label>
+        <textarea class="inp tarea" name="description" rows="4" required>
+          {{ notification.description }}</textarea
+        >
+
+        <label for="file" class="file-label">File:</label>
+        <label for="file" class="file-input-label">Choose a file...</label>
+        <input class="inp" type="file" name="file" id="file" />
+
+        <button type="submit" class="btn">Update</button>
+      </form>
+      <a href="{% url 'list_notifications' %}" class="btn-edit btn">Back to List</a>
+    </div>
+    {% endblock %}

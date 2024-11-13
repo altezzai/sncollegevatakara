@@ -1,0 +1,27 @@
+{% extends "header.html" %} {% block content %} {% load static %}
+<div class="container banner">
+  <div class="heading">All News</div>
+</div>
+
+<div class="container">
+  <div class="sec-container grid">
+    {% for article in newses %}
+    <a href="{% url 'news' article.id %}" class="news-box w-600">
+      <div class="imgcon">
+        <img
+          src="{{ article.images.first.image.url }}"
+          alt="{{ article.title }}"
+          width="100"
+          class="news-img"
+        />
+      </div>
+      <div class="text">{{ article.title }}</div>
+      <div class="date-box">
+        {{ article.date|date:"D" }}, {{ article.date }}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
