@@ -9,6 +9,12 @@ from datetime import date
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import sys
+import os
+from django.conf import settings
 #home
 def index(request):
     # employees = Employee.objects.all()
@@ -96,19 +102,47 @@ def principal(request):
 def create_employee(request):
     if 'username' in request.session:
         if request.method == 'POST':
-            # Extract data from the request
-            name = request.POST.get('name')
-            position = request.POST.get('position')
-            department = request.POST.get('department')
-            photo = request.FILES['photo']
-            qualification = request.POST.get('qualification')
-
-            # Create and save a new Employee instance
-            employee = Employee(name=name, position=position, photo=photo, qualification=qualification,department=department)
-            employee.save()
-
-            return redirect('employee_list')  # Redirect to the list view
-
+            try:
+                # First check if a file was uploaded
+                if 'photo' not in request.FILES:
+                    return render(request, 'create_employee.html', 
+                                {'error': 'Please upload a photo'})
+                
+                photo = request.FILES['photo']
+                
+                # Validate file type
+                if not photo.content_type.startswith('image/'):
+                    return render(request, 'create_employee.html', 
+                                {'error': 'Please upload a valid image file'})
+                
+                # Check file size (e.g., max 5MB)
+                if photo.size > 5 * 1024 * 1024:  # 5MB in bytes
+                    return render(request, 'create_employee.html', 
+                                {'error': 'Photo size should be less than 5MB'})
+                
+                # If all checks pass, compress the photo
+                try:
+                    compressed_photo = compress_image(photo)
+                except Exception as e:
+                    return render(request, 'create_employee.html', 
+                                {'error': f'Error processing photo: {str(e)}'})
+                
+                # Continue with creating employee...
+                employee = Employee(
+                    name=request.POST.get('name'),
+                    position=request.POST.get('position'),
+                    photo=compressed_photo,
+                    qualification=request.POST.get('qualification'),
+                    department=request.POST.get('department')
+                )
+                employee.save()
+                
+                return redirect('employee_list')
+                
+            except Exception as e:
+                return render(request, 'create_employee.html', 
+                            {'error': f'Error creating employee: {str(e)}'})
+                
         return render(request, 'create_employee.html')
     return redirect('login')
 def employee_list(request):
@@ -116,6 +150,16 @@ def employee_list(request):
         employees = Employee.objects.all().order_by('-id')
         return render(request, 'employee_list.html', {'employees': employees})
     return redirect('login')
+def delete_old_photo(employee):
+    """
+    Safely delete the old photo file from storage
+    """
+    if employee.photo:
+        if os.path.isfile(employee.photo.path):
+            try:
+                os.remove(employee.photo.path)
+            except Exception as e:
+                print(f"Error deleting old photo: {e}")
 def update_employee(request, employee_id):
     if 'username' in request.session:
         employee = get_object_or_404(Employee, pk=employee_id)
@@ -129,10 +173,34 @@ def update_employee(request, employee_id):
             employee.name = name
             employee.position = position
             employee.department = department
-            if photo:
-                employee.photo = photo
-
             employee.qualification = qualification
+            if 'photo' in request.FILES:
+                        photo = request.FILES['photo']
+                        
+                        # Validate file type
+                        if not photo.content_type.startswith('image/'):
+                            return render(request, 'update_employee.html', 
+                                        {'employee': employee, 
+                                        'error': 'Please upload a valid image file'})
+                        
+                        # Check file size (max 5MB)
+                        if photo.size > 5 * 1024 * 1024:
+                            return render(request, 'update_employee.html', 
+                                        {'employee': employee, 
+                                        'error': 'Photo size should be less than 5MB'})
+                        
+                        try:
+                            # Delete old photo first
+                            delete_old_photo(employee)
+                            # Compress and save new photo
+                            compressed_photo = compress_image(photo)
+                            employee.photo = compressed_photo
+                        except Exception as e:
+                            return render(request, 'update_employee.html', 
+                                        {'employee': employee, 
+                                        'error': f'Error processing photo: {str(e)}'})
+                    
+
             employee.save()
             return redirect('employee_list')
 
@@ -142,10 +210,47 @@ def delete_employee(request, employee_id):
     if 'username' in request.session:
         employee = get_object_or_404(Employee, pk=employee_id)
         employee.delete()
+        delete_old_photo(employee)
         return redirect('employee_list')
     return redirect('login')
 #Event
 
+def compress_image(image_file):
+    """
+    Compress the input image file while maintaining aspect ratio
+    Returns a compressed InMemoryUploadedFile object
+    """
+    img = Image.open(image_file)
+    
+    # Convert to RGB if image is in RGBA mode
+    if img.mode == 'RGBA':
+        img = img.convert('RGB')
+    
+    # Set maximum dimensions
+    max_width = 800
+    max_height = 800
+    
+    # Calculate new dimensions while maintaining aspect ratio
+    ratio = min(max_width/img.width, max_height/img.height)
+    new_width = int(img.width * ratio)
+    new_height = int(img.height * ratio)
+    
+    # Resize image
+    img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+    
+    # Save the compressed image
+    output = BytesIO()
+    img.save(output, format='JPEG', quality=75, optimize=True)
+    output.seek(0)
+    
+    return InMemoryUploadedFile(
+        output,
+        'ImageField',
+        f"{image_file.name.split('.')[0]}.jpg",
+        'image/jpeg',
+        sys.getsizeof(output),
+        None
+    )
 def event_list(request):
 
     if 'username' in request.session:
@@ -200,20 +305,29 @@ def create_news(request):
             title = request.POST['title']
             description = request.POST['description']
             d = request.POST['date']
-            photo = request.FILES['photos']
-            # Create the news article
-            # News.objects.create(title=title, description=description, date=d, image=photo)
-            news_article = News.objects.create(title=title, description=description,date=d)
-
-            # Handle multiple image uploads
+            
+            # Create the news article first
+            news_article = News.objects.create(
+                title=title,
+                description=description,
+                date=d
+            )
+            
+            # Process and save each uploaded image
             for image_file in request.FILES.getlist('photos'):
-                NewsImage.objects.create(news_article=news_article, image=image_file)
-
+                # Compress the image
+                compressed_image = compress_image(image_file)
+                
+                # Create NewsImage object with compressed image
+                NewsImage.objects.create(
+                    news_article=news_article,
+                    image=compressed_image
+                )
+            
             return redirect('news_list')
-
+        
         return render(request, 'create_news.html')
     return redirect('login')
-
 def update_news(request, pk):
     if 'username' in request.session:
         article = get_object_or_404(News, pk=pk)
@@ -222,12 +336,22 @@ def update_news(request, pk):
             # Update the text fields (title and description)
             article.title = request.POST['title']
             article.description = request.POST['description']
-            # photos = request.FILES.get('file')
-            # if photos:
-            #     article.image = photos
+            
+            # Handle new images
+            if request.FILES:
+                for image_file in request.FILES.getlist('photos'):
+                    # Compress each new image
+                    compressed_image = compress_image(image_file)
+                    
+                    # Create new NewsImage object with compressed image
+                    NewsImage.objects.create(
+                        news_article=article,
+                        image=compressed_image
+                    )
+            
             article.save()
-            for image_file in request.FILES.getlist('photos'):
-                NewsImage.objects.create(news_article=article, image=image_file)
+            # for image_file in request.FILES.getlist('photos'):
+            #     NewsImage.objects.create(news_article=article, image=image_file)
 
             return redirect('news_list')
 
@@ -238,12 +362,44 @@ def update_news(request, pk):
 
 
 def delete_news(request, pk):
+    """
+    Delete a news article and all its associated images
+    """
     if 'username' in request.session:
-        event = get_object_or_404(News, pk=pk)
-        event.delete()
-        return redirect('news_list')
+        try:
+            # Get the news article
+            article = get_object_or_404(News, pk=pk)
+            
+            # Get all associated images before deleting the article
+            images = NewsImage.objects.filter(news_article=article)
+            
+            # Delete each image file from storage
+            for image in images:
+                if image.image:
+                    # Get the full path of the image
+                    image_path = os.path.join(settings.MEDIA_ROOT, str(image.image))
+                    try:
+                        # Check if file exists before attempting deletion
+                        if os.path.isfile(image_path):
+                            os.remove(image_path)
+                    except Exception as e:
+                        print(f"Error deleting image file {image_path}: {e}")
+            
+            # Delete the news article (this will also delete associated NewsImage objects
+            # due to CASCADE deletion in the database)
+            article.delete()
+            
+            return redirect('news_list')
+            
+        except Exception as e:
+            # Log the error and redirect
+            print(f"Error deleting news article {pk}: {e}")
+            return redirect('news_list')
+            
     return redirect('login')
+
 #Notificationreturn redirect('news_list')
+
 def create_notification(request):
     if 'username' in request.session:
         if request.method == 'POST':
