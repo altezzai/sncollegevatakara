@@ -159,6 +159,10 @@
   .data iframe {
     width: 100%;
   }
+
+  .extra-logo {
+    display: none;
+  }
 }
 @media (max-width: 600px) {
   .mw.mw {
