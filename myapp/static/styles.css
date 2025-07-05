@@ -221,20 +221,23 @@ navbar {
 }
 
 .hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: relative;
   overflow: hidden;
+  margin-top: 10px;
 }
 /* m -----------------------------------------------------------------------------------*/
 .mySlides {
   display: none;
   object-fit: cover;
   width: 100%;
-  border-radius: 20px;
   max-height: 80vh;
-  margin-top: 10px;
+}
+
+.slide-link {
+  display: block;
+  border-radius: 20px;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Next & previous buttons */
@@ -636,6 +639,26 @@ navbar {
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+.social-con {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  border: white 1px solid;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.social-con:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.social {
+  width: 20px;
+  height: 20px;
 }
 
 .link img {
