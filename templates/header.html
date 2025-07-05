@@ -83,13 +83,13 @@
                   alt=""
                 />
                 <div class="sec-dropdown" id="fac">
-                        <a
+                  <a
                     href="{% url 'faculty' dept='COMPUTER APPLICATION' %}"
                     class="option"
                   >
                     <div>DEPARTMENT OF COMPUTER APPLICATION</div>
                   </a>
-                         <a
+                  <a
                     href="{% url 'faculty' dept='MANAGEMENT STUDIES' %}"
                     class="option"
                   >
@@ -203,18 +203,18 @@
               <a href="https://www.leetbox.in/" class="option">
                 <div>PYQ Site</div>
               </a>
-               <a
-                    href="{% static 'assets/ICC_head.pdf'%}"
-                    class="option"
-                    download
-                  >
-                    <div>ICC Head</div>
-                    <img
-                      style="background: white"
-                      src="{% static 'assets/download_black.svg' %}"
-                      alt=""
-                    />
-                  </a>
+              <a
+                href="{% static 'assets/ICC_head.pdf'%}"
+                class="option"
+                download
+              >
+                <div>ICC Head</div>
+                <img
+                  style="background: white"
+                  src="{% static 'assets/download_black.svg' %}"
+                  alt=""
+                />
+              </a>
               <!-- #### -->
             </div>
           </div>
@@ -224,6 +224,7 @@
             </div>
           </div>
         </div>
+        <img src="{% static 'assets/asap.jpg' %}" class="extra-logo" />
       </navbar>
     </div>
     {% block content %}{% endblock %}

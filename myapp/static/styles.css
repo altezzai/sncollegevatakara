@@ -81,6 +81,12 @@ navbar {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  margin-left: auto;
+}
+
+.extra-logo {
+  height: 100%;
+  display: block;
 }
 .group {
   display: flex;
