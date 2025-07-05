@@ -37,3 +37,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.title
+class Banner(models.Model):
+    image = models.ImageField(upload_to='banners/')
+    url = models.URLField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)  # optional, to enable/disable a banner
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Banner {self.id}"        

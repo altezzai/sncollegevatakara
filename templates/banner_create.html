@@ -1,0 +1,26 @@
+{% extends "admin_header.html" %} {% block content %} {% load static %}
+<body class="edit-body">
+  <div class="edit-formcon">
+    <h2>Banner Form</h2>
+    <form id="employeeForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <label for="image">image:</label>
+      <input
+        class="inp"
+        type="file"
+        id="image"
+        name="image"
+        accept="image/*"
+        required
+      />
+
+      <label for="url">URL:</label>
+      <input class="inp" type="url" id="url" name="url" />
+
+      <button type="Submit" value="Submit">Submit</button>
+    </form>
+    <a href="{% url 'employee_list' %}" class="btn-edit btn">Back to List</a>
+  </div>
+  {% endblock %}
+</body>

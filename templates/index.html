@@ -1,43 +1,9 @@
 {% extends "header.html" %} {% block content %} {% load static %}
 <div class="container">
   <section class="hero">
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/sn6.webp' %}"
-      alt=""
-    />
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/coverpic1.webp' %}"
-      alt=""
-    />
-
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/sn1.webp' %}"
-      alt=""
-    />
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/sn2.webp' %}"
-      alt=""
-    />
-
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/sn4.webp' %}"
-      alt=""
-    />
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/sn3.webp' %}"
-      alt=""
-    />
-    <img
-      class="mySlides fade"
-      src="{% static 'assets/clg/sn5.webp' %}"
-      alt=""
-    />
+    {% for banner in banners %}
+    <img class="mySlides fade" src="{{ banner.image.url }}" alt="" />
+    {% endfor %}
 
     <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
     <a class="next" onclick="plusSlides(1)">&#10095;</a>

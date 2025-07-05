@@ -3,6 +3,7 @@ from .models import Employee
 from .models import Event
 from .models import News,NewsImage
 from .models import Notification
+from .models import Banner
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from datetime import date
@@ -21,7 +22,11 @@ def index(request):
     evt = Event.objects.all().order_by('-date')[:3]
 
     nws = News.objects.all().order_by('-id')[:3]
-    return render(request, 'index.html',{'events': evt,'news': nws})
+    #send banners list also
+
+    bnr = Banner.objects.all().order_by('-id')[:6]
+    return render(request, 'index.html',{'events': evt,'news': nws ,'banners':bnr})
+
 
 def news(request,nw_id):
     nw = get_object_or_404(News, pk=nw_id)
@@ -454,6 +459,53 @@ def list_notifications(request):
         notifications = Notification.objects.all().order_by('-id')
         return render(request, 'notification_list.html', {'notifications': notifications})
     return redirect('login')
+
+# Banner views
+def create_banner(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            image = request.FILES.get('image')
+            url = request.POST.get('url')
+
+            banner = Banner(image=image, url=url)
+            banner.save()
+            return redirect('list_banners')
+        return render(request, 'banner_create.html')
+    return redirect('login')
+def update_banner(request, banner_id):
+    if 'username' in request.session:
+        banner = get_object_or_404(Banner, pk=banner_id)
+
+        if request.method == 'POST':
+            url = request.POST.get('url')
+            image = request.FILES.get('image')
+
+            banner.url = url
+            if image:
+                banner.image = image
+
+            banner.save()
+            return redirect('list_banners')
+
+        return render(request, 'banner_update.html', {'banner': banner})
+    return redirect('login')
+def delete_banner(request, banner_id):
+    if 'username' in request.session:
+        banner = get_object_or_404(Banner, pk=banner_id)
+        banner.delete()
+        return redirect('list_banners')
+    return redirect('login')    
+def list_banners(request):
+    if 'username' in request.session:
+        banners = Banner.objects.all().order_by('-created_at')
+        return render(request, 'banner_list.html', {'banners': banners})
+    return redirect('login')
+def banner_detail(request, banner_id):
+    if 'username' in request.session:
+        banner = get_object_or_404(Banner, pk=banner_id)
+        return render(request, 'banner_detail.html', {'banner': banner})
+    return redirect('login')
+
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')

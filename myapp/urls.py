@@ -48,6 +48,12 @@ urlpatterns = [
     path('update_notification/<int:notification_id>/', views.update_notification, name='update_notification'),
     path('delete_notification/<int:notification_id>/', views.delete_notification, name='delete_notification'),
     path('list_notifications/', views.list_notifications, name='list_notifications'),
+    
+    path('create_banner/', views.create_banner, name='create_banner'),
+    path('update_banner/<int:banner_id>/', views.update_banner, name='update_banner'),
+    path('delete_banner/<int:banner_id>/', views.delete_banner, name='delete_banner'),
+    path('list_banners/', views.list_banners, name='list_banners'),
+    path('banner/<int:banner_id>/', views.banner_detail, name='banner_detail'),
 
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
