@@ -1,0 +1,23 @@
+{% extends 'header.html' %}
+{% block content %}
+  {% load static %}
+  <div class="container banner">
+    <div class="heading">Alumni</div>
+  </div>
+
+  <div class="container">
+    <div class="sec-container">
+      <div class="small-container">
+        <div class="c">Alumni Association</div>
+        <div class="light">This page will be updated with alumni activities, registration details, and events.</div>
+      </div>
+
+      <div class="small-container">
+        <div class="c">Get in touch</div>
+        <div class="light">
+          For alumni-related queries, please use the details on the <a href="{% url 'contact_us' %}" style="color: var(--primary); text-decoration: none;">Contact Us</a> page.
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "admin_header.html" %}
+{% block content %}
+  {% load static %}
+  <body class="edit-body">
+    <div class="edit-formcon">
+      <h2>Update IQAC Member</h2>
+
+      {% if error %}
+        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="name">Name:</label>
+        <input class="inp" type="text" id="name" name="name" value="{{ member.name }}" required />
+
+        <label for="department">Department:</label>
+        <input class="inp" type="text" id="department" name="department" value="{{ member.department }}" required />
+
+        <label for="role">Position:</label>
+        <select class="inp" id="role" name="role">
+          <option value="coordinator" {% if member.role == 'coordinator' %}selected{% endif %}>Coordinator</option>
+          <option value="joint_coordinator" {% if member.role == 'joint_coordinator' %}selected{% endif %}>Joint Coordinator</option>
+          <option value="member" {% if member.role == 'member' %}selected{% endif %}>Member</option>
+        </select>
+
+        <label for="is_active">Active:</label>
+        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" {% if member.is_active %}checked{% endif %} />
+
+        <label>Current Photo:</label>
+        {% if member.photo %}
+          <img src="{{ member.photo.url }}" alt="" style="max-width: 140px; border-radius: 10px;" />
+        {% else %}
+          <img src="{% static 'assets/user.png' %}" alt="" style="max-width: 80px; border-radius: 10px;" />
+        {% endif %}
+
+        <label for="photo">Change Photo (optional):</label>
+        <input class="inp" type="file" id="photo" name="photo" accept="image/*" />
+
+        <button type="submit" class="btn">Update</button>
+      </form>
+
+      <a href="{% url 'iqac_member_list' %}" class="btn-edit btn">Back to List</a>
+    </div>
+  {% endblock %}
+  </body>

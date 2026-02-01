@@ -3,11 +3,11 @@
 <html>
   <head>
     <title>admin page</title>
-    <link rel="stylesheet" href="{% static 'styles.css'%}" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
 
-    <link rel="stylesheet" href="{% static 'mobile.css'%}" />
+    <link rel="stylesheet" href="{% static 'mobile.css' %}" />
 
-    <link rel="stylesheet" href="{% static 'admin.css'%}" />
+    <link rel="stylesheet" href="{% static 'admin.css' %}" />
 
     <script src="{% static 'script.js' %}" defer></script>
 
@@ -15,54 +15,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body class="admin-body">
-    <div class="navcon">
-      <navbar class="flex n">
-        <img src="{% static 'assets/logo.png' %}" class="logo" alt="" />
-        <img
-          src="{% static 'assets/bm.svg' %}"
-          alt=""
-          class="bm"
-          onclick="opennav()"
-        />
-        <div class="l">
-          <div class="close" onclick="closenav()">
-            <img src="{% static 'assets/close.svg' %}" alt="" />
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'employee_list' %}" class="nav">Faculty</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'event_list' %}" class="nav">Events</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'list_notifications' %}" class="nav"
-                >Notifications</a
-              >
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'news_list' %}" class="nav">News</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'list_banners' %}" class="nav">Banners</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'logout' %}" class="nav">Logout</a>
-            </div>
-          </div>
+    {% with current_url=request.resolver_match.url_name %}
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+          <a href="/" class="admin-logo-link"><img src="{% static 'assets/logo.png' %}" class="logo admin-logo" alt="" /></a>
         </div>
-      </navbar>
-    </div>
-    {% block content %}{% endblock %}
+
+        <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+          <a href="{% url 'employee_list' %}" class="admin-nav-link{% if current_url == 'employee_list' %} active{% endif %}">Faculty</a>
+          <a href="{% url 'event_list' %}" class="admin-nav-link{% if current_url == 'event_list' %} active{% endif %}">Events</a>
+          <a href="{% url 'list_notifications' %}" class="admin-nav-link{% if current_url == 'list_notifications' %} active{% endif %}">Notifications</a>
+          <a href="{% url 'news_list' %}" class="admin-nav-link{% if current_url == 'news_list' %} active{% endif %}">News</a>
+          <a href="{% url 'annual_report_list' %}" class="admin-nav-link{% if current_url == 'annual_report_list' %} active{% endif %}">Annual Reports</a>
+          <a href="{% url 'list_banners' %}" class="admin-nav-link{% if current_url == 'list_banners' %} active{% endif %}">Banners</a>
+          <a href="{% url 'iqac_member_list' %}" class="admin-nav-link{% if current_url == 'iqac_member_list' or current_url == 'iqac_member_create' or current_url == 'iqac_member_update' %} active{% endif %}">IQAC</a>
+          <a href="{% url 'gallery_item_list' %}" class="admin-nav-link{% if current_url == 'gallery_item_list' or current_url == 'gallery_item_create' or current_url == 'gallery_item_update' %} active{% endif %}">Gallery</a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+          <a href="{% url 'logout' %}" class="admin-nav-link admin-nav-link-danger">Logout</a>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        {% block content %}
+
+        {% endblock %}
+      </main>
+    {% endwith %}
   </body>
 </html>

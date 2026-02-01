@@ -4,6 +4,10 @@ from .models import Event
 from .models import News,NewsImage
 from .models import Notification
 from .models import Banner
+from .models import AnnualReport
+from .models import IQACMember
+from .models import GalleryItem
+from .models import GalleryImage
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from datetime import date
@@ -66,8 +70,8 @@ def courses(request):
 def FYUGP(request):
     return render(request, 'FYUGP.html')
 def iqac(request):
-    # employees = Employee.objects.all()
-    return render(request, 'iqac.html')
+    members = IQACMember.objects.filter(is_active=True)
+    return render(request, 'iqac.html', {"members": members})
 def staffcouncil(request):
     # employees = Employee.objects.all()
     return render(request, 'staffcouncil.html')
@@ -102,6 +106,284 @@ def manager(request):
     return render(request, "manager.html")
 def principal(request):
     return render(request, "principal.html")
+
+
+# About Us (static pages)
+def history(request):
+    return render(request, "history.html")
+
+
+def vision_mission(request):
+    return render(request, "vision_mission.html")
+
+
+def funding_agencies(request):
+    return render(request, "funding_agencies.html")
+
+
+def icc(request):
+    return render(request, "icc.html")
+
+
+def statutory_bodies(request):
+    return render(request, "statutory_bodies.html")
+
+
+def administrative_office(request):
+    return render(request, "administrative_office.html")
+
+
+def organogram(request):
+    return render(request, "organogram.html")
+
+
+def rti(request):
+    return render(request, "rti.html")
+
+
+def alumni(request):
+    return render(request, "alumni.html")
+
+
+def contact_us(request):
+    return render(request, "contact_us.html")
+
+
+# Gallery (public)
+def gallery(request):
+    photos = GalleryItem.objects.filter(
+        is_active=True,
+        media_type=GalleryItem.TYPE_IMAGE,
+    ).prefetch_related('images')
+    media = GalleryItem.objects.filter(
+        is_active=True,
+        media_type=GalleryItem.TYPE_VIDEO,
+    )
+    return render(request, "gallery.html", {"photos": photos, "media": media})
+
+
+# Gallery (admin CRUD)
+def gallery_item_list(request):
+    if 'username' in request.session:
+        items = GalleryItem.objects.all()
+        return render(request, 'gallery_item_list.html', {'items': items})
+    return redirect('login')
+
+
+def gallery_item_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            media_type = request.POST.get('media_type') or GalleryItem.TYPE_IMAGE
+            file = request.FILES.get('file')
+            files = request.FILES.getlist('files')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not title:
+                return render(
+                    request,
+                    'gallery_item_create.html',
+                    {'error': 'Title is required.'},
+                )
+
+            if media_type == GalleryItem.TYPE_VIDEO and not file:
+                return render(
+                    request,
+                    'gallery_item_create.html',
+                    {'error': 'Please upload a video file.'},
+                )
+
+            if media_type == GalleryItem.TYPE_IMAGE and not files:
+                return render(
+                    request,
+                    'gallery_item_create.html',
+                    {'error': 'Please upload one or more images.'},
+                )
+
+            item = GalleryItem.objects.create(
+                title=title,
+                media_type=media_type,
+                file=file if media_type == GalleryItem.TYPE_VIDEO else None,
+                is_active=is_active,
+            )
+
+            if media_type == GalleryItem.TYPE_IMAGE:
+                for f in files:
+                    GalleryImage.objects.create(gallery_item=item, image=f)
+
+            return redirect('gallery_item_list')
+
+        return render(request, 'gallery_item_create.html')
+    return redirect('login')
+
+
+def gallery_item_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(GalleryItem, pk=item_id)
+
+        if request.method == 'POST':
+            item.title = (request.POST.get('title') or '').strip()
+            item.media_type = request.POST.get('media_type') or item.media_type
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            file = request.FILES.get('file')
+            files = request.FILES.getlist('files')
+
+            if item.media_type == GalleryItem.TYPE_VIDEO:
+                if file:
+                    item.file = file
+            else:
+                # For images: add new uploaded images (if any)
+                for f in files:
+                    GalleryImage.objects.create(gallery_item=item, image=f)
+
+            if not item.title:
+                return render(
+                    request,
+                    'gallery_item_update.html',
+                    {'error': 'Title is required.', 'item': item},
+                )
+
+            item.save()
+            return redirect('gallery_item_list')
+
+        return render(request, 'gallery_item_update.html', {'item': item})
+    return redirect('login')
+
+
+def gallery_item_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(GalleryItem, pk=item_id)
+        item.delete()
+        return redirect('gallery_item_list')
+    return redirect('login')
+
+
+def gallery_image_delete(request, item_id, image_id):
+    if 'username' in request.session:
+        image = get_object_or_404(GalleryImage, pk=image_id, gallery_item_id=item_id)
+        image.delete()
+        return redirect('gallery_item_update', item_id=item_id)
+    return redirect('login')
+
+
+# Annual Reports
+def annual_reports(request):
+    reports = AnnualReport.objects.all()
+    return render(request, "annual_reports.html", {"reports": reports})
+
+
+def annual_report_list(request):
+    if 'username' in request.session:
+        reports = AnnualReport.objects.all()
+        return render(request, "annual_report_list.html", {"reports": reports})
+    return redirect('login')
+
+
+def annual_report_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            year = request.POST.get('year')
+            file = request.FILES.get('file')
+
+            if not file:
+                return render(request, "annual_report_create.html", {"error": "Please upload a file"})
+
+            AnnualReport.objects.create(title=title, year=year or 0, file=file)
+            return redirect('annual_report_list')
+
+        return render(request, "annual_report_create.html")
+    return redirect('login')
+
+
+def annual_report_update(request, report_id):
+    if 'username' in request.session:
+        report = get_object_or_404(AnnualReport, pk=report_id)
+
+        if request.method == 'POST':
+            report.title = request.POST.get('title')
+            report.year = request.POST.get('year') or report.year
+            file = request.FILES.get('file')
+            if file:
+                report.file = file
+            report.save()
+            return redirect('annual_report_list')
+
+        return render(request, "annual_report_update.html", {"report": report})
+    return redirect('login')
+
+
+def annual_report_delete(request, report_id):
+    if 'username' in request.session:
+        report = get_object_or_404(AnnualReport, pk=report_id)
+        report.delete()
+        return redirect('annual_report_list')
+    return redirect('login')
+
+
+# IQAC (Admin CRUD)
+def iqac_member_list(request):
+    if 'username' in request.session:
+        members = IQACMember.objects.all()
+        return render(request, 'iqac_member_list.html', {'members': members})
+    return redirect('login')
+
+
+def iqac_member_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            department = (request.POST.get('department') or '').strip()
+            role = request.POST.get('role') or IQACMember.ROLE_MEMBER
+            photo = request.FILES.get('photo')
+
+            if not name or not department:
+                return render(
+                    request,
+                    'iqac_member_create.html',
+                    {'error': 'Name and Department are required.'},
+                )
+
+            IQACMember.objects.create(name=name, department=department, role=role, photo=photo)
+            return redirect('iqac_member_list')
+
+        return render(request, 'iqac_member_create.html')
+    return redirect('login')
+
+
+def iqac_member_update(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(IQACMember, pk=member_id)
+
+        if request.method == 'POST':
+            member.name = (request.POST.get('name') or '').strip()
+            member.department = (request.POST.get('department') or '').strip()
+            member.role = request.POST.get('role') or member.role
+            member.is_active = True if request.POST.get('is_active') == 'on' else False
+            photo = request.FILES.get('photo')
+            if photo:
+                member.photo = photo
+
+            if not member.name or not member.department:
+                return render(
+                    request,
+                    'iqac_member_update.html',
+                    {'error': 'Name and Department are required.', 'member': member},
+                )
+
+            member.save()
+            return redirect('iqac_member_list')
+
+        return render(request, 'iqac_member_update.html', {'member': member})
+    return redirect('login')
+
+
+def iqac_member_delete(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(IQACMember, pk=member_id)
+        member.delete()
+        return redirect('iqac_member_list')
+    return redirect('login')
 
 #Employee
 def create_employee(request):

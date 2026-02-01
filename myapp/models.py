@@ -45,3 +45,76 @@ class Banner(models.Model):
 
     def __str__(self):
         return f"Banner {self.id}"        
+
+
+class AnnualReport(models.Model):
+    title = models.CharField(max_length=255)
+    year = models.PositiveIntegerField()
+    file = models.FileField(upload_to='annual_reports/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-year', '-id']
+
+    def __str__(self):
+        return f"{self.year} - {self.title}"
+
+
+class IQACMember(models.Model):
+    ROLE_COORDINATOR = "coordinator"
+    ROLE_JOINT_COORDINATOR = "joint_coordinator"
+    ROLE_MEMBER = "member"
+
+    ROLE_CHOICES = (
+        (ROLE_COORDINATOR, "Coordinator"),
+        (ROLE_JOINT_COORDINATOR, "Joint Coordinator"),
+        (ROLE_MEMBER, "Member"),
+    )
+
+    name = models.CharField(max_length=150)
+    department = models.CharField(max_length=150)
+    photo = models.ImageField(upload_to='iqac/', null=True, blank=True)
+    role = models.CharField(max_length=32, choices=ROLE_CHOICES, default=ROLE_MEMBER)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["role", "name", "id"]
+
+    def __str__(self):
+        return f"{self.name} ({self.department}) - {self.role}"
+
+
+class GalleryItem(models.Model):
+    TYPE_IMAGE = "image"
+    TYPE_VIDEO = "video"
+
+    TYPE_CHOICES = (
+        (TYPE_IMAGE, "Photo"),
+        (TYPE_VIDEO, "Media (Video)"),
+    )
+
+    title = models.CharField(max_length=255)
+    media_type = models.CharField(max_length=16, choices=TYPE_CHOICES, default=TYPE_IMAGE)
+    # For videos, use `file`. For photos, store multiple images via related GalleryImage.
+    file = models.FileField(upload_to='gallery/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_at', '-id']
+
+    def __str__(self):
+        return f"{self.title} ({self.media_type})"
+
+
+class GalleryImage(models.Model):
+    gallery_item = models.ForeignKey(GalleryItem, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='gallery/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return f"Image for {self.gallery_item_id}"

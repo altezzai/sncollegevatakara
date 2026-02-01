@@ -1,0 +1,48 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  {% load static %}
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>Annual Reports</h2>
+      <a class="btn-add btn" href="{% url 'annual_report_create' %}"><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New</a>
+    </div>
+
+    <div class="table-con">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Year</th>
+            <th>Title</th>
+            <th>File</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in reports %}
+            <tr>
+              <td>{{ report.id }}</td>
+              <td>{{ report.year }}</td>
+              <td>{{ report.title }}</td>
+              <td>
+                {% if report.file %}
+                  <a href="{{ report.file.url }}" class="btn-add btn" style="width: 20vh;" target="_blank">View File</a>
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td>
+                <a class="btn-edit btn" href="{% url 'annual_report_update' report.id %}">Edit</a>
+                <a class="btn-delete btn" href="{% url 'annual_report_delete' report.id %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5">No annual reports yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

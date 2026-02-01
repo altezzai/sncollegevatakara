@@ -1,0 +1,29 @@
+{% extends 'header.html' %}
+{% block content %}
+  <div class="container banner">
+    <div class="heading">Annual Reports</div>
+  </div>
+
+  <div class="container">
+    <div class="sec-container column-flex">
+      {% if reports %}
+        <div class="small-container">
+          <ul>
+            {% for report in reports %}
+              <li style="margin-bottom: 10px;">
+                <strong>{{ report.year }}</strong> — {{ report.title }}
+                {% if report.file %}
+                  &nbsp; <a href="{{ report.file.url }}" class="btn" target="_blank">View / Download</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% else %}
+        <div class="small-container">
+          <p>No annual reports uploaded yet.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

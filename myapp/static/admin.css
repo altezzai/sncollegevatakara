@@ -8,12 +8,14 @@
   padding: 0;
   font-family: "Poppins";
 }
+
 :root {
   --primary: #0f3c71;
   --primary-light: #1b5292;
   --sec: #aebbff;
   --third: #f1f1ff;
 }
+
 body {
   height: 100vh;
   background-color: #d0e6ff;
@@ -45,6 +47,7 @@ body,
   height: 100%;
   gap: 15px;
 }
+
 form h2 {
   text-align: center;
   margin-bottom: 15px;
@@ -81,18 +84,105 @@ form button:hover {
 
 .admin-body {
   background-color: #d0e6ff;
-  margin-top: 80px;
-  justify-content: unset;
-  height: auto;
+  margin-top: 0;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.admin-sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  background-color: white;
+  border-right: 2px solid rgb(204, 204, 204);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgb(230, 230, 230);
+}
+
+.admin-logo {
+  max-width: 220px;
+}
+
+.admin-logo-link {
+  text-decoration: none;
+}
+
+.admin-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.admin-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: background-color 0.2s ease-out, color 0.2s ease-out;
+}
+
+.admin-nav-link:hover {
+  background-color: var(--third);
+  color: var(--primary);
+}
+
+.admin-nav-link.active {
+  background-color: var(--sec);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.admin-sidebar-footer {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid rgb(230, 230, 230);
+}
+
+.admin-nav-link-danger {
+  color: rgb(170, 0, 0);
+}
+
+.admin-nav-link-danger:hover {
+  background-color: rgb(255, 230, 230);
+}
+
+.admin-main {
+  flex: 1;
+  height: 100vh;
+  overflow: auto;
+  padding: 20px;
 }
 
 .admin-container {
   background-color: white;
-  margin-block: 30px;
+  margin: 0 auto;
+  margin-block: 20px;
   padding: 20px;
   border-radius: 20px;
   width: 100%;
+  max-width: 1400px;
 }
+
 .admin-title {
   display: flex;
   align-items: center;
@@ -105,6 +195,7 @@ form button:hover {
   color: white;
   margin: 10px;
 }
+
 .btn-add:hover {
   background-color: var(--primary-light);
 }
@@ -118,6 +209,7 @@ form button:hover {
   justify-content: center;
   margin: 10px;
 }
+
 .btn-edit:hover {
   background-color: #b7c3ff;
 }
@@ -128,6 +220,7 @@ form button:hover {
   width: 5rem;
   margin: 10px;
 }
+
 .btn-delete:hover {
   background-color: rgb(255, 71, 71);
 }
@@ -135,29 +228,37 @@ form button:hover {
 tbody {
   overflow-y: auto;
 }
+
 tbody tr:nth-child(even) {
   background-color: rgb(241, 241, 241);
 }
+
 tr td,
 tr th {
   padding: 5px;
 }
+
 tr td {
   vertical-align: top;
 }
+
 .photo-list {
   width: 150px;
 }
+
 table {
   border: 2px solid black;
   overflow: hidden;
   border-radius: 10px;
   padding: 10px;
+  width: 100%;
 }
+
 thead tr {
   background-color: #aebbff;
   /* /////////////////////////////////////////////////// */
 }
+
 thead th {
   padding: 5px;
 }
@@ -166,6 +267,7 @@ thead tr th:last-child {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
 thead tr th:first-child {
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -174,6 +276,12 @@ thead tr th:first-child {
 .table-con {
   overflow: auto;
   width: 100%;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+thead th.actions {
+  white-space: nowrap;
 }
 
 .edit-formcon {
@@ -187,6 +295,7 @@ thead tr th:first-child {
   max-width: 700px;
   border-radius: 10px;
 }
+
 .edit-body {
   padding-block: 30px;
   height: unset;
