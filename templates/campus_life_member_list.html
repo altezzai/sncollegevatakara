@@ -1,0 +1,46 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  {% load static %}
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>{{ page.title }} Members</h2>
+      <a class="btn-add btn" href="{% url 'campus_life_member_create' slug=page.slug %}"><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New</a>
+    </div>
+
+    <div class="table-con">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Active</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in members %}
+            <tr>
+              <td>{{ m.name }}</td>
+              <td>{{ m.position }}</td>
+              <td>
+                {% if m.is_active %}
+                  Yes
+                {% else %}
+                  No
+                {% endif %}
+              </td>
+              <td>
+                <a class="btn-edit btn" href="{% url 'campus_life_member_update' m.id %}">Edit</a>
+                <a class="btn-delete btn" href="{% url 'campus_life_member_delete' m.id %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4">No members yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

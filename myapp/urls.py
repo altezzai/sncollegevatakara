@@ -13,8 +13,17 @@ urlpatterns = [
     path('notification2/<int:noti_id>/', views.notification2, name='notification2'),
     path('notificationfilter/<str:upg>/', views.notificationfilter, name='notificationfilter'),
 
-    path('club', views.club, name='club'),
-    path('fitness', views.fitness, name='fitness'),
+    # Campus Life (admin)
+    path('campus-life/admin/<slug:slug>/', views.campus_life_member_list, name='campus_life_member_list'),
+    path('campus-life/admin/<slug:slug>/create/', views.campus_life_member_create, name='campus_life_member_create'),
+    path('campus-life/admin/member/<int:member_id>/update/', views.campus_life_member_update, name='campus_life_member_update'),
+    path('campus-life/admin/member/<int:member_id>/delete/', views.campus_life_member_delete, name='campus_life_member_delete'),
+
+    # Campus Life (dynamic)
+    path('campus-life/', views.campus_life, name='campus_life'),
+    path('campus-life/<slug:slug>/', views.campus_life_page, name='campus_life_page'),
+
+    # Legacy endpoints removed (migrated to Campus Life)
     path('about', views.about, name='about'),
     path('about/history', views.history, name='history'),
     path('about/vision-mission', views.vision_mission, name='vision_mission'),
@@ -39,11 +48,8 @@ urlpatterns = [
     path('annual-reports/admin/create/', views.annual_report_create, name='annual_report_create'),
     path('annual-reports/admin/<int:report_id>/update/', views.annual_report_update, name='annual_report_update'),
     path('annual-reports/admin/<int:report_id>/delete/', views.annual_report_delete, name='annual_report_delete'),
-    path('BHOOMITHRA_SENA_CLUB', views.bhoomi, name='bhoomi'),
     path('courses', views.courses, name='courses'),
     path('FYUGP', views.FYUGP, name='FYUGP'),
-    path('placement', views.placement, name='placement'),
-    path('scholarship', views.scholarship, name='scholarship'),
     path('applicatonforms', views.applicatonforms, name='applicatonforms'),
     path('courses', views.courses, name='courses'),
     path('universityinfo', views.universityinfo, name='universityinfo'),
@@ -52,7 +58,6 @@ urlpatterns = [
     path('iqac/admin/create/', views.iqac_member_create, name='iqac_member_create'),
     path('iqac/admin/<int:member_id>/update/', views.iqac_member_update, name='iqac_member_update'),
     path('iqac/admin/<int:member_id>/delete/', views.iqac_member_delete, name='iqac_member_delete'),
-    path('staffcouncil', views.staffcouncil, name='staffcouncil'),
     path('manager', views.manager, name='manager'),
     path('principal', views.principal, name="principal"),
 

@@ -1,0 +1,30 @@
+{% extends "admin_header.html" %}
+{% block content %}
+  {% load static %}
+  <body class="edit-body">
+    <div class="edit-formcon">
+      <h2>Add Member - {{ page.title }}</h2>
+
+      {% if error %}
+        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="name">Name:</label>
+        <input class="inp" type="text" id="name" name="name" required />
+
+        <label for="position">Position:</label>
+        <input class="inp" type="text" id="position" name="position" required />
+
+        <label for="photo">Photo (optional):</label>
+        <input class="inp" type="file" id="photo" name="photo" accept="image/*" />
+
+        <button type="submit" class="btn">Create</button>
+      </form>
+
+      <a href="{% url 'campus_life_member_list' slug=page.slug %}" class="btn-edit btn">Back to List</a>
+    </div>
+  {% endblock %}
+  </body>

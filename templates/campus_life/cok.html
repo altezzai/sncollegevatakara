@@ -1,0 +1,30 @@
+{% extends 'header.html' %}
+{% block content %}
+  <div class="container banner">
+    <div class="heading">COK</div>
+  </div>
+
+  <div class="container">
+    <div class="sec-container column-flex">
+      {% if page.hero_image %}
+        <div class="small-container">
+          <img src="{{ page.hero_image.url }}" alt="COK" style="max-width: 100%; height: auto;" />
+        </div>
+      {% endif %}
+
+      <div class="small-container">
+        {% if page.content %}
+          <article>{{ page.content|safe }}</article>
+        {% else %}
+          <p>Content will be updated soon.</p>
+        {% endif %}
+      </div>
+
+      {% if page.attachment %}
+        <div class="small-container">
+          <a href="{{ page.attachment.url }}" class="btn" target="_blank">View / Download</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

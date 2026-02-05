@@ -30,6 +30,9 @@
           <a href="{% url 'list_banners' %}" class="admin-nav-link{% if current_url == 'list_banners' %} active{% endif %}">Banners</a>
           <a href="{% url 'iqac_member_list' %}" class="admin-nav-link{% if current_url == 'iqac_member_list' or current_url == 'iqac_member_create' or current_url == 'iqac_member_update' %} active{% endif %}">IQAC</a>
           <a href="{% url 'gallery_item_list' %}" class="admin-nav-link{% if current_url == 'gallery_item_list' or current_url == 'gallery_item_create' or current_url == 'gallery_item_update' %} active{% endif %}">Gallery</a>
+          <a href="{% url 'campus_life_member_list' slug='pta' %}" class="admin-nav-link{% if active_slug == 'pta' or '/campus-life/admin/pta/' in request.path %} active{% endif %}">Campus Life - PTA</a>
+          <a href="{% url 'campus_life_member_list' slug='placement-cell' %}" class="admin-nav-link{% if active_slug == 'placement-cell' or '/campus-life/admin/placement-cell/' in request.path %} active{% endif %}">Campus Life - Placement Cell</a>
+          <a href="{% url 'campus_life_member_list' slug='examination-committee' %}" class="admin-nav-link{% if active_slug == 'examination-committee' or '/campus-life/admin/examination-committee/' in request.path %} active{% endif %}">Campus Life - Examination Committee</a>
         </nav>
 
         <div class="admin-sidebar-footer">

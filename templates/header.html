@@ -1,4 +1,5 @@
 {% load static %}
+{% load campus_life_nav %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -93,14 +94,14 @@
             </div>
           </div>
           <div class="group flex">
-            <div class="flex" onclick="togglelist(club,'drop1')">
-              <div class="nav">Clubs & Associations</div>
+            <div class="flex" onclick="togglelist(campuslife,'drop1')">
+              <div class="nav">Campus Life</div>
             </div>
-            <div class="dropdown" id="club">
-              <a href="{% url 'club' %}" class="option"><div>National Service Scheme</div></a>
-              <a href="{% url 'bhoomi' %}" class="option"><div>BHOO MITHRA SENA CLUB</div></a>
-              <a href="{% url 'fitness' %}" class="option"><div>COLLEGE FITNESS PROGRAMME</div></a>
-              <a href="{% url 'staffcouncil' %}" class="option"><div>STAFF COUNCIL</div></a>
+            <div class="dropdown" id="campuslife">
+              {% campus_life_nav_pages as campus_pages %}
+              {% for p in campus_pages %}
+                <a href="{% url 'campus_life_page' slug=p.slug %}" class="option"><div>{{ p.title }}</div></a>
+              {% endfor %}
               <!-- #### -->
             </div>
           </div>
@@ -111,8 +112,6 @@
             </div>
             <div class="dropdown" id="stcr">
               <a href="{% url 'applicatonforms' %}" class="option"><div>Application Forms</div></a>
-              <a href="{% url 'scholarship' %}" class="option"><div>Scholarship Details</div></a>
-              <a href="{% url 'placement' %}" class="option"><div>Placement & Career guidance</div></a>
               <a href="{% url 'universityinfo' %}" class="option"><div>University Info</div></a>
 
               <a href="https://www.leetbox.in/" class="option"><div>PYQ Site</div></a>

@@ -7,6 +7,8 @@ from .models import Banner
 from .models import AnnualReport
 from .models import IQACMember
 from .models import GalleryItem
+from .models import CampusLifePage
+from .models import CampusLifeMember
 from .models import GalleryImage
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -14,6 +16,7 @@ from datetime import date
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from django.template.loader import select_template
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -54,15 +57,6 @@ def faculty(request,dept):
     # print(type(employees[0].qualification))
     return render(request, 'faculty.html',{'employees':employees,'depart':dept})
 
-def club(request):
-    # employees = Employee.objects.all()
-    return render(request, 'nss.html')
-def fitness(request):
-    # employees = Employee.objects.all()
-    return render(request, 'fitness.html')
-def bhoomi(request):
-    # employees = Employee.objects.all()
-    return render(request, 'bhoomi.html')
 def courses(request):
     # employees = Employee.objects.all()
     return render(request, 'courses.html')
@@ -72,21 +66,101 @@ def FYUGP(request):
 def iqac(request):
     members = IQACMember.objects.filter(is_active=True)
     return render(request, 'iqac.html', {"members": members})
-def staffcouncil(request):
-    # employees = Employee.objects.all()
-    return render(request, 'staffcouncil.html')
+
 def about(request):
     # employees = Employee.objects.all()
     return render(request, 'about.html')
 def applicatonforms(request):
     # employees = Employee.objects.all()
     return render(request, 'applicatonforms.html')
-def placement(request):
-    # employees = Employee.objects.all()
-    return render(request, 'placement.html')
-def scholarship(request):
-    # employees = Employee.objects.all()
-    return render(request, 'scholarship.html')
+
+def campus_life(request):
+    pages = CampusLifePage.objects.filter(is_published=True)
+    return render(request, 'campus_life_list.html', {'pages': pages})
+
+
+def campus_life_page(request, slug):
+    page = get_object_or_404(CampusLifePage, slug=slug, is_published=True)
+    members = page.members.filter(is_active=True)
+
+    # Separate template per Campus Life page (falls back to the generic template).
+    template_candidates = [
+        f"campus_life/{slug}.html",
+        "campus_life_detail.html",
+    ]
+    template = select_template(template_candidates)
+    return render(request, template.template.name, {'page': page, 'members': members})
+
+
+def campus_life_member_list(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+        members = CampusLifeMember.objects.filter(page=page).order_by('sort_order', 'name', 'id')
+        return render(request, 'campus_life_member_list.html', {'page': page, 'members': members, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_member_create(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            position = (request.POST.get('position') or '').strip()
+            photo = request.FILES.get('photo')
+
+            if not name or not position:
+                return render(
+                    request,
+                    'campus_life_member_create.html',
+                    {'error': 'Name and Position are required.', 'page': page},
+                )
+
+            CampusLifeMember.objects.create(
+                page=page,
+                name=name,
+                position=position,
+                photo=photo,
+            )
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        return render(request, 'campus_life_member_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_member_update(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(CampusLifeMember, pk=member_id)
+
+        if request.method == 'POST':
+            member.name = (request.POST.get('name') or '').strip()
+            member.position = (request.POST.get('position') or '').strip()
+            member.is_active = True if request.POST.get('is_active') == 'on' else False
+            photo = request.FILES.get('photo')
+            if photo:
+                member.photo = photo
+
+            if not member.name or not member.position:
+                return render(
+                    request,
+                    'campus_life_member_update.html',
+                    {'error': 'Name and Position are required.', 'member': member},
+                )
+
+            member.save()
+            return redirect('campus_life_member_list', slug=member.page.slug)
+
+        return render(request, 'campus_life_member_update.html', {'member': member, 'active_slug': member.page.slug})
+    return redirect('login')
+
+
+def campus_life_member_delete(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(CampusLifeMember, pk=member_id)
+        slug = member.page.slug
+        member.delete()
+        return redirect('campus_life_member_list', slug=slug)
+    return redirect('login')
 def universityinfo(request):
     # employees = Employee.objects.all()
     return render(request, 'universityinfo.html')

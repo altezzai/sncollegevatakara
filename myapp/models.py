@@ -118,3 +118,37 @@ class GalleryImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.gallery_item_id}"
+
+
+class CampusLifePage(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=220, unique=True)
+    content = models.TextField(blank=True)
+    hero_image = models.ImageField(upload_to='campus_life/', null=True, blank=True)
+    attachment = models.FileField(upload_to='campus_life/', null=True, blank=True)
+    is_published = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["sort_order", "title", "id"]
+
+    def __str__(self):
+        return self.title
+
+
+class CampusLifeMember(models.Model):
+    page = models.ForeignKey(CampusLifePage, on_delete=models.CASCADE, related_name='members')
+    name = models.CharField(max_length=150)
+    position = models.CharField(max_length=150)
+    photo = models.ImageField(upload_to='campus_life/members/', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["sort_order", "name", "id"]
+
+    def __str__(self):
+        return f"{self.name} - {self.position}"
