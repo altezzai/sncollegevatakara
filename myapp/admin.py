@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import IQACMember, GalleryItem, CampusLifePage, CampusLifeMember, CampusLifeGalleryItem
+from .models import IQACMember, GalleryItem, CampusLifePage, CampusLifeMember, CampusLifeGalleryItem, ScholarshipItem, ClubCommitteeItem
 
 # Register your models here.
 
@@ -40,4 +40,20 @@ class CampusLifeGalleryItemAdmin(admin.ModelAdmin):
 	list_display = ("page", "media_type", "caption", "is_active", "created_at")
 	list_filter = ("media_type", "is_active", "page")
 	search_fields = ("caption", "video_url")
+	ordering = ("-created_at", "-id")
+
+
+@admin.register(ScholarshipItem)
+class ScholarshipItemAdmin(admin.ModelAdmin):
+	list_display = ("page", "name", "is_active", "created_at")
+	list_filter = ("is_active", "page")
+	search_fields = ("name", "description", "link_url")
+	ordering = ("-created_at", "-id")
+
+
+@admin.register(ClubCommitteeItem)
+class ClubCommitteeItemAdmin(admin.ModelAdmin):
+	list_display = ("page", "name", "person_name", "person_position", "is_active", "created_at")
+	list_filter = ("is_active", "page")
+	search_fields = ("name", "description", "person_name", "person_position")
 	ordering = ("-created_at", "-id")

@@ -14,6 +14,14 @@ urlpatterns = [
     path('notificationfilter/<str:upg>/', views.notificationfilter, name='notificationfilter'),
 
     # Campus Life (admin)
+    path('campus-life/admin/scholarships/', views.scholarship_item_list, name='scholarship_item_list'),
+    path('campus-life/admin/scholarships/create/', views.scholarship_item_create, name='scholarship_item_create'),
+    path('campus-life/admin/scholarships/<int:item_id>/update/', views.scholarship_item_update, name='scholarship_item_update'),
+    path('campus-life/admin/scholarships/<int:item_id>/delete/', views.scholarship_item_delete, name='scholarship_item_delete'),
+    path('campus-life/admin/other-clubs-committees/', views.club_committee_item_list, name='club_committee_item_list'),
+    path('campus-life/admin/other-clubs-committees/create/', views.club_committee_item_create, name='club_committee_item_create'),
+    path('campus-life/admin/other-clubs-committees/<int:item_id>/update/', views.club_committee_item_update, name='club_committee_item_update'),
+    path('campus-life/admin/other-clubs-committees/<int:item_id>/delete/', views.club_committee_item_delete, name='club_committee_item_delete'),
     path('campus-life/admin/<slug:slug>/', views.campus_life_member_list, name='campus_life_member_list'),
     path('campus-life/admin/<slug:slug>/create/', views.campus_life_member_create, name='campus_life_member_create'),
     path('campus-life/admin/member/<int:member_id>/update/', views.campus_life_member_update, name='campus_life_member_update'),

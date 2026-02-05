@@ -1,5 +1,6 @@
 {% extends 'header.html' %}
 {% block content %}
+  {% load static %}
   <div class="container banner">
     <div class="heading">Other Clubs / Committees</div>
   </div>
@@ -17,6 +18,36 @@
           <article>{{ page.content|safe }}</article>
         {% else %}
           <p>Content will be updated soon.</p>
+        {% endif %}
+      </div>
+
+      <div class="small-container">
+        <h3 style="margin-bottom: 10px;">Clubs / Committees</h3>
+        {% if clubs %}
+          <div class="cl-cards">
+            {% for c in clubs %}
+              <div class="cl-card">
+                <div class="cl-card-body">
+                  <div class="cl-card-title">{{ c.name }}</div>
+                  <div class="cl-card-text">{{ c.description }}</div>
+
+                  <div class="cl-person">
+                    {% if c.person_photo %}
+                      <img src="{{ c.person_photo.url }}" alt="" class="cl-person-photo" />
+                    {% else %}
+                      <img src="{% static 'assets/user.png' %}" alt="" class="cl-person-photo" />
+                    {% endif %}
+                    <div>
+                      <div class="cl-person-name">{{ c.person_name }}</div>
+                      <div class="cl-person-position">{{ c.person_position }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No clubs / committees added yet.</p>
         {% endif %}
       </div>
 

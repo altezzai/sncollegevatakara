@@ -1,5 +1,6 @@
 {% extends 'header.html' %}
 {% block content %}
+  {% load static %}
   <div class="container banner">
     <div class="heading">COK</div>
   </div>
@@ -18,6 +19,40 @@
         {% else %}
           <p>Content will be updated soon.</p>
         {% endif %}
+      </div>
+
+      <div class="small-container">
+        <h3 style="margin-bottom: 10px;">Members</h3>
+        <div class="members-table-wrap">
+          <table class="members-table members-table--compact">
+            <thead>
+              <tr>
+                <th class="members-col-photo">Photo</th>
+                <th>Name</th>
+                <th>Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in members %}
+                <tr>
+                  <td>
+                    {% if m.photo %}
+                      <img src="{{ m.photo.url }}" alt="" class="members-photo" />
+                    {% else %}
+                      <img src="{% static 'assets/user.png' %}" alt="" class="members-photo" />
+                    {% endif %}
+                  </td>
+                  <td class="members-name">{{ m.name }}</td>
+                  <td class="members-position">{{ m.position }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3">No members added yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {% if page.attachment %}

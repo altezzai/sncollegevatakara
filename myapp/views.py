@@ -10,6 +10,7 @@ from .models import GalleryItem
 from .models import CampusLifePage
 from .models import CampusLifeMember
 from .models import CampusLifeGalleryItem
+from .models import ScholarshipItem, ClubCommitteeItem
 from .models import GalleryImage
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -87,6 +88,24 @@ def campus_life_page(request, slug):
     members = page.members.filter(is_active=True)
     gallery_items = page.gallery_items.filter(is_active=True)
 
+    scholarships = None
+    scholarships_payload = None
+    clubs = None
+    if slug == 'scholarships':
+        scholarships = ScholarshipItem.objects.filter(page=page, is_active=True)
+        scholarships_payload = [
+            {
+                'id': s.id,
+                'name': s.name,
+                'image': (s.image.url if s.image else ''),
+                'description': s.description or '',
+                'link_url': s.link_url or '',
+            }
+            for s in scholarships
+        ]
+    if slug == 'other-clubs-committees':
+        clubs = ClubCommitteeItem.objects.filter(page=page, is_active=True)
+
     nss_gallery_groups = None
     if slug == 'nss':
         image_qs = gallery_items.filter(media_type=CampusLifeGalleryItem.TYPE_IMAGE).exclude(image='').exclude(image__isnull=True).order_by('-created_at', '-id')
@@ -126,8 +145,165 @@ def campus_life_page(request, slug):
     return render(
         request,
         template.template.name,
-        {'page': page, 'members': members, 'gallery_items': gallery_items, 'nss_gallery_groups': nss_gallery_groups},
+        {
+            'page': page,
+            'members': members,
+            'gallery_items': gallery_items,
+            'nss_gallery_groups': nss_gallery_groups,
+            'scholarships': scholarships,
+            'scholarships_payload': scholarships_payload,
+            'clubs': clubs,
+        },
     )
+
+
+def scholarship_item_list(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='scholarships')
+        items = ScholarshipItem.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'scholarship_item_list.html', {'page': page, 'items': items, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def scholarship_item_create(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='scholarships')
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            link_url = (request.POST.get('link_url') or '').strip()
+            image = request.FILES.get('image')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not name:
+                return render(request, 'scholarship_item_create.html', {'page': page, 'error': 'Scholarship name is required.', 'active_slug': page.slug})
+
+            ScholarshipItem.objects.create(
+                page=page,
+                name=name,
+                description=description,
+                link_url=link_url,
+                image=image,
+                is_active=is_active,
+            )
+            return redirect('scholarship_item_list')
+
+        return render(request, 'scholarship_item_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def scholarship_item_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(ScholarshipItem, pk=item_id)
+        page = item.page
+        if page.slug != 'scholarships':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        if request.method == 'POST':
+            item.name = (request.POST.get('name') or '').strip()
+            item.description = (request.POST.get('description') or '').strip()
+            item.link_url = (request.POST.get('link_url') or '').strip()
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            image = request.FILES.get('image')
+            if image:
+                item.image = image
+
+            if not item.name:
+                return render(request, 'scholarship_item_update.html', {'item': item, 'error': 'Scholarship name is required.', 'active_slug': page.slug})
+
+            item.save()
+            return redirect('scholarship_item_list')
+
+        return render(request, 'scholarship_item_update.html', {'item': item, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def scholarship_item_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(ScholarshipItem, pk=item_id)
+        item.delete()
+        return redirect('scholarship_item_list')
+    return redirect('login')
+
+
+def club_committee_item_list(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        items = ClubCommitteeItem.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'club_committee_item_list.html', {'page': page, 'items': items, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_item_create(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            person_name = (request.POST.get('person_name') or '').strip()
+            person_position = (request.POST.get('person_position') or '').strip()
+            person_photo = request.FILES.get('person_photo')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not name or not description or not person_name or not person_position:
+                return render(
+                    request,
+                    'club_committee_item_create.html',
+                    {'page': page, 'error': 'Club/Committee name, description, person name and position are required.', 'active_slug': page.slug},
+                )
+
+            ClubCommitteeItem.objects.create(
+                page=page,
+                name=name,
+                description=description,
+                person_name=person_name,
+                person_position=person_position,
+                person_photo=person_photo,
+                is_active=is_active,
+            )
+            return redirect('club_committee_item_list')
+
+        return render(request, 'club_committee_item_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_item_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(ClubCommitteeItem, pk=item_id)
+        page = item.page
+        if page.slug != 'other-clubs-committees':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        if request.method == 'POST':
+            item.name = (request.POST.get('name') or '').strip()
+            item.description = (request.POST.get('description') or '').strip()
+            item.person_name = (request.POST.get('person_name') or '').strip()
+            item.person_position = (request.POST.get('person_position') or '').strip()
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            person_photo = request.FILES.get('person_photo')
+            if person_photo:
+                item.person_photo = person_photo
+
+            if not item.name or not item.description or not item.person_name or not item.person_position:
+                return render(
+                    request,
+                    'club_committee_item_update.html',
+                    {'item': item, 'error': 'Club/Committee name, description, person name and position are required.', 'active_slug': page.slug},
+                )
+
+            item.save()
+            return redirect('club_committee_item_list')
+
+        return render(request, 'club_committee_item_update.html', {'item': item, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_item_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(ClubCommitteeItem, pk=item_id)
+        item.delete()
+        return redirect('club_committee_item_list')
+    return redirect('login')
 
 
 def campus_life_member_list(request, slug):

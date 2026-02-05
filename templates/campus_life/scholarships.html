@@ -1,5 +1,6 @@
 {% extends 'header.html' %}
 {% block content %}
+  {% load static %}
   <div class="container banner">
     <div class="heading">Scholarships</div>
   </div>
@@ -17,6 +18,115 @@
           <article>{{ page.content|safe }}</article>
         {% else %}
           <p>Content will be updated soon.</p>
+        {% endif %}
+      </div>
+
+      <div class="small-container">
+        <h3 style="margin-bottom: 10px;">Available Scholarships</h3>
+        {% if scholarships %}
+          <div class="cl-cards">
+            {% for s in scholarships %}
+              <button type="button" class="cl-card cl-card--click" data-scholarship-id="{{ s.id }}">
+                {% if s.image %}
+                  <img src="{{ s.image.url }}" alt="" class="cl-card-img" />
+                {% endif %}
+                <div class="cl-card-body">
+                  <div class="cl-card-title">{{ s.name }}</div>
+                  {% if s.description %}
+                    <div class="cl-card-text">{{ s.description|truncatechars:120 }}</div>
+                  {% endif %}
+                  <div class="cl-card-cta">Click to view</div>
+                </div>
+              </button>
+            {% endfor %}
+          </div>
+
+          {% if scholarships_payload %}
+            {{ scholarships_payload|json_script:'scholarshipData' }}
+          {% endif %}
+
+          <div class="gallery-modal" id="scholarshipModal" aria-hidden="true">
+            <div class="gallery-modal-inner" role="dialog" aria-modal="true" aria-label="Scholarship details">
+              <button type="button" class="gallery-modal-close" id="scholarshipClose" aria-label="Close">×</button>
+
+              <div class="sch-modal-grid">
+                <div class="sch-modal-left">
+                  <img id="schImage" src="" alt="" class="sch-modal-img" />
+                </div>
+                <div class="sch-modal-right">
+                  <div class="sch-modal-title" id="schTitle"></div>
+                  <div class="sch-modal-desc" id="schDesc"></div>
+                  <div class="sch-modal-actions">
+                    <a id="schRegister" href="#" class="btn" target="_blank" rel="noopener">Register Now</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            ;(function () {
+              var dataEl = document.getElementById('scholarshipData')
+              if (!dataEl) return
+              var data = JSON.parse(dataEl.textContent || '[]')
+              var map = {}
+              data.forEach(function (s) {
+                map[String(s.id)] = s
+              })
+            
+              var modal = document.getElementById('scholarshipModal')
+              var btnClose = document.getElementById('scholarshipClose')
+              var img = document.getElementById('schImage')
+              var title = document.getElementById('schTitle')
+              var desc = document.getElementById('schDesc')
+              var register = document.getElementById('schRegister')
+              var placeholder = '{% static "assets/user.png" %}'
+            
+              function open(id) {
+                var s = map[String(id)]
+                if (!s) return
+                if (img) img.src = s.image || placeholder
+                if (title) title.textContent = s.name || ''
+                if (desc) desc.textContent = s.description || ''
+            
+                if (register) {
+                  if (s.link_url) {
+                    register.href = s.link_url
+                    register.style.display = 'inline-flex'
+                  } else {
+                    register.href = '#'
+                    register.style.display = 'none'
+                  }
+                }
+            
+                modal.classList.add('open')
+                modal.setAttribute('aria-hidden', 'false')
+              }
+            
+              function close() {
+                modal.classList.remove('open')
+                modal.setAttribute('aria-hidden', 'true')
+              }
+            
+              document.querySelectorAll('[data-scholarship-id]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                  open(btn.getAttribute('data-scholarship-id'))
+                })
+              })
+              if (btnClose) btnClose.addEventListener('click', close)
+              if (modal) {
+                modal.addEventListener('click', function (e) {
+                  if (e.target === modal) close()
+                })
+              }
+              document.addEventListener('keydown', function (e) {
+                if (!modal || !modal.classList.contains('open')) return
+                if (e.key === 'Escape') close()
+              })
+            })()
+          </script>
+        {% else %}
+          <p>No scholarships added yet.</p>
         {% endif %}
       </div>
 

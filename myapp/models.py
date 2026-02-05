@@ -179,3 +179,36 @@ class CampusLifeGalleryItem(models.Model):
 
     def __str__(self):
         return f"{self.page.slug} - {self.media_type}"
+
+
+class ScholarshipItem(models.Model):
+    page = models.ForeignKey(CampusLifePage, on_delete=models.CASCADE, related_name='scholarship_items')
+    name = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='campus_life/scholarships/', null=True, blank=True)
+    description = models.TextField(blank=True)
+    link_url = models.URLField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at', '-id']
+
+    def __str__(self):
+        return self.name
+
+
+class ClubCommitteeItem(models.Model):
+    page = models.ForeignKey(CampusLifePage, on_delete=models.CASCADE, related_name='club_committee_items')
+    name = models.CharField(max_length=220)
+    description = models.TextField()
+    person_name = models.CharField(max_length=180)
+    person_position = models.CharField(max_length=180)
+    person_photo = models.ImageField(upload_to='campus_life/clubs/', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at', '-id']
+
+    def __str__(self):
+        return self.name
