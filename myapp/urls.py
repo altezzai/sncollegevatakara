@@ -18,6 +18,10 @@ urlpatterns = [
     path('campus-life/admin/<slug:slug>/create/', views.campus_life_member_create, name='campus_life_member_create'),
     path('campus-life/admin/member/<int:member_id>/update/', views.campus_life_member_update, name='campus_life_member_update'),
     path('campus-life/admin/member/<int:member_id>/delete/', views.campus_life_member_delete, name='campus_life_member_delete'),
+    path('campus-life/admin/<slug:slug>/gallery/', views.campus_life_gallery_list, name='campus_life_gallery_list'),
+    path('campus-life/admin/<slug:slug>/gallery/create/', views.campus_life_gallery_create, name='campus_life_gallery_create'),
+    path('campus-life/admin/gallery/<int:item_id>/update/', views.campus_life_gallery_update, name='campus_life_gallery_update'),
+    path('campus-life/admin/gallery/<int:item_id>/delete/', views.campus_life_gallery_delete, name='campus_life_gallery_delete'),
 
     # Campus Life (dynamic)
     path('campus-life/', views.campus_life, name='campus_life'),

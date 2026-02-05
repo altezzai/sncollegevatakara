@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 class Employee(models.Model):
     name = models.CharField(max_length=100)
@@ -152,3 +153,29 @@ class CampusLifeMember(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.position}"
+
+
+class CampusLifeGalleryItem(models.Model):
+    TYPE_IMAGE = "image"
+    TYPE_VIDEO = "video"
+
+    TYPE_CHOICES = (
+        (TYPE_IMAGE, "Photo"),
+        (TYPE_VIDEO, "Video"),
+    )
+
+    page = models.ForeignKey(CampusLifePage, on_delete=models.CASCADE, related_name='gallery_items')
+    upload_batch = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
+    media_type = models.CharField(max_length=16, choices=TYPE_CHOICES, default=TYPE_IMAGE)
+    caption = models.CharField(max_length=255, blank=True)
+    image = models.ImageField(upload_to='campus_life/gallery/', null=True, blank=True)
+    video_file = models.FileField(upload_to='campus_life/gallery/', null=True, blank=True)
+    video_url = models.URLField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at', '-id']
+
+    def __str__(self):
+        return f"{self.page.slug} - {self.media_type}"

@@ -1,5 +1,6 @@
 {% extends 'header.html' %}
 {% block content %}
+  {% load static %}
   <div class="container banner">
     <div class="heading">NSS</div>
   </div>
@@ -17,6 +18,192 @@
           <article>{{ page.content|safe }}</article>
         {% else %}
           <p>NSS Content will be updated soon.</p>
+        {% endif %}
+      </div>
+
+      <div class="small-container">
+        <h3 style="margin-bottom: 10px;">Members</h3>
+        <div class="members-table-wrap">
+          <table class="members-table members-table--compact">
+            <thead>
+              <tr>
+                <th class="members-col-photo">Photo</th>
+                <th>Name</th>
+                <th>Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in members %}
+                <tr>
+                  <td>
+                    {% if m.photo %}
+                      <img src="{{ m.photo.url }}" alt="" class="members-photo" />
+                    {% else %}
+                      <img src="{% static 'assets/user.png' %}" alt="" class="members-photo" />
+                    {% endif %}
+                  </td>
+                  <td class="members-name">{{ m.name }}</td>
+                  <td class="members-position">{{ m.position }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3">No members added yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="small-container">
+        <h3 style="margin-bottom: 10px;">Gallery</h3>
+        {% if nss_gallery_groups %}
+          <div class="nss-gallery-grid">
+            {% for g in nss_gallery_groups %}
+              <button type="button" class="nss-gallery-card nss-gallery-card--btn" data-gallery-key="{{ g.key }}">
+                {% if g.type == 'image' %}
+                  <img src="{{ g.items.0 }}" alt="" class="nss-gallery-media" loading="lazy" />
+                {% else %}
+                  <video class="nss-gallery-media nss-gallery-media--video" muted preload="metadata">
+                    <source src="{{ g.items.0 }}" />
+                  </video>
+                {% endif %}
+
+                {% if g.items|length > 1 %}
+                  <span class="nss-gallery-badge">{{ g.items|length }}</span>
+                {% endif %}
+
+                {% if g.caption %}
+                  <div class="nss-gallery-caption">{{ g.caption }}</div>
+                {% endif %}
+              </button>
+            {% endfor %}
+          </div>
+
+          {{ nss_gallery_groups|json_script:'nssGalleryData' }}
+
+          <div class="gallery-modal" id="nssGalleryModal" aria-hidden="true">
+            <div class="gallery-modal-inner" role="dialog" aria-modal="true" aria-label="NSS gallery">
+              <button type="button" class="gallery-modal-close" id="nssGalleryClose" aria-label="Close">×</button>
+              <div class="gallery-modal-title" id="nssGalleryTitle">NSS Gallery</div>
+
+              <div class="gallery-slider">
+                <button type="button" class="gallery-nav" id="nssGalleryPrev" aria-label="Previous">‹</button>
+                <div id="nssGalleryStage"></div>
+                <button type="button" class="gallery-nav" id="nssGalleryNext" aria-label="Next">›</button>
+              </div>
+
+              <div class="gallery-count" id="nssGalleryCount"></div>
+            </div>
+          </div>
+
+          <script>
+            ;(function () {
+              var dataEl = document.getElementById('nssGalleryData')
+              if (!dataEl) return
+              var groups = JSON.parse(dataEl.textContent || '[]')
+              var groupMap = {}
+              groups.forEach(function (g) {
+                groupMap[g.key] = g
+              })
+            
+              var modal = document.getElementById('nssGalleryModal')
+              var stage = document.getElementById('nssGalleryStage')
+              var title = document.getElementById('nssGalleryTitle')
+              var count = document.getElementById('nssGalleryCount')
+              var btnPrev = document.getElementById('nssGalleryPrev')
+              var btnNext = document.getElementById('nssGalleryNext')
+              var btnClose = document.getElementById('nssGalleryClose')
+            
+              var activeGroup = null
+              var activeIndex = 0
+            
+              function render() {
+                if (!activeGroup || !stage) return
+                var items = activeGroup.items || []
+                if (!items.length) return
+            
+                var src = items[activeIndex]
+                stage.innerHTML = ''
+            
+                if (activeGroup.type === 'video') {
+                  var vid = document.createElement('video')
+                  vid.className = 'gallery-slider-img'
+                  vid.controls = true
+                  vid.preload = 'metadata'
+                  vid.src = src
+                  stage.appendChild(vid)
+                } else {
+                  var img = document.createElement('img')
+                  img.className = 'gallery-slider-img'
+                  img.alt = ''
+                  img.src = src
+                  stage.appendChild(img)
+                }
+            
+                if (title) title.textContent = activeGroup.caption || 'NSS Gallery'
+                if (count) count.textContent = activeIndex + 1 + ' / ' + items.length
+              }
+            
+              function open(key) {
+                activeGroup = groupMap[key]
+                if (!activeGroup) return
+                activeIndex = 0
+                modal.classList.add('open')
+                modal.setAttribute('aria-hidden', 'false')
+                render()
+              }
+            
+              function close() {
+                modal.classList.remove('open')
+                modal.setAttribute('aria-hidden', 'true')
+                activeGroup = null
+                activeIndex = 0
+                if (stage) stage.innerHTML = ''
+              }
+            
+              function prev() {
+                if (!activeGroup) return
+                var items = activeGroup.items || []
+                if (items.length <= 1) return
+                activeIndex = (activeIndex - 1 + items.length) % items.length
+                render()
+              }
+            
+              function next() {
+                if (!activeGroup) return
+                var items = activeGroup.items || []
+                if (items.length <= 1) return
+                activeIndex = (activeIndex + 1) % items.length
+                render()
+              }
+            
+              document.querySelectorAll('[data-gallery-key]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                  open(btn.getAttribute('data-gallery-key'))
+                })
+              })
+            
+              if (btnPrev) btnPrev.addEventListener('click', prev)
+              if (btnNext) btnNext.addEventListener('click', next)
+              if (btnClose) btnClose.addEventListener('click', close)
+            
+              if (modal) {
+                modal.addEventListener('click', function (e) {
+                  if (e.target === modal) close()
+                })
+              }
+            
+              document.addEventListener('keydown', function (e) {
+                if (!modal || !modal.classList.contains('open')) return
+                if (e.key === 'Escape') close()
+                if (e.key === 'ArrowLeft') prev()
+                if (e.key === 'ArrowRight') next()
+              })
+            })()
+          </script>
+        {% else %}
+          <p>No gallery items yet.</p>
         {% endif %}
       </div>
 

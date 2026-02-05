@@ -1,0 +1,81 @@
+{% extends "admin_header.html" %}
+{% block content %}
+  {% load static %}
+  <body class="edit-body">
+    <div class="edit-formcon">
+      <h2>Update NSS Gallery Item</h2>
+
+      {% if error %}
+        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="media_type">Type:</label>
+        <select class="inp" id="media_type" name="media_type">
+          <option value="image" {% if item.media_type == 'image' %}selected{% endif %}>Photo</option>
+          <option value="video" {% if item.media_type == 'video' %}selected{% endif %}>Video</option>
+        </select>
+
+        <label for="caption">Caption (optional):</label>
+        <input class="inp" type="text" id="caption" name="caption" value="{{ item.caption }}" />
+
+        <label for="is_active">Active:</label>
+        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" {% if item.is_active %}checked{% endif %} />
+
+        {% if item.media_type == 'image' and item.image %}
+          <label>Current Photo:</label>
+          <img src="{{ item.image.url }}" alt="" style="max-width: 180px; border-radius: 10px;" />
+        {% endif %}
+
+        {% if item.media_type == 'video' and item.video_file %}
+          <label>Current Video File:</label>
+          <p style="font-size: 13px; color: #444;">{{ item.video_file.name }}</p>
+        {% endif %}
+
+        <div id="gallery_image_fields">
+          <label for="image">Photo upload (replace):</label>
+          <input class="inp" type="file" id="image" name="image" accept="image/*" />
+        </div>
+
+        <div id="gallery_video_fields">
+          <label for="video_file">Video upload (replace):</label>
+          <input class="inp" type="file" id="video_file" name="video_file" accept="video/*" />
+        </div>
+
+        <button type="submit" class="btn">Update</button>
+      </form>
+
+      <a href="{% url 'campus_life_gallery_list' slug=item.page.slug %}" class="btn-edit btn">Back to NSS Gallery</a>
+    </div>
+
+    <script>
+      (function () {
+        function syncGalleryFields() {
+          var typeSelect = document.getElementById('media_type');
+          var imageWrap = document.getElementById('gallery_image_fields');
+          var videoWrap = document.getElementById('gallery_video_fields');
+          var imageInput = document.getElementById('image');
+          var videoInput = document.getElementById('video_file');
+          if (!typeSelect || !imageWrap || !videoWrap) return;
+
+          var t = typeSelect.value;
+          var isImage = t === 'image';
+          imageWrap.style.display = isImage ? 'block' : 'none';
+          videoWrap.style.display = isImage ? 'none' : 'block';
+
+          // Required is best-effort here; update can keep existing file.
+          if (imageInput) imageInput.required = false;
+          if (videoInput) videoInput.required = false;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+          var typeSelect = document.getElementById('media_type');
+          if (typeSelect) typeSelect.addEventListener('change', syncGalleryFields);
+          syncGalleryFields();
+        });
+      })();
+    </script>
+  {% endblock %}
+  </body>

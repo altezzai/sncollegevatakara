@@ -5,6 +5,9 @@
     <div class="admin-title">
       <h2>{{ page.title }} Members</h2>
       <a class="btn-add btn" href="{% url 'campus_life_member_create' slug=page.slug %}"><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New</a>
+      {% if page.slug == 'nss' %}
+        <a class="btn-edit btn" href="{% url 'campus_life_gallery_list' slug=page.slug %}">NSS Gallery</a>
+      {% endif %}
     </div>
 
     <div class="table-con">

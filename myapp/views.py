@@ -9,6 +9,7 @@ from .models import IQACMember
 from .models import GalleryItem
 from .models import CampusLifePage
 from .models import CampusLifeMember
+from .models import CampusLifeGalleryItem
 from .models import GalleryImage
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -23,6 +24,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
 import os
 from django.conf import settings
+import uuid
+from collections import OrderedDict
 #home
 def index(request):
     # employees = Employee.objects.all()
@@ -82,6 +85,37 @@ def campus_life(request):
 def campus_life_page(request, slug):
     page = get_object_or_404(CampusLifePage, slug=slug, is_published=True)
     members = page.members.filter(is_active=True)
+    gallery_items = page.gallery_items.filter(is_active=True)
+
+    nss_gallery_groups = None
+    if slug == 'nss':
+        image_qs = gallery_items.filter(media_type=CampusLifeGalleryItem.TYPE_IMAGE).exclude(image='').exclude(image__isnull=True).order_by('-created_at', '-id')
+        video_qs = gallery_items.filter(media_type=CampusLifeGalleryItem.TYPE_VIDEO).exclude(video_file='').exclude(video_file__isnull=True).order_by('-created_at', '-id')
+
+        def build_groups(qs, kind):
+            groups = OrderedDict()
+            for it in qs:
+                batch = str(getattr(it, 'upload_batch', None) or it.id)
+                key = f"{kind}:{batch}"
+                if key not in groups:
+                    groups[key] = {
+                        'key': key,
+                        'type': kind,
+                        'caption': it.caption or '',
+                        'items': [],
+                    }
+
+                if kind == 'image' and it.image:
+                    groups[key]['items'].append(it.image.url)
+                if kind == 'video' and it.video_file:
+                    groups[key]['items'].append(it.video_file.url)
+
+                # Prefer a non-empty caption from any item in the batch
+                if not groups[key]['caption'] and it.caption:
+                    groups[key]['caption'] = it.caption
+            return list(groups.values())
+
+        nss_gallery_groups = build_groups(image_qs, 'image') + build_groups(video_qs, 'video')
 
     # Separate template per Campus Life page (falls back to the generic template).
     template_candidates = [
@@ -89,7 +123,11 @@ def campus_life_page(request, slug):
         "campus_life_detail.html",
     ]
     template = select_template(template_candidates)
-    return render(request, template.template.name, {'page': page, 'members': members})
+    return render(
+        request,
+        template.template.name,
+        {'page': page, 'members': members, 'gallery_items': gallery_items, 'nss_gallery_groups': nss_gallery_groups},
+    )
 
 
 def campus_life_member_list(request, slug):
@@ -878,4 +916,119 @@ def login(request):
 def logout(request):
     if 'username' in request.session:
         request.session.flush()
+    return redirect('login')
+
+
+def campus_life_gallery_list(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+        if page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=page.slug)
+        items = CampusLifeGalleryItem.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'campus_life_gallery_list.html', {'page': page, 'items': items, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_gallery_create(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+        if page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        if request.method == 'POST':
+            media_type = request.POST.get('media_type') or CampusLifeGalleryItem.TYPE_IMAGE
+            caption = (request.POST.get('caption') or '').strip()
+            images = request.FILES.getlist('image')
+            video_files = request.FILES.getlist('video_file')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+            batch_id = uuid.uuid4()
+
+            if media_type == CampusLifeGalleryItem.TYPE_IMAGE and not images:
+                return render(
+                    request,
+                    'campus_life_gallery_create.html',
+                    {'page': page, 'error': 'Please upload an image.', 'active_slug': page.slug, 'selected_type': media_type},
+                )
+
+            if media_type == CampusLifeGalleryItem.TYPE_VIDEO and not video_files:
+                return render(
+                    request,
+                    'campus_life_gallery_create.html',
+                    {'page': page, 'error': 'Please upload a video file.', 'active_slug': page.slug, 'selected_type': media_type},
+                )
+
+            if media_type == CampusLifeGalleryItem.TYPE_IMAGE:
+                for img in images:
+                    CampusLifeGalleryItem.objects.create(
+                        page=page,
+                        upload_batch=batch_id,
+                        media_type=media_type,
+                        caption=caption,
+                        image=img,
+                        video_file=None,
+                        video_url='',
+                        is_active=is_active,
+                    )
+            else:
+                for vf in video_files:
+                    CampusLifeGalleryItem.objects.create(
+                        page=page,
+                        upload_batch=batch_id,
+                        media_type=media_type,
+                        caption=caption,
+                        image=None,
+                        video_file=vf,
+                        video_url='',
+                        is_active=is_active,
+                    )
+            return redirect('campus_life_gallery_list', slug=page.slug)
+
+        return render(request, 'campus_life_gallery_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_gallery_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(CampusLifeGalleryItem, pk=item_id)
+        if item.page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=item.page.slug)
+
+        if request.method == 'POST':
+            item.caption = (request.POST.get('caption') or '').strip()
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            item.media_type = request.POST.get('media_type') or item.media_type
+
+            image = request.FILES.get('image')
+            video_file = request.FILES.get('video_file')
+
+            if item.media_type == CampusLifeGalleryItem.TYPE_IMAGE:
+                if image:
+                    item.image = image
+                item.video_file = None
+                item.video_url = ''
+                if not item.image:
+                    return render(request, 'campus_life_gallery_update.html', {'item': item, 'error': 'Image is required.', 'active_slug': item.page.slug})
+            else:
+                if video_file:
+                    item.video_file = video_file
+                item.video_url = ''
+                item.image = None
+                if not item.video_file:
+                    return render(request, 'campus_life_gallery_update.html', {'item': item, 'error': 'Video file is required.', 'active_slug': item.page.slug})
+
+            item.save()
+            return redirect('campus_life_gallery_list', slug=item.page.slug)
+
+        return render(request, 'campus_life_gallery_update.html', {'item': item, 'active_slug': item.page.slug})
+    return redirect('login')
+
+
+def campus_life_gallery_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(CampusLifeGalleryItem, pk=item_id)
+        if item.page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=item.page.slug)
+        slug = item.page.slug
+        item.delete()
+        return redirect('campus_life_gallery_list', slug=slug)
     return redirect('login')
