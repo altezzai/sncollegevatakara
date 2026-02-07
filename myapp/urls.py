@@ -4,6 +4,14 @@ from . import views
 urlpatterns = [
     # ... other URL patterns
     path('', views.index, name='index'),
+    # Academics
+    path('academics/mou-details', views.mou_details, name='mou_details'),
+    path('academics/asap', views.asap, name='asap'),
+    path('academics/add-on-courses', views.add_on_courses, name='add_on_courses'),
+    path('academics/add-on-courses/admin/', views.add_on_course_list, name='add_on_course_list'),
+    path('academics/add-on-courses/admin/create/', views.add_on_course_create, name='add_on_course_create'),
+    path('academics/add-on-courses/admin/<int:course_id>/update/', views.add_on_course_update, name='add_on_course_update'),
+    path('academics/add-on-courses/admin/<int:course_id>/delete/', views.add_on_course_delete, name='add_on_course_delete'),
     path('news/<int:nw_id>/', views.news, name='news'),
     path('allnews', views.allnews, name='allnews'),
     path('events/<int:ev_id>/', views.events, name='events'),

@@ -1034,6 +1034,43 @@ navbar {
   background-color: white;
 }
 
+/* Add-on Courses */
+.addon-course-card {
+  position: relative;
+}
+
+.addon-course-card.addon-has-download {
+  padding-top: 26px;
+}
+
+.addon-course-header {
+  width: 100%;
+  padding-right: 170px;
+}
+
+.addon-course-download {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.addon-desc {
+  white-space: pre-line;
+}
+
+.addon-desc.is-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.addon-readmore {
+  padding: 6px 10px;
+  font-size: 12px;
+  align-self: flex-start;
+}
+
 /* .img-pot,
 .height {
   height: 250px;

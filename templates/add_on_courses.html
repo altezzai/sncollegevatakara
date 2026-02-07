@@ -1,0 +1,53 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container banner">
+    <div class="heading">Add-on Courses</div>
+  </div>
+
+  <div class="container">
+    <div class="sec-container">
+      {% if courses %}
+        <div class="column-flex">
+          {% for c in courses %}
+            <div class="small-container column-flex addon-course-card{% if c.file %} addon-has-download{% endif %}">
+              <div class="addon-course-header">
+                <div class="flex-just-start">
+                  <img class="img-small" src="{% static 'assets/courses.svg' %}" alt="" />
+                  <div class="head-big">{{ c.title }}</div>
+                </div>
+                {% if c.file %}
+                  <a href="{{ c.file.url }}" class="btn outline addon-course-download" target="_blank" download>
+                    <img src="{% static 'assets/download_black.svg' %}" alt="" />Syllabus
+                  </a>
+                {% endif %}
+              </div>
+
+              {% if c.description %}
+                <div id="addon-desc-{{ c.id }}" class="addon-desc article light" data-collapsible="1">{{ c.description }}</div>
+                {% if c.description|length > 180 %}
+                  <button
+                    type="button"
+                    class="btn outline addon-readmore js-addon-toggle"
+                    data-target="addon-desc-{{ c.id }}"
+                    data-more="Show more"
+                    data-less="Show less"
+                    style="display: none;"
+                  >
+                    Show more
+                  </button>
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="small-container column-flex">
+          <div class="head-big">No add-on courses</div>
+          <div class="article light">No add-on courses have been published yet.</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

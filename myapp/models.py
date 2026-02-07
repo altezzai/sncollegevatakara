@@ -212,3 +212,17 @@ class ClubCommitteeItem(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AddOnCourse(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    file = models.FileField(upload_to='uploads/', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at', '-id']
+
+    def __str__(self):
+        return self.title

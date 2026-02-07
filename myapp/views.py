@@ -12,6 +12,7 @@ from .models import CampusLifeMember
 from .models import CampusLifeGalleryItem
 from .models import ScholarshipItem, ClubCommitteeItem
 from .models import GalleryImage
+from .models import AddOnCourse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from datetime import date
@@ -27,6 +28,82 @@ import os
 from django.conf import settings
 import uuid
 from collections import OrderedDict
+
+
+def mou_details(request):
+    return render(request, 'mou_details.html')
+
+
+def asap(request):
+    return render(request, 'asap.html')
+
+
+def add_on_courses(request):
+    courses = AddOnCourse.objects.filter(is_active=True)
+    return render(request, 'add_on_courses.html', {'courses': courses})
+
+
+def add_on_course_list(request):
+    if 'username' in request.session:
+        courses = AddOnCourse.objects.all().order_by('-created_at', '-id')
+        return render(request, 'add_on_course_list.html', {'courses': courses})
+    return redirect('login')
+
+
+def add_on_course_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            is_active = True if request.POST.get('is_active') == 'on' else False
+            syllabus_file = request.FILES.get('file')
+
+            if not title:
+                return render(request, 'add_on_course_create.html', {'error': 'Course name is required.'})
+
+            AddOnCourse.objects.create(
+                title=title,
+                description=description,
+                file=syllabus_file,
+                is_active=is_active,
+            )
+            return redirect('add_on_course_list')
+
+        return render(request, 'add_on_course_create.html')
+    return redirect('login')
+
+
+def add_on_course_update(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(AddOnCourse, pk=course_id)
+
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            is_active = True if request.POST.get('is_active') == 'on' else False
+            syllabus_file = request.FILES.get('file')
+
+            if not title:
+                return render(request, 'add_on_course_update.html', {'course': course, 'error': 'Course name is required.'})
+
+            course.title = title
+            course.description = description
+            course.is_active = is_active
+            if syllabus_file:
+                course.file = syllabus_file
+            course.save()
+            return redirect('add_on_course_list')
+
+        return render(request, 'add_on_course_update.html', {'course': course})
+    return redirect('login')
+
+
+def add_on_course_delete(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(AddOnCourse, pk=course_id)
+        course.delete()
+        return redirect('add_on_course_list')
+    return redirect('login')
 #home
 def index(request):
     # employees = Employee.objects.all()

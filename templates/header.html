@@ -55,42 +55,49 @@
             <div class="flex" onclick="togglelist(aca,'drop1')">
               <div class="nav">Academics</div>
             </div>
-            <div class="dropdown" id="aca">
-              <div class="option" onclick="togglelist(cour,'drop2')">
-                <div>FYUGP Syllabus</div>
-                <img class="arrow" src="{% static 'assets/rightarrow.svg' %}" alt="" />
-                <div class="sec-dropdown dropdown-hope" id="cour">
-                  <a href="{% url 'FYUGP' %}" class="option"><div>Major Courses</div></a>
-                  <a href="{% static 'assets/syllabus/FYUGP-MINOR COURSES OFFERED.pdf' %}" class="option" download>
-                    <div>Minor Courses</div>
-                    <img style="background: white" src="{% static 'assets/download_black.svg' %}" alt="" />
-                  </a>
-                </div>
-              </div>
-              <a href="{% url 'courses' %}" class="option"><div>Courses and Syllabus</div></a>
-              <div class="option" onclick="togglelist(fac,'drop2')">
-                <div>Faculty</div>
-                <img class="arrow" src="{% static 'assets/rightarrow.svg' %}" alt="" />
-                <div class="sec-dropdown" id="fac">
-                  <a href="{% url 'faculty' dept='COMPUTER APPLICATION' %}" class="option"><div>DEPARTMENT OF COMPUTER APPLICATION</div></a>
-                  <a href="{% url 'faculty' dept='MANAGEMENT STUDIES' %}" class="option"><div>DEPARTMENT OF MANAGEMENT STUDIES</div></a>
-                  <a href="{% url 'faculty' dept='COMMERCE & MANAGEMENT STUDIES' %}" class="option"><div>DEPARTMENT OF COMMERCE & MANAGEMENT STUDIES</div></a>
-                  <a href="{% url 'faculty' dept='PHYSICS' %}" class="option"><div>DEPARTMENT OF PHYSICS</div></a>
-                  <a href="{% url 'faculty' dept='MATHEMATICS' %}" class="option"><div>DEPARTMENT OF MATHEMATICS</div></a>
-                  <a href="{% url 'faculty' dept='CHEMISTRY' %}" class="option"><div>DEPARTMENT OF CHEMISTRY</div></a>
-                  <a href="{% url 'faculty' dept='STATISTICS' %}" class="option"><div>DEPARTMENT OF STATISTICS</div></a>
-                  <a href="{% url 'faculty' dept='COMPUTER SCIENCE' %}" class="option"><div>DEPARTMENT OF COMPUTER SCIENCE</div></a>
-                  <a href="{% url 'faculty' dept='BOTANY' %}" class="option"><div>DEPARTMENT OF BOTANY</div></a>
-                  <a href="{% url 'faculty' dept='ZOOLOGY' %}" class="option"><div>DEPARTMENT OF ZOOLOGY</div></a>
-                  <a href="{% url 'faculty' dept='PSYCHOLOGY' %}" class="option"><div>DEPARTMENT OF PSYCHOLOGY</div></a>
-                  <a href="{% url 'faculty' dept='ENGLISH' %}" class="option"><div>DEPARTMENT OF ENGLISH</div></a>
-                  <a href="{% url 'faculty' dept='PHYSICAL EDUCATION' %}" class="option"><div>DEPARTMENT OF PHYSICAL EDUCATION</div></a>
-                  <a href="{% url 'faculty' dept='MALAYALAM' %}" class="option"><div>DEPARTMENT OF MALAYALAM</div></a>
-                  <a href="{% url 'faculty' dept='HINDI' %}" class="option"><div>DEPARTMENT OF HINDI</div></a>
-                </div>
+            <div class="dropdown mega-dropdown" id="aca">
+              <div class="mega-col">
+                <div class="mega-title">Academic Collaboration</div>
+                <a href="{% url 'mou_details' %}" class="option"><div>MoU Details</div></a>
+                <a href="{% url 'asap' %}" class="option"><div>ASAP</div></a>
+                <a href="{% url 'add_on_courses' %}" class="option"><div>Add-on Courses</div></a>
               </div>
 
-              <!-- #### -->
+              <div class="mega-col">
+                <div class="option" onclick="togglelist(cour,'drop2')">
+                  <div>FYUGP Syllabus</div>
+                  <img class="arrow" src="{% static 'assets/rightarrow.svg' %}" alt="" />
+                  <div class="sec-dropdown dropdown-hope" id="cour">
+                    <a href="{% url 'FYUGP' %}" class="option"><div>Major Courses</div></a>
+                    <a href="{% static 'assets/syllabus/FYUGP-MINOR COURSES OFFERED.pdf' %}" class="option" download>
+                      <div>Minor Courses</div>
+                      <img style="background: white" src="{% static 'assets/download_black.svg' %}" alt="" />
+                    </a>
+                  </div>
+                </div>
+                <a href="{% url 'courses' %}" class="option"><div>Courses and Syllabus</div></a>
+                <div class="option" onclick="togglelist(fac,'drop2')">
+                  <div>Faculty</div>
+                  <img class="arrow" src="{% static 'assets/rightarrow.svg' %}" alt="" />
+                  <div class="sec-dropdown" id="fac">
+                    <a href="{% url 'faculty' dept='COMPUTER APPLICATION' %}" class="option"><div>DEPARTMENT OF COMPUTER APPLICATION</div></a>
+                    <a href="{% url 'faculty' dept='MANAGEMENT STUDIES' %}" class="option"><div>DEPARTMENT OF MANAGEMENT STUDIES</div></a>
+                    <a href="{% url 'faculty' dept='COMMERCE & MANAGEMENT STUDIES' %}" class="option"><div>DEPARTMENT OF COMMERCE & MANAGEMENT STUDIES</div></a>
+                    <a href="{% url 'faculty' dept='PHYSICS' %}" class="option"><div>DEPARTMENT OF PHYSICS</div></a>
+                    <a href="{% url 'faculty' dept='MATHEMATICS' %}" class="option"><div>DEPARTMENT OF MATHEMATICS</div></a>
+                    <a href="{% url 'faculty' dept='CHEMISTRY' %}" class="option"><div>DEPARTMENT OF CHEMISTRY</div></a>
+                    <a href="{% url 'faculty' dept='STATISTICS' %}" class="option"><div>DEPARTMENT OF STATISTICS</div></a>
+                    <a href="{% url 'faculty' dept='COMPUTER SCIENCE' %}" class="option"><div>DEPARTMENT OF COMPUTER SCIENCE</div></a>
+                    <a href="{% url 'faculty' dept='BOTANY' %}" class="option"><div>DEPARTMENT OF BOTANY</div></a>
+                    <a href="{% url 'faculty' dept='ZOOLOGY' %}" class="option"><div>DEPARTMENT OF ZOOLOGY</div></a>
+                    <a href="{% url 'faculty' dept='PSYCHOLOGY' %}" class="option"><div>DEPARTMENT OF PSYCHOLOGY</div></a>
+                    <a href="{% url 'faculty' dept='ENGLISH' %}" class="option"><div>DEPARTMENT OF ENGLISH</div></a>
+                    <a href="{% url 'faculty' dept='PHYSICAL EDUCATION' %}" class="option"><div>DEPARTMENT OF PHYSICAL EDUCATION</div></a>
+                    <a href="{% url 'faculty' dept='MALAYALAM' %}" class="option"><div>DEPARTMENT OF MALAYALAM</div></a>
+                    <a href="{% url 'faculty' dept='HINDI' %}" class="option"><div>DEPARTMENT OF HINDI</div></a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="group flex">

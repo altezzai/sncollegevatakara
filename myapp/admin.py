@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import IQACMember, GalleryItem, CampusLifePage, CampusLifeMember, CampusLifeGalleryItem, ScholarshipItem, ClubCommitteeItem
+from .models import IQACMember, GalleryItem, CampusLifePage, CampusLifeMember, CampusLifeGalleryItem, ScholarshipItem, ClubCommitteeItem, AddOnCourse
 
 # Register your models here.
 
@@ -56,4 +56,12 @@ class ClubCommitteeItemAdmin(admin.ModelAdmin):
 	list_display = ("page", "name", "person_name", "person_position", "is_active", "created_at")
 	list_filter = ("is_active", "page")
 	search_fields = ("name", "description", "person_name", "person_position")
+	ordering = ("-created_at", "-id")
+
+
+@admin.register(AddOnCourse)
+class AddOnCourseAdmin(admin.ModelAdmin):
+	list_display = ("title", "is_active", "created_at")
+	list_filter = ("is_active",)
+	search_fields = ("title", "description")
 	ordering = ("-created_at", "-id")

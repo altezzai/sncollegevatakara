@@ -27,6 +27,7 @@
           <a href="{% url 'list_notifications' %}" class="admin-nav-link{% if current_url == 'list_notifications' %} active{% endif %}">Notifications</a>
           <a href="{% url 'news_list' %}" class="admin-nav-link{% if current_url == 'news_list' %} active{% endif %}">News</a>
           <a href="{% url 'annual_report_list' %}" class="admin-nav-link{% if current_url == 'annual_report_list' %} active{% endif %}">Annual Reports</a>
+          <a href="{% url 'add_on_course_list' %}" class="admin-nav-link{% if current_url == 'add_on_course_list' or current_url == 'add_on_course_create' or current_url == 'add_on_course_update' %} active{% endif %}">Add-on Courses</a>
           <a href="{% url 'list_banners' %}" class="admin-nav-link{% if current_url == 'list_banners' %} active{% endif %}">Banners</a>
           <a href="{% url 'iqac_member_list' %}" class="admin-nav-link{% if current_url == 'iqac_member_list' or current_url == 'iqac_member_create' or current_url == 'iqac_member_update' %} active{% endif %}">IQAC</a>
           <a href="{% url 'gallery_item_list' %}" class="admin-nav-link{% if current_url == 'gallery_item_list' or current_url == 'gallery_item_create' or current_url == 'gallery_item_update' %} active{% endif %}">Gallery</a>
