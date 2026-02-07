@@ -226,3 +226,27 @@ class AddOnCourse(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ProgrammeSyllabusCourse(models.Model):
+    TYPE_FYUGP = 'fyugp'
+    TYPE_UG = 'ug'
+    TYPE_PG = 'pg'
+
+    TYPE_CHOICES = (
+        (TYPE_FYUGP, 'UG - FYUGP'),
+        (TYPE_UG, 'UG'),
+        (TYPE_PG, 'PG'),
+    )
+
+    title = models.CharField(max_length=255)
+    course_type = models.CharField(max_length=16, choices=TYPE_CHOICES, default=TYPE_UG, db_index=True)
+    syllabus_pdf = models.FileField(upload_to='syllabus/')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['course_type', 'title', 'id']
+
+    def __str__(self):
+        return f"{self.get_course_type_display()} - {self.title}"

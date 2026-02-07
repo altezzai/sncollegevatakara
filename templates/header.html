@@ -75,7 +75,8 @@
                     </a>
                   </div>
                 </div>
-                <a href="{% url 'courses' %}" class="option"><div>Courses and Syllabus</div></a>
+                <a href="{% url 'programme_syllabus' %}" class="option"><div>Programme &amp; Syllabus</div></a>
+
                 <div class="option" onclick="togglelist(fac,'drop2')">
                   <div>Faculty</div>
                   <img class="arrow" src="{% static 'assets/rightarrow.svg' %}" alt="" />
@@ -97,6 +98,10 @@
                     <a href="{% url 'faculty' dept='HINDI' %}" class="option"><div>DEPARTMENT OF HINDI</div></a>
                   </div>
                 </div>
+
+                <a href="{% url 'admission_process' %}" class="option"><div>Admission Process</div></a>
+                <a href="{% url 'academic_calendar' %}" class="option"><div>Academic Calendar</div></a>
+                <a href="{% url 'library' %}" class="option"><div>Library</div></a>
               </div>
             </div>
           </div>

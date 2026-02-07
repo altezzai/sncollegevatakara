@@ -1,39 +1,38 @@
-{% extends "admin_header.html" %}
+{% extends 'admin_header.html' %}
 {% block content %}
-  {% load static %}
-  <body class="edit-body">
-    <div class="edit-formcon">
+  <div class="admin-container">
+    <div class="admin-title">
       <h2>Add Club / Committee</h2>
-
-      {% if error %}
-        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
-      {% endif %}
-
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <label for="name">Club / Committee name:</label>
-        <input class="inp" type="text" id="name" name="name" required />
-
-        <label for="description">Description:</label>
-        <textarea class="inp" id="description" name="description" rows="5" required></textarea>
-
-        <label for="person_name">Person name:</label>
-        <input class="inp" type="text" id="person_name" name="person_name" required />
-
-        <label for="person_position">Person position:</label>
-        <input class="inp" type="text" id="person_position" name="person_position" required />
-
-        <label for="person_photo">Person image (optional):</label>
-        <input class="inp" type="file" id="person_photo" name="person_photo" accept="image/*" />
-
-        <label for="is_active">Active:</label>
-        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" checked />
-
-        <button type="submit" class="btn">Create</button>
-      </form>
-
-      <a href="{% url 'club_committee_item_list' %}" class="btn-edit btn">Back to List</a>
     </div>
-  {% endblock %}
-  </body>
+
+    {% if error %}
+      <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      {% csrf_token %}
+
+      <label>Club / Committee Name</label>
+      <input type="text" name="name" required />
+
+      <label>Description</label>
+      <textarea name="description" rows="5" required></textarea>
+
+      <label>Person Name</label>
+      <input type="text" name="person_name" required />
+
+      <label>Person Position</label>
+      <input type="text" name="person_position" required />
+
+      <label>Person Image (optional)</label>
+      <input type="file" name="person_photo" accept="image/*" />
+
+      <label class="admin-toggle"><input type="checkbox" name="is_active" checked />Active</label>
+
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+        <button type="submit" class="btn-add btn">Create</button>
+        <a href="{% url 'club_committee_item_list' %}" class="btn-edit btn">Back to List</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

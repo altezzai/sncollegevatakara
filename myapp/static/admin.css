@@ -104,6 +104,7 @@ form button:hover {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow: hidden;
 }
 
 .admin-sidebar-header {
@@ -122,11 +123,17 @@ form button:hover {
   text-decoration: none;
 }
 
+.admin-sidebar-nav-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin-top: 6px;
+}
+
 .admin-sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: 6px;
 }
 
 .admin-nav-link {
@@ -190,6 +197,15 @@ form button:hover {
   margin-bottom: 10px;
 }
 
+.admin-title h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.admin-title .btn {
+  margin: 0;
+}
+
 .btn-add {
   background-color: var(--primary);
   color: white;
@@ -221,6 +237,46 @@ form button:hover {
   margin: 10px;
 }
 
+/* Reduce button padding/margins inside admin pages */
+.admin-container .btn-add,
+.admin-container .btn-edit,
+.admin-container .btn-delete {
+  margin: 4px;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.btn-file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  margin: 0;
+  min-width: unset;
+  width: auto;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.status-active {
+  background-color: var(--sec);
+  color: var(--primary);
+}
+
+.status-inactive {
+  background-color: rgb(255, 230, 230);
+  color: rgb(170, 0, 0);
+}
+
 .btn-delete:hover {
   background-color: rgb(255, 71, 71);
 }
@@ -247,11 +303,89 @@ tr td {
 }
 
 table {
-  border: 2px solid black;
+  border: 1px solid rgb(220, 220, 220);
   overflow: hidden;
   border-radius: 10px;
   padding: 10px;
   width: 100%;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead th {
+  padding: 10px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+tr td,
+tr th {
+  padding: 10px;
+}
+
+tbody td {
+  font-size: 13px;
+}
+
+td.actions,
+th.actions {
+  white-space: nowrap;
+}
+
+/* Admin forms */
+.admin-form {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.admin-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="file"],
+.admin-form select,
+.admin-form textarea {
+  background-color: var(--third);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
+}
+
+.admin-form select {
+  height: 48px;
+}
+
+.admin-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.admin-form input[type="file"] {
+  padding: 10px;
+}
+
+.admin-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
 }
 
 thead tr {

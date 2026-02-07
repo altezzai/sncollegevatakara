@@ -1,39 +1,43 @@
-{% extends "admin_header.html" %}
+{% extends 'admin_header.html' %}
 {% block content %}
   {% load static %}
-  <div class="edit-formcon">
+  <div class="admin-container">
+    <div class="admin-title">
       <h2>Update Scholarship</h2>
+    </div>
 
       {% if error %}
         <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
       {% endif %}
 
-      <form method="post" enctype="multipart/form-data">
+      <form method="post" enctype="multipart/form-data" class="admin-form">
         {% csrf_token %}
 
-        <label for="name">Scholarship name:</label>
-        <input class="inp" type="text" id="name" name="name" value="{{ item.name }}" required />
+        <label>Scholarship Name</label>
+        <input type="text" name="name" value="{{ item.name }}" required />
 
         {% if item.image %}
-          <label>Current Image:</label>
-          <img src="{{ item.image.url }}" alt="" style="max-width: 180px; border-radius: 10px;" />
+          <div>
+            <label style="display: block; margin-bottom: 6px;">Current Image</label>
+            <img src="{{ item.image.url }}" alt="" style="max-width: 220px; border-radius: 10px; display: block;" />
+          </div>
         {% endif %}
 
-        <label for="image">Change image (optional):</label>
-        <input class="inp" type="file" id="image" name="image" accept="image/*" />
+        <label>Change Image (optional)</label>
+        <input type="file" name="image" accept="image/*" />
 
-        <label for="description">Description (optional):</label>
-        <textarea class="inp" id="description" name="description" rows="4">{{ item.description }}</textarea>
+        <label>Description (optional)</label>
+        <textarea name="description" rows="4">{{ item.description }}</textarea>
 
-        <label for="link_url">Link (optional):</label>
-        <input class="inp" type="url" id="link_url" name="link_url" value="{{ item.link_url }}" placeholder="https://..." />
+        <label>Link (optional)</label>
+        <input type="url" name="link_url" value="{{ item.link_url }}" placeholder="https://..." />
 
-        <label for="is_active">Active:</label>
-        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" {% if item.is_active %}checked{% endif %} />
+        <label class="admin-toggle"><input type="checkbox" name="is_active" {% if item.is_active %}checked{% endif %} />Active</label>
 
-        <button type="submit" class="btn">Update</button>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+          <button type="submit" class="btn-edit btn">Update</button>
+          <a href="{% url 'scholarship_item_list' %}" class="btn-edit btn">Back to List</a>
+        </div>
       </form>
-
-      <a href="{% url 'scholarship_item_list' %}" class="btn-edit btn">Back to List</a>
   </div>
 {% endblock %}

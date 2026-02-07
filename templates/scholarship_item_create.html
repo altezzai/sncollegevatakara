@@ -1,34 +1,36 @@
 {% extends 'admin_header.html' %}
 {% block content %}
   {% load static %}
-  <div class="edit-formcon">
-    <h2>Add Scholarship</h2>
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>Add Scholarship</h2>
+    </div>
 
     {% if error %}
       <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
     {% endif %}
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="admin-form">
       {% csrf_token %}
 
-      <label for="name">Scholarship name:</label>
-      <input class="inp" type="text" id="name" name="name" required />
+      <label>Scholarship Name</label>
+      <input type="text" name="name" required />
 
-      <label for="image">Image (optional):</label>
-      <input class="inp" type="file" id="image" name="image" accept="image/*" />
+      <label>Image (optional)</label>
+      <input type="file" name="image" accept="image/*" />
 
-      <label for="description">Description (optional):</label>
-      <textarea class="inp" id="description" name="description" rows="4"></textarea>
+      <label>Description (optional)</label>
+      <textarea name="description" rows="4"></textarea>
 
-      <label for="link_url">Link (optional):</label>
-      <input class="inp" type="url" id="link_url" name="link_url" placeholder="https://..." />
+      <label>Link (optional)</label>
+      <input type="url" name="link_url" placeholder="https://..." />
 
-      <label for="is_active">Active:</label>
-      <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" checked />
+      <label class="admin-toggle"><input type="checkbox" name="is_active" checked />Active</label>
 
-      <button type="submit" class="btn">Create</button>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+        <button type="submit" class="btn-add btn">Create</button>
+        <a href="{% url 'scholarship_item_list' %}" class="btn-edit btn">Back to List</a>
+      </div>
     </form>
-
-    <a href="{% url 'scholarship_item_list' %}" class="btn-edit btn">Back to List</a>
   </div>
 {% endblock %}

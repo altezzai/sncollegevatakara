@@ -23,19 +23,19 @@
               <td>{{ it.name }}</td>
               <td>
                 {% if it.link_url %}
-                  <a href="{{ it.link_url }}" class="btn-add btn" target="_blank" rel="noopener">Open</a>
+                  <a href="{{ it.link_url }}" class="btn-add btn btn-file" target="_blank" rel="noopener">Open</a>
                 {% else %}
                   —
                 {% endif %}
               </td>
               <td>
                 {% if it.is_active %}
-                  Yes
+                  <span class="status-badge status-active">Active</span>
                 {% else %}
-                  No
+                  <span class="status-badge status-inactive">Inactive</span>
                 {% endif %}
               </td>
-              <td>
+              <td class="actions">
                 <a class="btn-edit btn" href="{% url 'scholarship_item_update' it.id %}">Edit</a>
                 <a class="btn-delete btn" href="{% url 'scholarship_item_delete' it.id %}">Delete</a>
               </td>

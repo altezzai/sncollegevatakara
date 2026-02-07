@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import IQACMember, GalleryItem, CampusLifePage, CampusLifeMember, CampusLifeGalleryItem, ScholarshipItem, ClubCommitteeItem, AddOnCourse
+from .models import IQACMember, GalleryItem, CampusLifePage, CampusLifeMember, CampusLifeGalleryItem, ScholarshipItem, ClubCommitteeItem, AddOnCourse, ProgrammeSyllabusCourse
 
 # Register your models here.
 
@@ -65,3 +65,11 @@ class AddOnCourseAdmin(admin.ModelAdmin):
 	list_filter = ("is_active",)
 	search_fields = ("title", "description")
 	ordering = ("-created_at", "-id")
+
+
+@admin.register(ProgrammeSyllabusCourse)
+class ProgrammeSyllabusCourseAdmin(admin.ModelAdmin):
+	list_display = ("title", "course_type", "is_active", "created_at")
+	list_filter = ("course_type", "is_active")
+	search_fields = ("title",)
+	ordering = ("course_type", "title", "id")

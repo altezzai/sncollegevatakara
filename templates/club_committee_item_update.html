@@ -1,44 +1,45 @@
-{% extends "admin_header.html" %}
+{% extends 'admin_header.html' %}
 {% block content %}
-  {% load static %}
-  <body class="edit-body">
-    <div class="edit-formcon">
+  <div class="admin-container">
+    <div class="admin-title">
       <h2>Update Club / Committee</h2>
+    </div>
 
-      {% if error %}
-        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+    {% if error %}
+      <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      {% csrf_token %}
+
+      <label>Club / Committee Name</label>
+      <input type="text" name="name" value="{{ item.name }}" required />
+
+      <label>Description</label>
+      <textarea name="description" rows="5" required>{{ item.description }}</textarea>
+
+      <label>Person Name</label>
+      <input type="text" name="person_name" value="{{ item.person_name }}" required />
+
+      <label>Person Position</label>
+      <input type="text" name="person_position" value="{{ item.person_position }}" required />
+
+      {% if item.person_photo %}
+        <div>
+          <label style="display: block; margin-bottom: 6px;">Current Image</label>
+          <img src="{{ item.person_photo.url }}" alt="" style="max-width: 220px; border-radius: 10px; display: block;" />
+        </div>
       {% endif %}
 
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+      <label>Change Person Image (optional)</label>
+      <input type="file" name="person_photo" accept="image/*" />
 
-        <label for="name">Club / Committee name:</label>
-        <input class="inp" type="text" id="name" name="name" value="{{ item.name }}" required />
+      <label class="admin-toggle"><input type="checkbox" name="is_active" {{ item.is_active|yesno:'checked,' }} />Active</label>
 
-        <label for="description">Description:</label>
-        <textarea class="inp" id="description" name="description" rows="5" required>{{ item.description }}</textarea>
-
-        <label for="person_name">Person name:</label>
-        <input class="inp" type="text" id="person_name" name="person_name" value="{{ item.person_name }}" required />
-
-        <label for="person_position">Person position:</label>
-        <input class="inp" type="text" id="person_position" name="person_position" value="{{ item.person_position }}" required />
-
-        {% if item.person_photo %}
-          <label>Current Image:</label>
-          <img src="{{ item.person_photo.url }}" alt="" style="max-width: 180px; border-radius: 10px;" />
-        {% endif %}
-
-        <label for="person_photo">Change person image (optional):</label>
-        <input class="inp" type="file" id="person_photo" name="person_photo" accept="image/*" />
-
-        <label for="is_active">Active:</label>
-        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" {% if item.is_active %}checked{% endif %} />
-
-        <button type="submit" class="btn">Update</button>
-      </form>
-
-      <a href="{% url 'club_committee_item_list' %}" class="btn-edit btn">Back to List</a>
-    </div>
-  {% endblock %}
-  </body>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+        <button type="submit" class="btn-edit btn">Update</button>
+        <a href="{% url 'club_committee_item_list' %}" class="btn-edit btn">Back to List</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

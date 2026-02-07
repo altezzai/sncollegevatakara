@@ -13,6 +13,7 @@ from .models import CampusLifeGalleryItem
 from .models import ScholarshipItem, ClubCommitteeItem
 from .models import GalleryImage
 from .models import AddOnCourse
+from .models import ProgrammeSyllabusCourse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from datetime import date
@@ -32,6 +33,100 @@ from collections import OrderedDict
 
 def mou_details(request):
     return render(request, 'mou_details.html')
+
+
+def admission_process(request):
+    return render(request, 'admission_process.html')
+
+
+def programme_syllabus(request):
+    level = (request.GET.get('level') or ProgrammeSyllabusCourse.TYPE_FYUGP).strip().lower()
+    if level not in {ProgrammeSyllabusCourse.TYPE_FYUGP, ProgrammeSyllabusCourse.TYPE_UG, ProgrammeSyllabusCourse.TYPE_PG}:
+        level = ProgrammeSyllabusCourse.TYPE_FYUGP
+
+    items = ProgrammeSyllabusCourse.objects.filter(is_active=True, course_type=level).order_by('title', 'id')
+    return render(request, 'programme_syllabus.html', {'level': level, 'items': items})
+
+
+def programme_course_list(request):
+    if 'username' in request.session:
+        courses = ProgrammeSyllabusCourse.objects.all().order_by('-created_at', '-id')
+        return render(request, 'programme_course_list.html', {'courses': courses})
+    return redirect('login')
+
+
+def programme_course_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            course_type = (request.POST.get('course_type') or '').strip().lower()
+            syllabus_pdf = request.FILES.get('syllabus_pdf')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            allowed_types = {ProgrammeSyllabusCourse.TYPE_FYUGP, ProgrammeSyllabusCourse.TYPE_UG, ProgrammeSyllabusCourse.TYPE_PG}
+            if course_type not in allowed_types:
+                course_type = ProgrammeSyllabusCourse.TYPE_UG
+
+            if not title:
+                return render(request, 'programme_course_create.html', {'error': 'Course name is required.'})
+            if not syllabus_pdf:
+                return render(request, 'programme_course_create.html', {'error': 'Syllabus PDF is required.'})
+
+            ProgrammeSyllabusCourse.objects.create(
+                title=title,
+                course_type=course_type,
+                syllabus_pdf=syllabus_pdf,
+                is_active=is_active,
+            )
+            return redirect('programme_course_list')
+
+        return render(request, 'programme_course_create.html')
+    return redirect('login')
+
+
+def programme_course_update(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(ProgrammeSyllabusCourse, pk=course_id)
+
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            course_type = (request.POST.get('course_type') or '').strip().lower()
+            syllabus_pdf = request.FILES.get('syllabus_pdf')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            allowed_types = {ProgrammeSyllabusCourse.TYPE_FYUGP, ProgrammeSyllabusCourse.TYPE_UG, ProgrammeSyllabusCourse.TYPE_PG}
+            if course_type not in allowed_types:
+                course_type = ProgrammeSyllabusCourse.TYPE_UG
+
+            if not title:
+                return render(request, 'programme_course_update.html', {'course': course, 'error': 'Course name is required.'})
+
+            course.title = title
+            course.course_type = course_type
+            course.is_active = is_active
+            if syllabus_pdf:
+                course.syllabus_pdf = syllabus_pdf
+            course.save()
+            return redirect('programme_course_list')
+
+        return render(request, 'programme_course_update.html', {'course': course})
+    return redirect('login')
+
+
+def programme_course_delete(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(ProgrammeSyllabusCourse, pk=course_id)
+        course.delete()
+        return redirect('programme_course_list')
+    return redirect('login')
+
+
+def academic_calendar(request):
+    return render(request, 'academic_calendar.html')
+
+
+def library(request):
+    return render(request, 'library.html')
 
 
 def asap(request):
