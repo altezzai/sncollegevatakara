@@ -1,23 +1,29 @@
 {% extends 'admin_header.html' %}
+{% load static %}
+
 {% block content %}
-  {% load static %}
   <div class="admin-container">
-    <div class="admin-title">
-      <h2>{{ page.title }} Members</h2>
-      <a class="btn-add btn" href="{% url 'campus_life_member_create' slug=page.slug %}"><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New</a>
-      {% if page.slug == 'nss' %}
-        <a class="btn-edit btn" href="{% url 'campus_life_gallery_list' slug=page.slug %}">NSS Gallery</a>
-      {% endif %}
+    
+    <div class="admin-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+      <h2 style="margin: 0;">{{ page.title }} Members</h2>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a class="btn-add btn" href="{% url 'campus_life_member_create' slug=page.slug %}">
+          <img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
+        </a>
+        {% if page.slug == 'nss' %}
+          <a class="btn-edit btn" href="{% url 'campus_life_gallery_list' slug=page.slug %}">NSS Gallery</a>
+        {% endif %}
+      </div>
     </div>
 
     <div class="table-con">
-      <table>
+      <table style="width: 100%; text-align: left;">
         <thead>
           <tr>
             <th>Name</th>
             <th>Position</th>
-            <th>Active</th>
-            <th class="actions">Actions</th>
+            <th style="text-align: center;">Active</th>
+            <th class="actions" style="text-align: right;">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -25,21 +31,23 @@
             <tr>
               <td>{{ m.name }}</td>
               <td>{{ m.position }}</td>
-              <td>
+              <td style="text-align: center;">
                 {% if m.is_active %}
-                  Yes
+                  <span style="color: green; font-weight: 500;">Yes</span>
                 {% else %}
-                  No
+                  <span style="color: red; font-weight: 500;">No</span>
                 {% endif %}
               </td>
-              <td>
-                <a class="btn-edit btn" href="{% url 'campus_life_member_update' m.id %}">Edit</a>
-                <a class="btn-delete btn" href="{% url 'campus_life_member_delete' m.id %}">Delete</a>
+              <td class="actions" style="text-align: right;">
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                  <a class="btn-edit btn" href="{% url 'campus_life_member_update' m.id %}">Edit</a>
+                  <a class="btn-delete btn" href="{% url 'campus_life_member_delete' m.id %}">Delete</a>
+                </div>
               </td>
             </tr>
           {% empty %}
             <tr>
-              <td colspan="4">No members yet.</td>
+              <td colspan="4" style="text-align: center; padding: 20px;">No members yet.</td>
             </tr>
           {% endfor %}
         </tbody>

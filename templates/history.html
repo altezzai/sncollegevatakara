@@ -1,11 +1,73 @@
 {% extends 'header.html' %}
+{% load static %}
+
 {% block content %}
   <div class="container banner">
-    <div class="heading">History</div>
+    <div class="heading">Overview & History</div>
   </div>
-  <div class="container">
-    <div class="small-container">
-      <p>Update this page with the college history content.</p>
+
+  <div class="container pad-top pad-bottom">
+    <div class="sec-container" style="margin-top: 20px; background-color: transparent; padding: 0;">
+      
+      <div class="small-container article" style="margin-bottom: 30px; border-radius: 12px; padding: 25px; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);">
+        <p style="margin-bottom: 15px; font-size: 1.05rem; line-height: 1.7; color: #333;">
+          Established in <strong>2003</strong> by the <strong>SNDP Union Development and Welfare Society, Vadakara</strong>, Sree Narayana College is a self-financing institution located at Keezhal, Kozhikode District. Nestled atop a lush, green hill, the college stands as a beacon of academic excellence and values inspired by the teachings of <strong>Sree Narayana Guru</strong>. 
+        </p>
+        <p style="margin: 0; line-height: 1.7; color: #444;">
+          The goodwill of our institution extends beyond academic achievements, embracing a legacy of values, a beautiful campus setting, and faculties devoted to shaping the leaders of tomorrow. The college prides itself on fostering the holistic development of students, instilling a sense of social responsibility and ethical conduct.
+        </p>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="head-big" style="margin-bottom: 15px; color: var(--primary);">Affiliations & Approvals</div>
+          <ul style="margin-left: 20px; color: #444; line-height: 1.7; margin-bottom: 0;">
+            <li>Affiliated with the <strong>University of Calicut</strong>.</li>
+            <li>Approved by the <strong>All India Council for Technical Education (AICTE)</strong>.</li>
+            <li>Recognized by the <strong>Institution's Innovation Council (IIC)</strong>, reflecting a commitment to quality education, innovation, and academic excellence.</li>
+          </ul>
+        </div>
+
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="head-big" style="margin-bottom: 15px; color: var(--primary);">Academic Programmes</div>
+          <p style="margin-bottom: 10px; color: #444; line-height: 1.6;">
+            We offer a comprehensive education with a diverse array of <strong>14 undergraduate</strong> and <strong>5 post-graduate programmes</strong> spanning Arts, Science, Commerce, and Management.
+          </p>
+          <p style="margin: 0; color: #444; line-height: 1.6; background: #f9f9f9; padding: 12px; border-radius: 8px;">
+            In alignment with the National Education Policy (NEP) 2020, the college successfully introduced the <strong>Four Year Undergraduate Programme (FYUGP)</strong> structure in 2024, providing multidisciplinary exposure, academic flexibility, skill enhancement, and research orientation.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="bold-head" style="color: var(--primary); margin-bottom: 12px; font-size: 1.2rem;">Infrastructure</div>
+          <p style="margin: 0; color: #444; line-height: 1.6;">
+            The campus is equipped with well-maintained infrastructure, spacious classrooms, a well-stocked library, modern laboratories, computer facilities, and ICT-enabled learning resources to support effective teaching-learning processes.
+          </p>
+        </div>
+
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="bold-head" style="color: var(--primary); margin-bottom: 12px; font-size: 1.2rem;">Campus Life & Activities</div>
+          <ul style="margin-left: 20px; color: #444; line-height: 1.6; margin-bottom: 0;">
+            <li><strong>NSS Unit:</strong> A vibrant National Service Scheme unit that instills social commitment, leadership qualities, and community engagement.</li>
+            <li><strong>Sports & Games:</strong> A strong tradition of excellence, with our men's and women's volleyball teams proudly representing the institution at the national level.</li>
+            <li><strong>Arts & Culture:</strong> Active participation is encouraged, with students consistently achieving recognition at the University level.</li>
+          </ul>
+        </div>
+
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="bold-head" style="color: var(--primary); margin-bottom: 12px; font-size: 1.2rem;">Campus Environment</div>
+          <p style="margin: 0; color: #444; line-height: 1.6;">
+            The institution strictly enforces a <strong>zero-tolerance policy</strong> and maintains a student-friendly campus atmosphere in accordance with UGC norms and government regulations.
+          </p>
+        </div>
+
+      </div>
+
     </div>
   </div>
 {% endblock %}
