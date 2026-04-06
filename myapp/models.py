@@ -197,21 +197,33 @@ class ScholarshipItem(models.Model):
         return self.name
 
 
-class ClubCommitteeItem(models.Model):
-    page = models.ForeignKey(CampusLifePage, on_delete=models.CASCADE, related_name='club_committee_items')
+class ClubCommittee(models.Model):
+    page = models.ForeignKey(CampusLifePage, on_delete=models.CASCADE, related_name='clubs')
     name = models.CharField(max_length=220)
     description = models.TextField()
-    person_name = models.CharField(max_length=180)
-    person_position = models.CharField(max_length=180)
-    person_photo = models.ImageField(upload_to='campus_life/clubs/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at', '-id']
+        ordering = ['name', 'id']
 
     def __str__(self):
         return self.name
+
+
+class ClubCommitteePerson(models.Model):
+    club = models.ForeignKey(ClubCommittee, on_delete=models.CASCADE, related_name='people')
+    name = models.CharField(max_length=180)
+    position = models.CharField(max_length=180)
+    photo = models.ImageField(upload_to='campus_life/clubs/', null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name', 'id']
+
+    def __str__(self):
+        return f"{self.name} - {self.position}"
 
 
 class AddOnCourse(models.Model):

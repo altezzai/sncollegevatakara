@@ -39,7 +39,7 @@
             <a href="{% url 'campus_life_member_list' slug='placement-cell' %}" class="admin-nav-link{% if active_slug == 'placement-cell' or '/campus-life/admin/placement-cell/' in request.path %} active{% endif %}">Campus Life - Placement Cell</a>
             <a href="{% url 'campus_life_member_list' slug='examination-committee' %}" class="admin-nav-link{% if active_slug == 'examination-committee' or '/campus-life/admin/examination-committee/' in request.path %} active{% endif %}">Campus Life - Examination Committee</a>
             <a href="{% url 'scholarship_item_list' %}" class="admin-nav-link{% if current_url == 'scholarship_item_list' or current_url == 'scholarship_item_create' or current_url == 'scholarship_item_update' %} active{% endif %}">Campus Life - Scholarships</a>
-            <a href="{% url 'club_committee_item_list' %}" class="admin-nav-link{% if current_url == 'club_committee_item_list' or current_url == 'club_committee_item_create' or current_url == 'club_committee_item_update' %} active{% endif %}">Campus Life - Other Clubs / Committees</a>
+            <a href="{% url 'club_committee_item_list' %}" class="admin-nav-link{% if current_url == 'club_committee_item_list' or current_url == 'club_committee_item_create' or current_url == 'club_committee_item_update' or current_url == 'club_committee_person_list' or current_url == 'club_committee_person_create' or current_url == 'club_committee_person_update' %} active{% endif %}">Campus Life - Other Clubs / Committees</a>
           </nav>
         </div>
 

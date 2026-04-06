@@ -1,11 +1,72 @@
 {% extends 'header.html' %}
+{% load static %}
+
 {% block content %}
   <div class="container banner">
     <div class="heading">Administrative Office</div>
   </div>
-  <div class="container">
-    <div class="small-container">
-      <p>Update this page with college office details (address, timings, contacts).</p>
+
+  <div class="container pad-top pad-bottom">
+    <div class="sec-container" style="margin-top: 20px; background-color: transparent; padding: 0;">
+      
+      <div class="small-container article" style="margin-bottom: 30px; border-radius: 12px; padding: 25px; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); background: #fff;">
+        <p style="margin-bottom: 15px; font-size: 1.05rem; line-height: 1.7; color: #333;">
+          The College Administrative Office plays a vital role in the smooth and efficient functioning of the institution. It serves as the central hub for managing all administrative, academic, and official activities of the college.
+        </p>
+        <p style="margin-bottom: 15px; line-height: 1.7; color: #444;">
+          It ensures proper documentation and timely communication between the management, faculty, students, and external authorities. The staff of the administrative office are committed to providing prompt and reliable services to students and faculty, ensuring transparency and efficiency in all operations.
+        </p>
+        <p style="margin: 0; line-height: 1.7; color: #444;">
+          Modern record-keeping practices and systematic procedures are followed to maintain accuracy and accountability.
+        </p>
+      </div>
+
+      <div class="small-container" style="margin-bottom: 40px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px; background: #fff;">
+        <div class="bold-head" style="color: var(--primary); margin-bottom: 15px; font-size: 1.2rem;">Key Responsibilities</div>
+        <ul style="margin-left: 20px; color: #444; line-height: 1.7; margin-bottom: 0;">
+          <li style="margin-bottom: 8px;">Maintaining student records, processing admissions, handling correspondence, and supporting the conduct of examinations.</li>
+          <li style="margin-bottom: 8px;">Managing financial transactions, fee collection, staff records, and the implementation of institutional policies.</li>
+          <li>Working in close coordination with various departments and committees to ensure the effective execution of academic and administrative plans.</li>
+        </ul>
+      </div>
+
+      <div class="heading" style="margin-bottom: 20px;">Administrative Staff</div>
+      
+      <div class="small-container" style="padding: 0; background: #fff; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; margin-bottom: 30px; overflow: hidden;">
+        <div class="members-table-wrap" style="width: 100%; overflow-x: auto;">
+          <table class="members-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead style="background-color: rgba(15, 60, 113, 0.03); border-bottom: 1px solid rgba(15, 60, 113, 0.1);">
+              <tr>
+                <th style="padding: 16px 24px; font-weight: 600; color: var(--primary); width: 40%;">Name</th>
+                <th style="padding: 16px 24px; font-weight: 600; color: var(--primary);">Designation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(15, 60, 113, 0.05);">
+                <td style="padding: 16px 24px; vertical-align: middle; font-weight: 600; color: #222;">Dr. M K Radhakrishnan</td>
+                <td style="padding: 16px 24px; vertical-align: middle; color: #555;">Principal</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(15, 60, 113, 0.05);">
+                <td style="padding: 16px 24px; vertical-align: middle; font-weight: 600; color: #222;">Jayarajan B C</td>
+                <td style="padding: 16px 24px; vertical-align: middle; color: #555;">Office Superintendent</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(15, 60, 113, 0.05);">
+                <td style="padding: 16px 24px; vertical-align: middle; font-weight: 600; color: #222;">Pramod</td>
+                <td style="padding: 16px 24px; vertical-align: middle; color: #555;">Senior Clerk</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(15, 60, 113, 0.05);">
+                <td style="padding: 16px 24px; vertical-align: middle; font-weight: 600; color: #222;">Bindhu</td>
+                <td style="padding: 16px 24px; vertical-align: middle; color: #555;">Junior Clerk</td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(15, 60, 113, 0.05);">
+                <td style="padding: 16px 24px; vertical-align: middle; font-weight: 600; color: #222;">Salini</td>
+                <td style="padding: 16px 24px; vertical-align: middle; color: #555;">Accountant</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   </div>
 {% endblock %}

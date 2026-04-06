@@ -1,9 +1,74 @@
-{% extends "admin_header.html" %} {% block content %} {% load static %}
+{% extends "admin_header.html" %} 
+{% block content %} 
+{% load static %}
+
+<style>
+  /* Table Alignment Fixes */
+  .table-con table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table-con th, 
+  .table-con td {
+    text-align: left;
+    padding: 12px 15px;
+    vertical-align: middle;
+  }
+  .table-con th.actions, 
+  .table-con td.actions {
+    text-align: center; 
+  }
+
+  /* Fullscreen Image Modal Styles */
+  .image-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 9999; 
+    padding-top: 60px; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.85); /* Dark semi-transparent background */
+    backdrop-filter: blur(4px);
+  }
+  .image-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    object-fit: contain;
+    animation: zoomIn 0.3s ease;
+  }
+  @keyframes zoomIn {
+    from {transform: scale(0.9); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+  }
+  .close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  .close-modal:hover,
+  .close-modal:focus {
+    color: #bbb;
+    text-decoration: none;
+  }
+</style>
+
 <div class="admin-container">
   <div class="admin-title">
     <h2>Faculty List</h2>
-    <a class="btn-add btn" href="{% url 'create_employee' %}"
-      ><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
+    <a class="btn-add btn" href="{% url 'create_employee' %}">
+      <img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
     </a>
   </div>
   <div class="table-con">
@@ -12,10 +77,10 @@
         <tr>
           <th>Name</th>
           <th>Position</th>
-          <th>department</th>
+          <th>Department</th>
           <th>Photo</th>
           <th>Qualification</th>
-          <th>Actions</th>
+          <th class="actions">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -29,29 +94,56 @@
               src="{{ employee.photo.url }}"
               alt="{{ employee.name }} Photo"
               class="photo-list"
+              style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 1px solid #ddd; transition: transform 0.2s;"
+              onclick="openFullscreen(this.src)"
+              onmouseover="this.style.transform='scale(1.1)'"
+              onmouseout="this.style.transform='scale(1)'"
             />
           </td>
           <td>{{ employee.qualification }}</td>
-          <td>
-            <a
-              class="btn-edit btn"
-              href="{% url 'update_employee' employee.id %}"
-              >Edit</a
-            >
-            <a
-              class="btn-delete btn"
-              href="{% url 'delete_employee' employee.id %}"
-              >Delete</a
-            >
+          <td class="actions">
+            <a class="btn-edit btn" href="{% url 'update_employee' employee.id %}">Edit</a>
+            <a class="btn-delete btn" href="{% url 'delete_employee' employee.id %}">Delete</a>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5">No employees available.</td>
+          <td colspan="6" style="text-align: center;">No employees available.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    {% endblock %}
   </div>
 </div>
+
+<div id="photoModal" class="image-modal" onclick="closeFullscreen(event)">
+  <span class="close-modal">&times;</span>
+  <img class="image-modal-content" id="expandedImg">
+</div>
+
+<script>
+  function openFullscreen(src) {
+    document.getElementById("photoModal").style.display = "flex";
+    document.getElementById("photoModal").style.alignItems = "center";
+    document.getElementById("expandedImg").src = src;
+    document.body.style.overflow = "hidden"; // Prevent scrolling in the background
+  }
+
+  function closeFullscreen(event) {
+    // Close if they click the background or the X, but not the image itself
+    if (event.target.id === "photoModal" || event.target.className === "close-modal") {
+      document.getElementById("photoModal").style.display = "none";
+      document.body.style.overflow = "auto"; // Restore scrolling
+    }
+  }
+  
+  // Close modal on Escape key press
+  document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+      document.getElementById("photoModal").style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+  });
+</script>
+
+{% endblock %}

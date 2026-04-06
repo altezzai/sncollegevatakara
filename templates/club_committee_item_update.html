@@ -18,27 +18,12 @@
       <label>Description</label>
       <textarea name="description" rows="5" required>{{ item.description }}</textarea>
 
-      <label>Person Name</label>
-      <input type="text" name="person_name" value="{{ item.person_name }}" required />
-
-      <label>Person Position</label>
-      <input type="text" name="person_position" value="{{ item.person_position }}" required />
-
-      {% if item.person_photo %}
-        <div>
-          <label style="display: block; margin-bottom: 6px;">Current Image</label>
-          <img src="{{ item.person_photo.url }}" alt="" style="max-width: 220px; border-radius: 10px; display: block;" />
-        </div>
-      {% endif %}
-
-      <label>Change Person Image (optional)</label>
-      <input type="file" name="person_photo" accept="image/*" />
-
       <label class="admin-toggle"><input type="checkbox" name="is_active" {{ item.is_active|yesno:'checked,' }} />Active</label>
 
       <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
         <button type="submit" class="btn-edit btn">Update</button>
         <a href="{% url 'club_committee_item_list' %}" class="btn-edit btn">Back to List</a>
+        <a href="{% url 'club_committee_person_list' %}" class="btn-edit btn">Manage People</a>
       </div>
     </form>
   </div>

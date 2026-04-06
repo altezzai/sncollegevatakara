@@ -1,0 +1,48 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  {% load static %}
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>Update Club / Committee Person</h2>
+    </div>
+
+    {% if error %}
+      <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      {% csrf_token %}
+
+      <label>Club / Committee</label>
+      <select name="club_id" required>
+        <option value="">Select Club / Committee</option>
+        {% for club in clubs %}
+          <option value="{{ club.id }}" {% if club.id == person.club_id %}selected{% endif %}>{{ club.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Person Name</label>
+      <input type="text" name="person_name" value="{{ person.name }}" required />
+
+      <label>Person Position</label>
+      <input type="text" name="person_position" value="{{ person.position }}" required />
+
+      <label style="display: block; margin-bottom: 6px;">Current Image</label>
+      {% if person.photo %}
+        <img src="{{ person.photo.url }}" alt="" style="max-width: 220px; border-radius: 10px; display: block;" />
+      {% else %}
+        <img src="{% static 'assets/user.png' %}" alt="" style="max-width: 120px; border-radius: 10px; display: block;" />
+      {% endif %}
+
+      <label>Change Person Image (optional)</label>
+      <input type="file" name="person_photo" accept="image/*" />
+
+      <label class="admin-toggle"><input type="checkbox" name="is_active" {% if person.is_active %}checked{% endif %} />Active</label>
+
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+        <button type="submit" class="btn-edit btn">Update</button>
+        <a href="{% url 'club_committee_person_list' %}" class="btn-edit btn">Back to List</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

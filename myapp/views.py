@@ -10,7 +10,7 @@ from .models import GalleryItem
 from .models import CampusLifePage
 from .models import CampusLifeMember
 from .models import CampusLifeGalleryItem
-from .models import ScholarshipItem, ClubCommitteeItem
+from .models import ScholarshipItem, ClubCommittee, ClubCommitteePerson
 from .models import GalleryImage
 from .models import AddOnCourse
 from .models import ProgrammeSyllabusCourse
@@ -29,6 +29,7 @@ import os
 from django.conf import settings
 import uuid
 from collections import OrderedDict
+from django.db.models import Prefetch
 
 
 def mou_details(request):
@@ -276,7 +277,12 @@ def campus_life_page(request, slug):
             for s in scholarships
         ]
     if slug == 'other-clubs-committees':
-        clubs = ClubCommitteeItem.objects.filter(page=page, is_active=True)
+        people_qs = ClubCommitteePerson.objects.filter(is_active=True).order_by('name', 'id')
+        clubs = (
+            ClubCommittee.objects.filter(page=page, is_active=True)
+            .prefetch_related(Prefetch('people', queryset=people_qs))
+            .order_by('name', 'id')
+        )
 
     nss_gallery_groups = None
     if slug == 'nss':
@@ -401,8 +407,8 @@ def scholarship_item_delete(request, item_id):
 def club_committee_item_list(request):
     if 'username' in request.session:
         page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
-        items = ClubCommitteeItem.objects.filter(page=page).order_by('-created_at', '-id')
-        return render(request, 'club_committee_item_list.html', {'page': page, 'items': items, 'active_slug': page.slug})
+        clubs = ClubCommittee.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'club_committee_item_list.html', {'page': page, 'clubs': clubs, 'active_slug': page.slug})
     return redirect('login')
 
 
@@ -412,25 +418,19 @@ def club_committee_item_create(request):
         if request.method == 'POST':
             name = (request.POST.get('name') or '').strip()
             description = (request.POST.get('description') or '').strip()
-            person_name = (request.POST.get('person_name') or '').strip()
-            person_position = (request.POST.get('person_position') or '').strip()
-            person_photo = request.FILES.get('person_photo')
             is_active = True if request.POST.get('is_active') == 'on' else False
 
-            if not name or not description or not person_name or not person_position:
+            if not name or not description:
                 return render(
                     request,
                     'club_committee_item_create.html',
-                    {'page': page, 'error': 'Club/Committee name, description, person name and position are required.', 'active_slug': page.slug},
+                    {'page': page, 'error': 'Club/Committee name and description are required.', 'active_slug': page.slug},
                 )
 
-            ClubCommitteeItem.objects.create(
+            ClubCommittee.objects.create(
                 page=page,
                 name=name,
                 description=description,
-                person_name=person_name,
-                person_position=person_position,
-                person_photo=person_photo,
                 is_active=is_active,
             )
             return redirect('club_committee_item_list')
@@ -441,40 +441,144 @@ def club_committee_item_create(request):
 
 def club_committee_item_update(request, item_id):
     if 'username' in request.session:
-        item = get_object_or_404(ClubCommitteeItem, pk=item_id)
-        page = item.page
+        club = get_object_or_404(ClubCommittee, pk=item_id)
+        page = club.page
         if page.slug != 'other-clubs-committees':
             return redirect('campus_life_member_list', slug=page.slug)
 
         if request.method == 'POST':
-            item.name = (request.POST.get('name') or '').strip()
-            item.description = (request.POST.get('description') or '').strip()
-            item.person_name = (request.POST.get('person_name') or '').strip()
-            item.person_position = (request.POST.get('person_position') or '').strip()
-            item.is_active = True if request.POST.get('is_active') == 'on' else False
-            person_photo = request.FILES.get('person_photo')
-            if person_photo:
-                item.person_photo = person_photo
+            club.name = (request.POST.get('name') or '').strip()
+            club.description = (request.POST.get('description') or '').strip()
+            club.is_active = True if request.POST.get('is_active') == 'on' else False
 
-            if not item.name or not item.description or not item.person_name or not item.person_position:
+            if not club.name or not club.description:
                 return render(
                     request,
                     'club_committee_item_update.html',
-                    {'item': item, 'error': 'Club/Committee name, description, person name and position are required.', 'active_slug': page.slug},
+                    {'item': club, 'error': 'Club/Committee name and description are required.', 'active_slug': page.slug},
                 )
 
-            item.save()
+            club.save()
             return redirect('club_committee_item_list')
 
-        return render(request, 'club_committee_item_update.html', {'item': item, 'active_slug': page.slug})
+        return render(request, 'club_committee_item_update.html', {'item': club, 'active_slug': page.slug})
     return redirect('login')
 
 
 def club_committee_item_delete(request, item_id):
     if 'username' in request.session:
-        item = get_object_or_404(ClubCommitteeItem, pk=item_id)
-        item.delete()
+        club = get_object_or_404(ClubCommittee, pk=item_id)
+        club.delete()
         return redirect('club_committee_item_list')
+    return redirect('login')
+
+
+def club_committee_person_list(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        people = (
+            ClubCommitteePerson.objects.filter(club__page=page)
+            .select_related('club')
+            .order_by('-created_at', '-id')
+        )
+        return render(request, 'club_committee_person_list.html', {'page': page, 'people': people, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_person_create(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        clubs = ClubCommittee.objects.filter(page=page).order_by('name', 'id')
+
+        if request.method == 'POST':
+            club_id = (request.POST.get('club_id') or '').strip()
+            name = (request.POST.get('person_name') or '').strip()
+            position = (request.POST.get('person_position') or '').strip()
+            photo = request.FILES.get('person_photo')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            try:
+                club = ClubCommittee.objects.get(pk=club_id, page=page)
+            except (ClubCommittee.DoesNotExist, ValueError, TypeError):
+                club = None
+
+            if not club or not name or not position:
+                return render(
+                    request,
+                    'club_committee_person_create.html',
+                    {
+                        'page': page,
+                        'clubs': clubs,
+                        'error': 'Club/Committee, person name and position are required.',
+                        'active_slug': page.slug,
+                    },
+                )
+
+            ClubCommitteePerson.objects.create(
+                club=club,
+                name=name,
+                position=position,
+                photo=photo,
+                is_active=is_active,
+            )
+            return redirect('club_committee_person_list')
+
+        return render(request, 'club_committee_person_create.html', {'page': page, 'clubs': clubs, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_person_update(request, person_id):
+    if 'username' in request.session:
+        person = get_object_or_404(ClubCommitteePerson, pk=person_id)
+        page = person.club.page
+        if page.slug != 'other-clubs-committees':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        clubs = ClubCommittee.objects.filter(page=page).order_by('name', 'id')
+
+        if request.method == 'POST':
+            club_id = (request.POST.get('club_id') or '').strip()
+            person.name = (request.POST.get('person_name') or '').strip()
+            person.position = (request.POST.get('person_position') or '').strip()
+            person.is_active = True if request.POST.get('is_active') == 'on' else False
+            photo = request.FILES.get('person_photo')
+
+            try:
+                club = ClubCommittee.objects.get(pk=club_id, page=page)
+            except (ClubCommittee.DoesNotExist, ValueError, TypeError):
+                club = None
+
+            if not club or not person.name or not person.position:
+                return render(
+                    request,
+                    'club_committee_person_update.html',
+                    {
+                        'person': person,
+                        'clubs': clubs,
+                        'error': 'Club/Committee, person name and position are required.',
+                        'active_slug': page.slug,
+                    },
+                )
+
+            person.club = club
+            if photo:
+                person.photo = photo
+            person.save()
+            return redirect('club_committee_person_list')
+
+        return render(
+            request,
+            'club_committee_person_update.html',
+            {'person': person, 'clubs': clubs, 'active_slug': page.slug},
+        )
+    return redirect('login')
+
+
+def club_committee_person_delete(request, person_id):
+    if 'username' in request.session:
+        person = get_object_or_404(ClubCommitteePerson, pk=person_id)
+        person.delete()
+        return redirect('club_committee_person_list')
     return redirect('login')
 
 
