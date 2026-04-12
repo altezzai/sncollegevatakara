@@ -16,6 +16,19 @@
   </head>
   <body class="admin-body">
     {% with current_url=request.resolver_match.url_name %}
+      <input type="checkbox" id="admin-menu-toggle" class="admin-menu-toggle" />
+      <header class="admin-topbar">
+        <label for="admin-menu-toggle" class="admin-menu-button" aria-label="Toggle admin menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+        <a href="/" class="admin-topbar-logo">
+          <img src="{% static 'assets/logo.png' %}" class="logo admin-logo admin-logo-small" alt="" />
+        </a>
+        <a href="{% url 'logout' %}" class="admin-topbar-logout">Logout</a>
+      </header>
+      <label for="admin-menu-toggle" class="admin-scrim" aria-hidden="true"></label>
       <aside class="admin-sidebar">
         <div class="admin-sidebar-header">
           <a href="/" class="admin-logo-link"><img src="{% static 'assets/logo.png' %}" class="logo admin-logo" alt="" /></a>

@@ -94,6 +94,72 @@ form button:hover {
   overflow: hidden;
 }
 
+.admin-menu-toggle {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.admin-topbar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: white;
+  border-bottom: 1px solid rgb(230, 230, 230);
+  padding: 10px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.admin-menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgb(220, 220, 220);
+  background-color: white;
+  cursor: pointer;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.admin-menu-button span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: #111;
+  border-radius: 999px;
+}
+
+.admin-topbar-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.admin-topbar-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: rgb(170, 0, 0);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgb(255, 210, 210);
+  background-color: rgb(255, 245, 245);
+}
+
+.admin-scrim {
+  display: none;
+}
+
 .admin-sidebar {
   width: 260px;
   min-width: 260px;
@@ -117,6 +183,10 @@ form button:hover {
 
 .admin-logo {
   max-width: 220px;
+}
+
+.admin-logo-small {
+  max-width: 140px;
 }
 
 .admin-logo-link {
@@ -481,4 +551,129 @@ form .tarea {
   border-radius: 10px;
   padding: 10px;
   width: 100%;
+}
+
+@media (max-width: 900px) {
+  .admin-body {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+
+  .admin-topbar {
+    display: flex;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    height: 100dvh;
+    width: min(80vw, 320px);
+    min-width: 0;
+    transform: translateX(-105%);
+    transition: transform 0.2s ease-out;
+    z-index: 40;
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .admin-sidebar-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
+
+  .admin-sidebar-nav-wrap {
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+
+  .admin-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+    z-index: 35;
+  }
+
+  .admin-menu-toggle:checked ~ .admin-sidebar {
+    transform: translateX(0);
+  }
+
+  .admin-menu-toggle:checked ~ .admin-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .admin-main {
+    height: auto;
+    overflow: visible;
+    padding: 16px;
+  }
+
+  .admin-container {
+    margin-block: 12px;
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .admin-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .admin-title h2 {
+    font-size: 18px;
+  }
+
+  .table-con {
+    max-height: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-con table {
+    min-width: 640px;
+  }
+
+  .admin-form,
+  .edit-formcon {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .contain-admin {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    padding: 24px;
+  }
+
+  .contain-admin form {
+    height: auto;
+  }
+
+  .admin-menu-button {
+    width: 38px;
+    height: 34px;
+  }
+
+  .admin-logo-small {
+    max-width: 120px;
+  }
+
+  .admin-topbar-logout {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
 }
