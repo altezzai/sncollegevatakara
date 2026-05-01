@@ -22,10 +22,11 @@ def index(request):
     evt = Event.objects.all().order_by('-date')[:3]
 
     nws = News.objects.all().order_by('-id')[:3]
-    #send banners list also
+    
+    notifi = Notification.objects.all().order_by('-id')[:3]
 
     bnr = Banner.objects.all().order_by('-id')[:6]
-    return render(request, 'index.html',{'events': evt,'news': nws ,'banners':bnr})
+    return render(request, 'index.html',{'events': evt,'news': nws ,'banners':bnr,'notifications':notifi})
 
 
 def news(request,nw_id):
