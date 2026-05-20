@@ -3,11 +3,11 @@
 <html>
   <head>
     <title>admin page</title>
-    <link rel="stylesheet" href="{% static 'styles.css'%}" />
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
 
-    <link rel="stylesheet" href="{% static 'mobile.css'%}" />
+    <link rel="stylesheet" href="{% static 'mobile.css' %}" />
 
-    <link rel="stylesheet" href="{% static 'admin.css'%}" />
+    <link rel="stylesheet" href="{% static 'admin.css' %}" />
 
     <script src="{% static 'script.js' %}" defer></script>
 
@@ -15,54 +15,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body class="admin-body">
-    <div class="navcon">
-      <navbar class="flex n">
-        <img src="{% static 'assets/logo.png' %}" class="logo" alt="" />
-        <img
-          src="{% static 'assets/bm.svg' %}"
-          alt=""
-          class="bm"
-          onclick="opennav()"
-        />
-        <div class="l">
-          <div class="close" onclick="closenav()">
-            <img src="{% static 'assets/close.svg' %}" alt="" />
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'employee_list' %}" class="nav">Faculty</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'event_list' %}" class="nav">Events</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'list_notifications' %}" class="nav"
-                >Notifications</a
-              >
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'news_list' %}" class="nav">News</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'list_banners' %}" class="nav">Banners</a>
-            </div>
-          </div>
-          <div class="group flex">
-            <div class="flex">
-              <a href="{% url 'logout' %}" class="nav">Logout</a>
-            </div>
-          </div>
+    {% with current_url=request.resolver_match.url_name %}
+      <input type="checkbox" id="admin-menu-toggle" class="admin-menu-toggle" />
+      <header class="admin-topbar">
+        <label for="admin-menu-toggle" class="admin-menu-button" aria-label="Toggle admin menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+        <a href="/" class="admin-topbar-logo">
+          <img src="{% static 'assets/logo.png' %}" class="logo admin-logo admin-logo-small" alt="" />
+        </a>
+        <a href="{% url 'logout' %}" class="admin-topbar-logout">Logout</a>
+      </header>
+      <label for="admin-menu-toggle" class="admin-scrim" aria-hidden="true"></label>
+      <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+          <a href="/" class="admin-logo-link"><img src="{% static 'assets/logo.png' %}" class="logo admin-logo" alt="" /></a>
         </div>
-      </navbar>
-    </div>
-    {% block content %}{% endblock %}
+
+        <div class="admin-sidebar-nav-wrap">
+          <nav class="admin-sidebar-nav" aria-label="Admin navigation">
+            <a href="{% url 'employee_list' %}" class="admin-nav-link{% if current_url == 'employee_list' %} active{% endif %}">Faculty</a>
+            <a href="{% url 'event_list' %}" class="admin-nav-link{% if current_url == 'event_list' %} active{% endif %}">Events</a>
+            <a href="{% url 'list_notifications' %}" class="admin-nav-link{% if current_url == 'list_notifications' %} active{% endif %}">Notifications</a>
+            <a href="{% url 'news_list' %}" class="admin-nav-link{% if current_url == 'news_list' %} active{% endif %}">News</a>
+            <a href="{% url 'annual_report_list' %}" class="admin-nav-link{% if current_url == 'annual_report_list' %} active{% endif %}">Annual Reports</a>
+            <a href="{% url 'add_on_course_list' %}" class="admin-nav-link{% if current_url == 'add_on_course_list' or current_url == 'add_on_course_create' or current_url == 'add_on_course_update' %} active{% endif %}">Add-on Courses</a>
+            <a href="{% url 'programme_course_list' %}" class="admin-nav-link{% if current_url == 'programme_course_list' or current_url == 'programme_course_create' or current_url == 'programme_course_update' %} active{% endif %}">Programme &amp; Syllabus</a>
+            <a href="{% url 'list_banners' %}" class="admin-nav-link{% if current_url == 'list_banners' %} active{% endif %}">Banners</a>
+            <a href="{% url 'iqac_member_list' %}" class="admin-nav-link{% if current_url == 'iqac_member_list' or current_url == 'iqac_member_create' or current_url == 'iqac_member_update' %} active{% endif %}">IQAC</a>
+            <a href="{% url 'gallery_item_list' %}" class="admin-nav-link{% if current_url == 'gallery_item_list' or current_url == 'gallery_item_create' or current_url == 'gallery_item_update' %} active{% endif %}">Gallery</a>
+            <a href="{% url 'campus_life_member_list' slug='pta' %}" class="admin-nav-link{% if active_slug == 'pta' or '/campus-life/admin/pta/' in request.path %} active{% endif %}">Campus Life - PTA</a>
+            <a href="{% url 'campus_life_member_list' slug='nss' %}" class="admin-nav-link{% if active_slug == 'nss' or '/campus-life/admin/nss/' in request.path %} active{% endif %}">Campus Life - NSS</a>
+            <a href="{% url 'campus_life_member_list' slug='cok' %}" class="admin-nav-link{% if active_slug == 'cok' or '/campus-life/admin/cok/' in request.path %} active{% endif %}">Campus Life - COK</a>
+            <a href="{% url 'campus_life_member_list' slug='placement-cell' %}" class="admin-nav-link{% if active_slug == 'placement-cell' or '/campus-life/admin/placement-cell/' in request.path %} active{% endif %}">Campus Life - Placement Cell</a>
+            <a href="{% url 'campus_life_member_list' slug='examination-committee' %}" class="admin-nav-link{% if active_slug == 'examination-committee' or '/campus-life/admin/examination-committee/' in request.path %} active{% endif %}">Campus Life - Examination Committee</a>
+            <a href="{% url 'scholarship_item_list' %}" class="admin-nav-link{% if current_url == 'scholarship_item_list' or current_url == 'scholarship_item_create' or current_url == 'scholarship_item_update' %} active{% endif %}">Campus Life - Scholarships</a>
+            <a href="{% url 'club_committee_item_list' %}" class="admin-nav-link{% if current_url == 'club_committee_item_list' or current_url == 'club_committee_item_create' or current_url == 'club_committee_item_update' or current_url == 'club_committee_person_list' or current_url == 'club_committee_person_create' or current_url == 'club_committee_person_update' %} active{% endif %}">Campus Life - Other Clubs / Committees</a>
+          </nav>
+        </div>
+
+        <div class="admin-sidebar-footer">
+          <a href="{% url 'logout' %}" class="admin-nav-link admin-nav-link-danger">Logout</a>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        {% block content %}
+
+        {% endblock %}
+      </main>
+    {% endwith %}
   </body>
 </html>

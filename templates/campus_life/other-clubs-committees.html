@@ -1,0 +1,102 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container banner">
+    <div class="heading">Clubs & Committees</div>
+  </div>
+
+  <div class="container pad-top pad-bottom">
+    <div class="sec-container" style="margin-top: 20px; background-color: transparent; padding: 0;">
+      
+      {% if page.hero_image %}
+        <div class="small-container" style="margin-bottom: 20px; padding: 0; overflow: hidden; border-radius: 12px;">
+          <img src="{{ page.hero_image.url }}" alt="Clubs & Committees" style="width: 100%; height: auto; display: block;" />
+        </div>
+      {% endif %}
+
+      <div class="small-container article" style="margin-bottom: 30px; border-radius: 12px; padding: 25px; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); background: #fff;">
+        <div class="head-big" style="color: var(--primary); margin-bottom: 15px; font-size: 1.3rem;">Campus Life & Administration</div>
+        
+        <p style="margin-bottom: 15px; color: #444; line-height: 1.7; font-size: 1.05rem;">
+          The college functions dynamically with the support of various clubs and committees that contribute to the overall development of students and the effective administration of institutional activities.
+        </p>
+        
+        <p style="margin-bottom: 15px; color: #444; line-height: 1.7;">
+          The institution has established several committees such as the Examination Monitoring Committee, Academic Committee, and Canteen Committee, which ensure the smooth conduct of academic, administrative, and student support services. These committees work systematically to maintain discipline, uphold academic standards, and address the needs of students and staff.
+        </p>
+        
+        <p style="margin-bottom: 15px; color: #444; line-height: 1.7;">
+          In addition to committees, the college actively promotes a vibrant campus life through a variety of student clubs. These clubs provide platforms for students to explore their talents, enhance skills, and participate in co-curricular and extracurricular activities. Cultural clubs, literary clubs, sports clubs, and social service units encourage creativity, teamwork, leadership, and social responsibility among students.
+        </p>
+
+        <p style="margin: 0; color: #444; line-height: 1.7;">
+          Each club and committee functions under the guidance of faculty coordinators and designated members, ensuring proper planning and execution of activities. Regular meetings, events, and programs are conducted to engage students and enrich their learning experience beyond the classroom.
+        </p>
+      </div>
+
+      {% if page.content %}
+        <div class="small-container article" style="margin-bottom: 30px; border-radius: 12px; padding: 25px; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); background: #fff;">
+          <article>{{ page.content|safe }}</article>
+        </div>
+      {% endif %}
+
+      <div class="heading" style="margin-bottom: 20px;">Active Clubs & Committees</div>
+      <div class="small-container" style="padding: 0; background: transparent; margin-bottom: 30px; border: none; box-shadow: none;">
+        
+        {% if clubs %}
+          <div class="cl-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            {% for c in clubs %}
+              <div class="cl-card" style="display: flex; flex-direction: column; height: 100%; border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); background: #fff; overflow: hidden;">
+                <div class="cl-card-body" style="display: flex; flex-direction: column; flex-grow: 1; padding: 25px;">
+                  
+                  <div class="cl-card-title" style="font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 10px;">{{ c.name }}</div>
+                  <div class="cl-card-text" style="color: #555; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; flex-grow: 1;">{{ c.description }}</div>
+
+                  <div class="cl-people" style="display: grid; gap: 12px; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(15, 60, 113, 0.08);">
+                    {% if c.people.all %}
+                      {% for p in c.people.all %}
+                        <div class="cl-person" style="display: flex; align-items: center; gap: 15px;">
+                          {% if p.photo %}
+                            <img src="{{ p.photo.url }}" alt="{{ p.name }}" class="cl-person-photo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #f1f1f1;" />
+                          {% else %}
+                            <img src="{% static 'assets/user.png' %}" alt="Coordinator" class="cl-person-photo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #f1f1f1;" />
+                          {% endif %}
+                          <div>
+                            <div class="cl-person-name" style="font-weight: 700; color: #222; font-size: 1rem;">{{ p.name }}</div>
+                            <div class="cl-person-position" style="font-size: 0.85rem; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">{{ p.position }}</div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% else %}
+                      <div style="color: #666; font-size: 0.9rem;">No coordinators listed.</div>
+                    {% endif %}
+                  </div>
+
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="padding: 40px 20px; text-align: center; border: 1px dashed rgba(15, 60, 113, 0.3); border-radius: 12px; color: #666; background: #fff;">
+            No clubs / committees added yet.
+          </div>
+        {% endif %}
+      </div>
+
+      {% if page.attachment %}
+        <div class="small-container" style="display: flex; justify-content: flex-start; background: transparent; padding: 0;">
+          <a href="{{ page.attachment.url }}" class="btn fill" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: 500;" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            View / Download Attachment
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}

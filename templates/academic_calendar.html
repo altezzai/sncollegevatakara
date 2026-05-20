@@ -1,0 +1,55 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container banner">
+    <div class="heading">Academic Calendar 2025-26</div>
+  </div>
+
+  <div class="container pad-top pad-bottom">
+    <div class="sec-container" style="margin-top: 20px; background-color: transparent; padding: 0;">
+      <div style="display: flex; flex-direction: column; gap: 40px;">
+
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px; background: #fff;">
+          <div class="bold-head" style="color: var(--primary); font-size: 1.3rem; margin-bottom: 15px;">Important Guidelines & Notes</div>
+          
+          <p style="margin-bottom: 15px; color: #444; line-height: 1.6;">
+            <strong style="color: #222;">University of Calicut (DOA / PAREEKSHA BHAVAN)</strong><br/>
+            Issued Date: 15.07.2025
+          </p>
+          
+          <ul style="margin-left: 20px; color: #444; line-height: 1.7; margin-bottom: 0;">
+            <li><strong>Subject to Change:</strong> Dates are subject to change due to unforeseen contingencies.</li>
+            <li><strong>Confirmation:</strong> For confirmation of dates/schedules, please check University notifications, press releases, the University website, or contact PRO/PB/DSSC/Information Centres of the University.</li>
+            <li><strong>Pending Schedules:</strong> Details regarding Elections, Sports Meets, and Cultural activities will be updated in due course.</li>
+            <li><strong>Admissions:</strong> Specific details will be updated after confirming admission details.</li>
+          </ul>
+        </div>
+
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px; background: #fff;">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+            <div class="bold-head" style="color: var(--primary); font-size: 1.3rem; margin: 0;">Revised Academic Cum Examination Calendar</div>
+            <a class="btn outline" href="{% static 'assets/Revised_Academic_Cum_Examination_Calendar.pdf' %}" download style="display: inline-flex; align-items: center; gap: 8px; border-radius: 8px;">
+              <img src="{% static 'assets/download_black.svg' %}" alt="Download" style="width: 18px;" />
+              Download PDF
+            </a>
+          </div>
+          
+          <div style="border-radius: 8px; overflow: hidden; border: 1px solid rgba(0, 0, 0, 0.1); background: #f9f9f9;">
+            <iframe
+              src="{% static 'assets/Revised_Academic_Cum_Examination_Calendar.pdf' %}"
+              title="Revised Academic Cum Examination Calendar 2025-26"
+              width="100%"
+              height="700"
+              style="border: 0; display: block;"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  {% load static %}
+  <div class="admin-container">
+    <div class="admin-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+      <h2>Other Clubs / Committees</h2>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a class="btn-add btn" href="{% url 'club_committee_item_create' %}"><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New Club</a>
+        <a class="btn-edit btn" href="{% url 'club_committee_person_list' %}">Manage People</a>
+      </div>
+    </div>
+
+    <div class="table-con">
+      <table>
+        <thead>
+          <tr>
+            <th>Club / Committee</th>
+            <th>Description</th>
+            <th>Active</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for it in clubs %}
+            <tr>
+              <td>{{ it.name }}</td>
+              <td>{{ it.description }}</td>
+              <td>
+                {% if it.is_active %}
+                  <span class="status-badge status-active">Active</span>
+                {% else %}
+                  <span class="status-badge status-inactive">Inactive</span>
+                {% endif %}
+              </td>
+              <td class="actions">
+                <a class="btn-edit btn" href="{% url 'club_committee_item_update' it.id %}">Edit</a>
+                <a class="btn-delete btn" href="{% url 'club_committee_item_delete' it.id %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4">No clubs / committees yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

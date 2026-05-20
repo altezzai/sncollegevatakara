@@ -1,0 +1,29 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>Update Annual Report</h2>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      {% csrf_token %}
+
+      <label>Year</label>
+      <input type="number" name="year" value="{{ report.year }}" required />
+
+      <label>Title</label>
+      <input type="text" name="title" value="{{ report.title }}" required />
+
+      <label>Replace File (optional)</label>
+      <input type="file" name="file" />
+
+      {% if report.file %}
+        <p style="margin-top: 8px;">
+          Current: <a href="{{ report.file.url }}" target="_blank">View</a>
+        </p>
+      {% endif %}
+
+      <button type="submit" class="btn-edit btn">Update</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,9 +1,11 @@
-{% extends "admin_header.html" %} {% block content %} {% load static %}
+{% extends "admin_header.html" %} 
+{% block content %} 
+{% load static %}
 <div class="admin-container">
   <div class="admin-title">
     <h2>Banner List</h2>
-    <a class="btn-add btn" href="{% url 'create_banner' %}"
-      ><img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
+    <a class="btn-add btn" href="{% url 'create_banner' %}">
+      <img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
     </a>
   </div>
   <div class="table-con">
@@ -42,6 +44,6 @@
         {% endfor %}
       </tbody>
     </table>
-    {% endblock %}
   </div>
 </div>
+{% endblock %}

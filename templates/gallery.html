@@ -1,0 +1,69 @@
+{% extends 'header.html' %}
+{% block content %}
+  {% load static %}
+  <div class="container banner">
+    <div class="heading">Gallery</div>
+  </div>
+
+  <div class="container">
+    <div class="sec-container">
+      <div class="heading2">Gallery Photos</div>
+      <div class="gallery-grid">
+        {% for p in photos %}
+          {% comment %}Build a pipe-separated list of image URLs for slider preview{% endcomment %}
+          {% if p.images.all %}
+            <a class="gallery-card gallery-open"
+              href="#"
+              data-title="{{ p.title|escape }}"
+              data-images="{% for img in p.images.all %}
+                {{ img.image.url }}{% if not forloop.last %}|{% endif %}
+              {% endfor %}">
+              <img class="gallery-thumb" src="{{ p.images.first.image.url }}" alt="{{ p.title }}" loading="lazy" />
+              <div class="gallery-title">{{ p.title }}</div>
+            </a>
+          {% elif p.file %}
+            <a class="gallery-card gallery-open" href="#" data-title="{{ p.title|escape }}" data-images="{{ p.file.url }}">
+              <img class="gallery-thumb" src="{{ p.file.url }}" alt="{{ p.title }}" loading="lazy" />
+              <div class="gallery-title">{{ p.title }}</div>
+            </a>
+          {% endif %}
+        {% empty %}
+          <div class="small-container">
+            <div class="light">No photos added yet.</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="heading2" style="margin-top: 30px;">Media Gallery</div>
+      <div class="gallery-grid">
+        {% for m in media %}
+          <div class="gallery-card">
+            <video class="gallery-video" controls preload="metadata">
+              <source src="{{ m.file.url }}" />
+            </video>
+            <div class="gallery-title">{{ m.title }}</div>
+          </div>
+        {% empty %}
+          <div class="small-container">
+            <div class="light">No media added yet.</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-modal" id="galleryModal" aria-hidden="true">
+    <div class="gallery-modal-inner" role="dialog" aria-modal="true">
+      <button class="gallery-modal-close" type="button" id="galleryClose">×</button>
+      <div class="gallery-modal-title" id="galleryTitle"></div>
+      <div class="gallery-slider">
+        <button class="gallery-nav gallery-prev" type="button" id="galleryPrev">‹</button>
+        <img class="gallery-slider-img" id="galleryImg" alt="" />
+        <button class="gallery-nav gallery-next" type="button" id="galleryNext">›</button>
+      </div>
+      <div class="gallery-count" id="galleryCount"></div>
+    </div>
+  </div>
+
+  <script src="{% static 'gallery.js' %}" defer></script>
+{% endblock %}

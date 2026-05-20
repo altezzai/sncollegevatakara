@@ -1,0 +1,76 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  {% load static %}
+  
+  <style>
+    /* Table Alignment Fixes */
+    .table-con table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .table-con th, 
+    .table-con td {
+      text-align: left; /* Aligns both headers and data to the left consistently */
+      padding: 12px 15px;
+      vertical-align: middle;
+    }
+    /* Keep the actions column centered for better UI */
+    .table-con th.actions, 
+    .table-con td.actions {
+      text-align: center; 
+    }
+  </style>
+
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>Add-on Courses</h2>
+      <a class="btn-add btn" href="{% url 'add_on_course_create' %}">
+        <img src="{% static 'assets/new.svg' %}" class="img-small" alt="" />New
+      </a>
+    </div>
+
+    <div class="table-con">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Syllabus</th>
+            <th>Status</th>
+            <th class="actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in courses %}
+            <tr>
+              <td>{{ c.id }}</td>
+              <td>{{ c.title }}</td>
+              <td>
+                {% if c.file %}
+                  <a href="{{ c.file.url }}" class="btn-add btn btn-file" target="_blank">View PDF</a>
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td>
+                {% if c.is_active %}
+                  <span class="status-badge status-active">Active</span>
+                {% else %}
+                  <span class="status-badge status-inactive">Inactive</span>
+                {% endif %}
+              </td>
+              <td class="actions">
+                <a class="btn-edit btn" href="{% url 'add_on_course_update' c.id %}">Edit</a>
+                <a class="btn-delete btn" href="{% url 'add_on_course_delete' c.id %}">Delete</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" style="text-align: center;">No add-on courses yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

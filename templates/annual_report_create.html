@@ -1,0 +1,27 @@
+{% extends 'admin_header.html' %}
+{% block content %}
+  <div class="admin-container">
+    <div class="admin-title">
+      <h2>Create Annual Report</h2>
+    </div>
+
+    {% if error %}
+      <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+      {% csrf_token %}
+
+      <label>Year</label>
+      <input type="number" name="year" placeholder="e.g. 2025" required />
+
+      <label>Title</label>
+      <input type="text" name="title" placeholder="Annual Report" required />
+
+      <label>File (PDF)</label>
+      <input type="file" name="file" required />
+
+      <button type="submit" class="btn-add btn">Create</button>
+    </form>
+  </div>
+{% endblock %}

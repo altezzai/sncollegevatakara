@@ -1,0 +1,70 @@
+{% extends "admin_header.html" %}
+{% block content %}
+  {% load static %}
+  <body class="edit-body">
+    <div class="edit-formcon">
+      <h2>Add NSS Gallery Item</h2>
+
+      {% if error %}
+        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="media_type">Type:</label>
+        <select class="inp" id="media_type" name="media_type">
+          <option value="image" {% if selected_type == 'image' or not selected_type %}selected{% endif %}>Photo</option>
+          <option value="video" {% if selected_type == 'video' %}selected{% endif %}>Video</option>
+        </select>
+
+        <label for="caption">Caption (optional):</label>
+        <input class="inp" type="text" id="caption" name="caption" />
+
+        <div id="gallery_image_fields">
+          <label for="image">Photo upload (select one or more):</label>
+          <input class="inp" type="file" id="image" name="image" accept="image/*" multiple />
+        </div>
+
+        <div id="gallery_video_fields">
+          <label for="video_file">Video upload (select one or more):</label>
+          <input class="inp" type="file" id="video_file" name="video_file" accept="video/*" multiple />
+        </div>
+
+        <label for="is_active">Active:</label>
+        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" checked />
+
+        <button type="submit" class="btn">Create</button>
+      </form>
+
+      <a href="{% url 'campus_life_gallery_list' slug=page.slug %}" class="btn-edit btn">Back to NSS Gallery</a>
+    </div>
+
+    <script>
+      (function () {
+        function syncGalleryFields() {
+          var typeSelect = document.getElementById('media_type');
+          var imageWrap = document.getElementById('gallery_image_fields');
+          var videoWrap = document.getElementById('gallery_video_fields');
+          var imageInput = document.getElementById('image');
+          var videoInput = document.getElementById('video_file');
+          if (!typeSelect || !imageWrap || !videoWrap) return;
+
+          var t = typeSelect.value;
+          var isImage = t === 'image';
+          imageWrap.style.display = isImage ? 'block' : 'none';
+          videoWrap.style.display = isImage ? 'none' : 'block';
+
+          if (imageInput) imageInput.required = isImage;
+          if (videoInput) videoInput.required = !isImage;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+          var typeSelect = document.getElementById('media_type');
+          if (typeSelect) typeSelect.addEventListener('change', syncGalleryFields);
+          syncGalleryFields();
+        });
+      })();
+    </script>
+  {% endblock %}
+  </body>

@@ -1,73 +1,206 @@
-{% extends "header.html" %} {% block content %} {% load static %}
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
 <div class="container banner">
-  <div class="heading">IQAC (Internal Quality Assurance Cell)</div>
+  <div class="heading">Internal Quality Assurance Cell (IQAC)</div>
 </div>
 
-<div class="container">
-  <div class="sec-container">
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Dr. Aravindan Tharemmal</div>
-      <div class="light">Dept of Zoology (Coordinator)</div>
+<div class="container pad-top">
+  <div class="sec-container" style="margin-top: 20px;">
+    <div class="small-container article" style="margin-bottom: 20px;">
+      <p>The <strong>Internal Quality Assurance Cell (IQAC)</strong> of Sree Narayana College, Vadakara was constituted
+        on 6th October 2023 as a proactive step towards achieving academic excellence and preparing for accreditation by
+        the National Assessment and Accreditation Council (NAAC). The formation of IQAC reflects the institution's
+        commitment to quality enhancement, continuous improvement, and systematic performance evaluation in all academic
+        and administrative activities.</p>
     </div>
 
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Prof: M.P Narayanan</div>
-      <div class="light">Dept of Physics (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Dr. K. Venugopalan</div>
-      <div class="light">Dept of Commerce (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Prof: Abdul Majeed</div>
-      <div class="light">Dept of Botany (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Prof: Raveendran</div>
-      <div class="light">Dept of Chemistry (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Prof: Sudhir Kumar T</div>
-      <div class="light">Dept of English (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Smt. Jipsy Rani</div>
-      <div class="light">Dept of Hindi (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Smt. Raji .M</div>
-      <div class="light">Dept of Computer Science (Joint Coordinator)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Smt. Nisha .E</div>
-      <div class="light">Dept of Mathematics (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Smt. Harsha</div>
-      <div class="light">Dept of Psychology (Member)</div>
-    </div>
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Dr. Abdul Assis Koroth</div>
-      <div class="light">Dept of Commerce (Member)</div>
+    <div class="grid">
+      <div class="small-container">
+        <div class="head-big">Vision</div>
+        <p>To promote a culture of quality consciousness, innovation, and institutional excellence through structured
+          and sustained quality initiatives.</p>
+      </div>
+
+      <div class="small-container">
+        <div class="head-big">Objectives</div>
+        <ul>
+          <li style="margin-bottom: 10px;">To develop a system for conscious, consistent, and catalytic action to
+            improve academic and administrative performance.</li>
+          <li style="margin-bottom: 10px;">To prepare the institution for NAAC accreditation.</li>
+          <li style="margin-bottom: 10px;">To promote best practices in teaching, learning, research and extension
+            activities.</li>
+          <li style="margin-bottom: 10px;">To ensure timely documentation and reporting quality initiatives.</li>
+        </ul>
+      </div>
     </div>
 
-    <div class="small-container flex-just-start flex-c list">
-      <img class="img-small" src="{% static 'assets/user.png' %}" alt="" />
-      <div class="c">Sri. Jayarajan B.C</div>
-      <div class="light">Office Supdt. (Member)</div>
+    <div class="grid" style="margin-top: 20px;">
+      <div class="small-container">
+        <div class="head-big">Location</div>
+        <p>Sree Narayana College, Vadakara, a Self Financing college, is nestled atop a lush, green hill, in a remote
+          village, of Maniyur Grama Panchayath in the Kozhikode district of Kerala, affiliated to University of Calicut.
+          The college is situated at approximately 11.60° N latitude and 75.58° E longitude.</p>
+      </div>
+
+      <div class="small-container">
+        <div class="head-big">Academic Programmes</div>
+        <p>The College offers 14 undergraduate and 5 post graduate programmes in Arts, Science, Commerce and Management.
+          From the 2024-25 academic year onwards, the college offers innovative, flexible, skill-oriented, and
+          multidisciplinary 'Four Year Undergraduate Programmes (FYUGP)' designed to enhance learning and career
+          prospects.</p>
+      </div>
     </div>
   </div>
+</div>
+
+<div class="container pad-top">
+  <div class="heading" style="margin-bottom: 30px;">IQAC Committee</div>
+  <div class="members-table-wrap">
+    <table class="members-table">
+      <thead>
+        <tr>
+          <th class="members-col-photo">Photo</th>
+          <th>Name</th>
+          <th>Department/Designation</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in members %}
+        <tr>
+          <td class="members-col-photo">
+            {% if m.photo %}
+            <img class="members-photo" src="{{ m.photo.url }}" alt="{{ m.name }}" />
+            {% else %}
+            <img class="members-photo" src="{% static 'assets/user.png' %}" alt="{{ m.name }}" />
+            {% endif %}
+          </td>
+          <td class="members-name">{{ m.name }}</td>
+          <td class="members-position">{{ m.department }}</td>
+          <td class="members-position" style="font-weight: 600; color: var(--primary);">
+            {{ m.get_role_display }}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" style="text-align: center; padding: 30px;">No IQAC members added yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container pad-top pad-bottom">
+  <div class="heading" style="margin-bottom: 30px;">Activities & Initiatives</div>
+  <div class="sec-container" style="margin-top: 0; background-color: transparent; padding: 0;">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">NAAC Workshop</div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            5th Dec 2023</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">One-day workshop on "NAAC, an Overview of Revised
+          Accreditation Guidelines" was organized to familiarize faculty members and administrative staff with NAAC
+          criteria, metrics documentation, data management, and institutional preparedness strategies.</p>
+      </div>
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">Envision - 2024</div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            22nd - 29th Jan 2024</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">An enriching series of seminars and workshops coordinated
+          by various departments, embracing a wide range of topics and expertise to provide valuable insights and foster
+          knowledge exchange.</p>
+      </div>
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">Orientation Programme on FYUGP
+          </div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            2024 • Town Hall</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">Organized for the general public and prospective students.
+          Dr. K.T. Varghese delivered an insightful presentation explaining the curriculum framework, credit structure,
+          and multiple exit options under the new FYUGP system.</p>
+      </div>
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">Online Orientation on FYUGP
+          </div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            28th Jun 2024</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">Conducted under the leadership of the Honorable Minister of
+          Higher Education, Kerala, for the faculties of higher education institutions. Emphasized the importance of
+          revamping higher education to achieve global standards.</p>
+      </div>
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">Envision - 2025</div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            10th - 17th Feb 2025</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">An intellectual journey through 11 technical sessions that
+          ignited curiosity among participants, elevated the understanding of present scenarios of relevant subjects,
+          and empowered students through dynamic interactions.</p>
+      </div>
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">Vijnanolsavam</div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            1st Jul 2025</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">Inauguration of the FYUGP for 2025-26, inaugurated by Hon.
+          Higher Education Minister Dr. R. Bindu. The program was live-streamed, followed by an orientation lecture by
+          the Academic Coordinator outlining academic opportunities.</p>
+      </div>
+
+      <div class="small-container"
+        style="display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px;">
+        <div
+          style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div class="bold-head" style="color: var(--primary); margin: 0; width: auto;">Envision - 2026</div>
+          <div
+            style="background-color: var(--third); color: var(--primary); padding: 5px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+            11th & 13th Feb 2026</div>
+        </div>
+        <p style="margin: 0; color: #444; line-height: 1.5;">Envisioned as a platform to enrich knowledge and encourage
+          academic interaction among students and faculty alike. Through such programs, IQAC strives to enhance quality,
+          innovation, and excellence in higher education.</p>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 {% endblock %}

@@ -4,18 +4,202 @@ from .models import Event
 from .models import News,NewsImage
 from .models import Notification
 from .models import Banner
+from .models import AnnualReport
+from .models import IQACMember
+from .models import GalleryItem
+from .models import CampusLifePage
+from .models import CampusLifeMember
+from .models import CampusLifeGalleryItem
+from .models import ScholarshipItem, ClubCommittee, ClubCommitteePerson
+from .models import GalleryImage
+from .models import AddOnCourse
+from .models import ProgrammeSyllabusCourse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from datetime import date
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
+from django.template.loader import select_template
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
 import os
 from django.conf import settings
+import uuid
+from collections import OrderedDict
+from django.db.models import Prefetch
+
+
+def mou_details(request):
+    return render(request, 'mou_details.html')
+
+
+def admission_process(request):
+    return render(request, 'admission_process.html')
+
+
+def programme_syllabus(request):
+    level = (request.GET.get('level') or ProgrammeSyllabusCourse.TYPE_FYUGP).strip().lower()
+    if level not in {ProgrammeSyllabusCourse.TYPE_FYUGP, ProgrammeSyllabusCourse.TYPE_UG, ProgrammeSyllabusCourse.TYPE_PG}:
+        level = ProgrammeSyllabusCourse.TYPE_FYUGP
+
+    items = ProgrammeSyllabusCourse.objects.filter(is_active=True, course_type=level).order_by('title', 'id')
+    return render(request, 'programme_syllabus.html', {'level': level, 'items': items})
+
+
+def programme_course_list(request):
+    if 'username' in request.session:
+        courses = ProgrammeSyllabusCourse.objects.all().order_by('-created_at', '-id')
+        return render(request, 'programme_course_list.html', {'courses': courses})
+    return redirect('login')
+
+
+def programme_course_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            course_type = (request.POST.get('course_type') or '').strip().lower()
+            syllabus_pdf = request.FILES.get('syllabus_pdf')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            allowed_types = {ProgrammeSyllabusCourse.TYPE_FYUGP, ProgrammeSyllabusCourse.TYPE_UG, ProgrammeSyllabusCourse.TYPE_PG}
+            if course_type not in allowed_types:
+                course_type = ProgrammeSyllabusCourse.TYPE_UG
+
+            if not title:
+                return render(request, 'programme_course_create.html', {'error': 'Course name is required.'})
+            if not syllabus_pdf:
+                return render(request, 'programme_course_create.html', {'error': 'Syllabus PDF is required.'})
+
+            ProgrammeSyllabusCourse.objects.create(
+                title=title,
+                course_type=course_type,
+                syllabus_pdf=syllabus_pdf,
+                is_active=is_active,
+            )
+            return redirect('programme_course_list')
+
+        return render(request, 'programme_course_create.html')
+    return redirect('login')
+
+
+def programme_course_update(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(ProgrammeSyllabusCourse, pk=course_id)
+
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            course_type = (request.POST.get('course_type') or '').strip().lower()
+            syllabus_pdf = request.FILES.get('syllabus_pdf')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            allowed_types = {ProgrammeSyllabusCourse.TYPE_FYUGP, ProgrammeSyllabusCourse.TYPE_UG, ProgrammeSyllabusCourse.TYPE_PG}
+            if course_type not in allowed_types:
+                course_type = ProgrammeSyllabusCourse.TYPE_UG
+
+            if not title:
+                return render(request, 'programme_course_update.html', {'course': course, 'error': 'Course name is required.'})
+
+            course.title = title
+            course.course_type = course_type
+            course.is_active = is_active
+            if syllabus_pdf:
+                course.syllabus_pdf = syllabus_pdf
+            course.save()
+            return redirect('programme_course_list')
+
+        return render(request, 'programme_course_update.html', {'course': course})
+    return redirect('login')
+
+
+def programme_course_delete(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(ProgrammeSyllabusCourse, pk=course_id)
+        course.delete()
+        return redirect('programme_course_list')
+    return redirect('login')
+
+
+def academic_calendar(request):
+    return render(request, 'academic_calendar.html')
+
+
+def library(request):
+    return render(request, 'library.html')
+
+
+def asap(request):
+    return render(request, 'asap.html')
+
+
+def add_on_courses(request):
+    courses = AddOnCourse.objects.filter(is_active=True)
+    return render(request, 'add_on_courses.html', {'courses': courses})
+
+
+def add_on_course_list(request):
+    if 'username' in request.session:
+        courses = AddOnCourse.objects.all().order_by('-created_at', '-id')
+        return render(request, 'add_on_course_list.html', {'courses': courses})
+    return redirect('login')
+
+
+def add_on_course_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            is_active = True if request.POST.get('is_active') == 'on' else False
+            syllabus_file = request.FILES.get('file')
+
+            if not title:
+                return render(request, 'add_on_course_create.html', {'error': 'Course name is required.'})
+
+            AddOnCourse.objects.create(
+                title=title,
+                description=description,
+                file=syllabus_file,
+                is_active=is_active,
+            )
+            return redirect('add_on_course_list')
+
+        return render(request, 'add_on_course_create.html')
+    return redirect('login')
+
+
+def add_on_course_update(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(AddOnCourse, pk=course_id)
+
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            is_active = True if request.POST.get('is_active') == 'on' else False
+            syllabus_file = request.FILES.get('file')
+
+            if not title:
+                return render(request, 'add_on_course_update.html', {'course': course, 'error': 'Course name is required.'})
+
+            course.title = title
+            course.description = description
+            course.is_active = is_active
+            if syllabus_file:
+                course.file = syllabus_file
+            course.save()
+            return redirect('add_on_course_list')
+
+        return render(request, 'add_on_course_update.html', {'course': course})
+    return redirect('login')
+
+
+def add_on_course_delete(request, course_id):
+    if 'username' in request.session:
+        course = get_object_or_404(AddOnCourse, pk=course_id)
+        course.delete()
+        return redirect('add_on_course_list')
+    return redirect('login')
 #home
 def index(request):
     # employees = Employee.objects.all()
@@ -51,15 +235,6 @@ def faculty(request,dept):
     # print(type(employees[0].qualification))
     return render(request, 'faculty.html',{'employees':employees,'depart':dept})
 
-def club(request):
-    # employees = Employee.objects.all()
-    return render(request, 'nss.html')
-def fitness(request):
-    # employees = Employee.objects.all()
-    return render(request, 'fitness.html')
-def bhoomi(request):
-    # employees = Employee.objects.all()
-    return render(request, 'bhoomi.html')
 def courses(request):
     # employees = Employee.objects.all()
     return render(request, 'courses.html')
@@ -67,23 +242,416 @@ def courses(request):
 def FYUGP(request):
     return render(request, 'FYUGP.html')
 def iqac(request):
-    # employees = Employee.objects.all()
-    return render(request, 'iqac.html')
-def staffcouncil(request):
-    # employees = Employee.objects.all()
-    return render(request, 'staffcouncil.html')
+    members = IQACMember.objects.filter(is_active=True)
+    return render(request, 'iqac.html', {"members": members})
+
 def about(request):
     # employees = Employee.objects.all()
     return render(request, 'about.html')
 def applicatonforms(request):
     # employees = Employee.objects.all()
     return render(request, 'applicatonforms.html')
-def placement(request):
-    # employees = Employee.objects.all()
-    return render(request, 'placement.html')
-def scholarship(request):
-    # employees = Employee.objects.all()
-    return render(request, 'scholarship.html')
+
+def campus_life(request):
+    pages = CampusLifePage.objects.filter(is_published=True)
+    return render(request, 'campus_life_list.html', {'pages': pages})
+
+
+def campus_life_page(request, slug):
+    page = get_object_or_404(CampusLifePage, slug=slug, is_published=True)
+    members = page.members.filter(is_active=True)
+    gallery_items = page.gallery_items.filter(is_active=True)
+
+    scholarships = None
+    scholarships_payload = None
+    clubs = None
+    if slug == 'scholarships':
+        scholarships = ScholarshipItem.objects.filter(page=page, is_active=True)
+        scholarships_payload = [
+            {
+                'id': s.id,
+                'name': s.name,
+                'image': (s.image.url if s.image else ''),
+                'description': s.description or '',
+                'link_url': s.link_url or '',
+            }
+            for s in scholarships
+        ]
+    if slug == 'other-clubs-committees':
+        people_qs = ClubCommitteePerson.objects.filter(is_active=True).order_by('name', 'id')
+        clubs = (
+            ClubCommittee.objects.filter(page=page, is_active=True)
+            .prefetch_related(Prefetch('people', queryset=people_qs))
+            .order_by('name', 'id')
+        )
+
+    nss_gallery_groups = None
+    if slug == 'nss':
+        image_qs = gallery_items.filter(media_type=CampusLifeGalleryItem.TYPE_IMAGE).exclude(image='').exclude(image__isnull=True).order_by('-created_at', '-id')
+        video_qs = gallery_items.filter(media_type=CampusLifeGalleryItem.TYPE_VIDEO).exclude(video_file='').exclude(video_file__isnull=True).order_by('-created_at', '-id')
+
+        def build_groups(qs, kind):
+            groups = OrderedDict()
+            for it in qs:
+                batch = str(getattr(it, 'upload_batch', None) or it.id)
+                key = f"{kind}:{batch}"
+                if key not in groups:
+                    groups[key] = {
+                        'key': key,
+                        'type': kind,
+                        'caption': it.caption or '',
+                        'items': [],
+                    }
+
+                if kind == 'image' and it.image:
+                    groups[key]['items'].append(it.image.url)
+                if kind == 'video' and it.video_file:
+                    groups[key]['items'].append(it.video_file.url)
+
+                # Prefer a non-empty caption from any item in the batch
+                if not groups[key]['caption'] and it.caption:
+                    groups[key]['caption'] = it.caption
+            return list(groups.values())
+
+        nss_gallery_groups = build_groups(image_qs, 'image') + build_groups(video_qs, 'video')
+
+    # Separate template per Campus Life page (falls back to the generic template).
+    template_candidates = [
+        f"campus_life/{slug}.html",
+        "campus_life_detail.html",
+    ]
+    template = select_template(template_candidates)
+    return render(
+        request,
+        template.template.name,
+        {
+            'page': page,
+            'members': members,
+            'gallery_items': gallery_items,
+            'nss_gallery_groups': nss_gallery_groups,
+            'scholarships': scholarships,
+            'scholarships_payload': scholarships_payload,
+            'clubs': clubs,
+        },
+    )
+
+
+def scholarship_item_list(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='scholarships')
+        items = ScholarshipItem.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'scholarship_item_list.html', {'page': page, 'items': items, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def scholarship_item_create(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='scholarships')
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            link_url = (request.POST.get('link_url') or '').strip()
+            image = request.FILES.get('image')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not name:
+                return render(request, 'scholarship_item_create.html', {'page': page, 'error': 'Scholarship name is required.', 'active_slug': page.slug})
+
+            ScholarshipItem.objects.create(
+                page=page,
+                name=name,
+                description=description,
+                link_url=link_url,
+                image=image,
+                is_active=is_active,
+            )
+            return redirect('scholarship_item_list')
+
+        return render(request, 'scholarship_item_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def scholarship_item_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(ScholarshipItem, pk=item_id)
+        page = item.page
+        if page.slug != 'scholarships':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        if request.method == 'POST':
+            item.name = (request.POST.get('name') or '').strip()
+            item.description = (request.POST.get('description') or '').strip()
+            item.link_url = (request.POST.get('link_url') or '').strip()
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            image = request.FILES.get('image')
+            if image:
+                item.image = image
+
+            if not item.name:
+                return render(request, 'scholarship_item_update.html', {'item': item, 'error': 'Scholarship name is required.', 'active_slug': page.slug})
+
+            item.save()
+            return redirect('scholarship_item_list')
+
+        return render(request, 'scholarship_item_update.html', {'item': item, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def scholarship_item_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(ScholarshipItem, pk=item_id)
+        item.delete()
+        return redirect('scholarship_item_list')
+    return redirect('login')
+
+
+def club_committee_item_list(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        clubs = ClubCommittee.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'club_committee_item_list.html', {'page': page, 'clubs': clubs, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_item_create(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            description = (request.POST.get('description') or '').strip()
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not name or not description:
+                return render(
+                    request,
+                    'club_committee_item_create.html',
+                    {'page': page, 'error': 'Club/Committee name and description are required.', 'active_slug': page.slug},
+                )
+
+            ClubCommittee.objects.create(
+                page=page,
+                name=name,
+                description=description,
+                is_active=is_active,
+            )
+            return redirect('club_committee_item_list')
+
+        return render(request, 'club_committee_item_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_item_update(request, item_id):
+    if 'username' in request.session:
+        club = get_object_or_404(ClubCommittee, pk=item_id)
+        page = club.page
+        if page.slug != 'other-clubs-committees':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        if request.method == 'POST':
+            club.name = (request.POST.get('name') or '').strip()
+            club.description = (request.POST.get('description') or '').strip()
+            club.is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not club.name or not club.description:
+                return render(
+                    request,
+                    'club_committee_item_update.html',
+                    {'item': club, 'error': 'Club/Committee name and description are required.', 'active_slug': page.slug},
+                )
+
+            club.save()
+            return redirect('club_committee_item_list')
+
+        return render(request, 'club_committee_item_update.html', {'item': club, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_item_delete(request, item_id):
+    if 'username' in request.session:
+        club = get_object_or_404(ClubCommittee, pk=item_id)
+        club.delete()
+        return redirect('club_committee_item_list')
+    return redirect('login')
+
+
+def club_committee_person_list(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        people = (
+            ClubCommitteePerson.objects.filter(club__page=page)
+            .select_related('club')
+            .order_by('-created_at', '-id')
+        )
+        return render(request, 'club_committee_person_list.html', {'page': page, 'people': people, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_person_create(request):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug='other-clubs-committees')
+        clubs = ClubCommittee.objects.filter(page=page).order_by('name', 'id')
+
+        if request.method == 'POST':
+            club_id = (request.POST.get('club_id') or '').strip()
+            name = (request.POST.get('person_name') or '').strip()
+            position = (request.POST.get('person_position') or '').strip()
+            photo = request.FILES.get('person_photo')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            try:
+                club = ClubCommittee.objects.get(pk=club_id, page=page)
+            except (ClubCommittee.DoesNotExist, ValueError, TypeError):
+                club = None
+
+            if not club or not name or not position:
+                return render(
+                    request,
+                    'club_committee_person_create.html',
+                    {
+                        'page': page,
+                        'clubs': clubs,
+                        'error': 'Club/Committee, person name and position are required.',
+                        'active_slug': page.slug,
+                    },
+                )
+
+            ClubCommitteePerson.objects.create(
+                club=club,
+                name=name,
+                position=position,
+                photo=photo,
+                is_active=is_active,
+            )
+            return redirect('club_committee_person_list')
+
+        return render(request, 'club_committee_person_create.html', {'page': page, 'clubs': clubs, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def club_committee_person_update(request, person_id):
+    if 'username' in request.session:
+        person = get_object_or_404(ClubCommitteePerson, pk=person_id)
+        page = person.club.page
+        if page.slug != 'other-clubs-committees':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        clubs = ClubCommittee.objects.filter(page=page).order_by('name', 'id')
+
+        if request.method == 'POST':
+            club_id = (request.POST.get('club_id') or '').strip()
+            person.name = (request.POST.get('person_name') or '').strip()
+            person.position = (request.POST.get('person_position') or '').strip()
+            person.is_active = True if request.POST.get('is_active') == 'on' else False
+            photo = request.FILES.get('person_photo')
+
+            try:
+                club = ClubCommittee.objects.get(pk=club_id, page=page)
+            except (ClubCommittee.DoesNotExist, ValueError, TypeError):
+                club = None
+
+            if not club or not person.name or not person.position:
+                return render(
+                    request,
+                    'club_committee_person_update.html',
+                    {
+                        'person': person,
+                        'clubs': clubs,
+                        'error': 'Club/Committee, person name and position are required.',
+                        'active_slug': page.slug,
+                    },
+                )
+
+            person.club = club
+            if photo:
+                person.photo = photo
+            person.save()
+            return redirect('club_committee_person_list')
+
+        return render(
+            request,
+            'club_committee_person_update.html',
+            {'person': person, 'clubs': clubs, 'active_slug': page.slug},
+        )
+    return redirect('login')
+
+
+def club_committee_person_delete(request, person_id):
+    if 'username' in request.session:
+        person = get_object_or_404(ClubCommitteePerson, pk=person_id)
+        person.delete()
+        return redirect('club_committee_person_list')
+    return redirect('login')
+
+
+def campus_life_member_list(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+        members = CampusLifeMember.objects.filter(page=page).order_by('sort_order', 'name', 'id')
+        return render(request, 'campus_life_member_list.html', {'page': page, 'members': members, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_member_create(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            position = (request.POST.get('position') or '').strip()
+            photo = request.FILES.get('photo')
+
+            if not name or not position:
+                return render(
+                    request,
+                    'campus_life_member_create.html',
+                    {'error': 'Name and Position are required.', 'page': page},
+                )
+
+            CampusLifeMember.objects.create(
+                page=page,
+                name=name,
+                position=position,
+                photo=photo,
+            )
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        return render(request, 'campus_life_member_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_member_update(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(CampusLifeMember, pk=member_id)
+
+        if request.method == 'POST':
+            member.name = (request.POST.get('name') or '').strip()
+            member.position = (request.POST.get('position') or '').strip()
+            member.is_active = True if request.POST.get('is_active') == 'on' else False
+            photo = request.FILES.get('photo')
+            if photo:
+                member.photo = photo
+
+            if not member.name or not member.position:
+                return render(
+                    request,
+                    'campus_life_member_update.html',
+                    {'error': 'Name and Position are required.', 'member': member},
+                )
+
+            member.save()
+            return redirect('campus_life_member_list', slug=member.page.slug)
+
+        return render(request, 'campus_life_member_update.html', {'member': member, 'active_slug': member.page.slug})
+    return redirect('login')
+
+
+def campus_life_member_delete(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(CampusLifeMember, pk=member_id)
+        slug = member.page.slug
+        member.delete()
+        return redirect('campus_life_member_list', slug=slug)
+    return redirect('login')
 def universityinfo(request):
     # employees = Employee.objects.all()
     return render(request, 'universityinfo.html')
@@ -103,6 +671,284 @@ def manager(request):
     return render(request, "manager.html")
 def principal(request):
     return render(request, "principal.html")
+
+
+# About Us (static pages)
+def history(request):
+    return render(request, "history.html")
+
+
+def vision_mission(request):
+    return render(request, "vision_mission.html")
+
+
+def funding_agencies(request):
+    return render(request, "funding_agencies.html")
+
+
+def icc(request):
+    return render(request, "icc.html")
+
+
+def statutory_bodies(request):
+    return render(request, "statutory_bodies.html")
+
+
+def administrative_office(request):
+    return render(request, "administrative_office.html")
+
+
+def organogram(request):
+    return render(request, "organogram.html")
+
+
+def rti(request):
+    return render(request, "rti.html")
+
+
+def alumni(request):
+    return render(request, "alumni.html")
+
+
+def contact_us(request):
+    return render(request, "contact_us.html")
+
+
+# Gallery (public)
+def gallery(request):
+    photos = GalleryItem.objects.filter(
+        is_active=True,
+        media_type=GalleryItem.TYPE_IMAGE,
+    ).prefetch_related('images')
+    media = GalleryItem.objects.filter(
+        is_active=True,
+        media_type=GalleryItem.TYPE_VIDEO,
+    )
+    return render(request, "gallery.html", {"photos": photos, "media": media})
+
+
+# Gallery (admin CRUD)
+def gallery_item_list(request):
+    if 'username' in request.session:
+        items = GalleryItem.objects.all()
+        return render(request, 'gallery_item_list.html', {'items': items})
+    return redirect('login')
+
+
+def gallery_item_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = (request.POST.get('title') or '').strip()
+            media_type = request.POST.get('media_type') or GalleryItem.TYPE_IMAGE
+            file = request.FILES.get('file')
+            files = request.FILES.getlist('files')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+
+            if not title:
+                return render(
+                    request,
+                    'gallery_item_create.html',
+                    {'error': 'Title is required.'},
+                )
+
+            if media_type == GalleryItem.TYPE_VIDEO and not file:
+                return render(
+                    request,
+                    'gallery_item_create.html',
+                    {'error': 'Please upload a video file.'},
+                )
+
+            if media_type == GalleryItem.TYPE_IMAGE and not files:
+                return render(
+                    request,
+                    'gallery_item_create.html',
+                    {'error': 'Please upload one or more images.'},
+                )
+
+            item = GalleryItem.objects.create(
+                title=title,
+                media_type=media_type,
+                file=file if media_type == GalleryItem.TYPE_VIDEO else None,
+                is_active=is_active,
+            )
+
+            if media_type == GalleryItem.TYPE_IMAGE:
+                for f in files:
+                    GalleryImage.objects.create(gallery_item=item, image=f)
+
+            return redirect('gallery_item_list')
+
+        return render(request, 'gallery_item_create.html')
+    return redirect('login')
+
+
+def gallery_item_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(GalleryItem, pk=item_id)
+
+        if request.method == 'POST':
+            item.title = (request.POST.get('title') or '').strip()
+            item.media_type = request.POST.get('media_type') or item.media_type
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            file = request.FILES.get('file')
+            files = request.FILES.getlist('files')
+
+            if item.media_type == GalleryItem.TYPE_VIDEO:
+                if file:
+                    item.file = file
+            else:
+                # For images: add new uploaded images (if any)
+                for f in files:
+                    GalleryImage.objects.create(gallery_item=item, image=f)
+
+            if not item.title:
+                return render(
+                    request,
+                    'gallery_item_update.html',
+                    {'error': 'Title is required.', 'item': item},
+                )
+
+            item.save()
+            return redirect('gallery_item_list')
+
+        return render(request, 'gallery_item_update.html', {'item': item})
+    return redirect('login')
+
+
+def gallery_item_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(GalleryItem, pk=item_id)
+        item.delete()
+        return redirect('gallery_item_list')
+    return redirect('login')
+
+
+def gallery_image_delete(request, item_id, image_id):
+    if 'username' in request.session:
+        image = get_object_or_404(GalleryImage, pk=image_id, gallery_item_id=item_id)
+        image.delete()
+        return redirect('gallery_item_update', item_id=item_id)
+    return redirect('login')
+
+
+# Annual Reports
+def annual_reports(request):
+    reports = AnnualReport.objects.all()
+    return render(request, "annual_reports.html", {"reports": reports})
+
+
+def annual_report_list(request):
+    if 'username' in request.session:
+        reports = AnnualReport.objects.all()
+        return render(request, "annual_report_list.html", {"reports": reports})
+    return redirect('login')
+
+
+def annual_report_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            year = request.POST.get('year')
+            file = request.FILES.get('file')
+
+            if not file:
+                return render(request, "annual_report_create.html", {"error": "Please upload a file"})
+
+            AnnualReport.objects.create(title=title, year=year or 0, file=file)
+            return redirect('annual_report_list')
+
+        return render(request, "annual_report_create.html")
+    return redirect('login')
+
+
+def annual_report_update(request, report_id):
+    if 'username' in request.session:
+        report = get_object_or_404(AnnualReport, pk=report_id)
+
+        if request.method == 'POST':
+            report.title = request.POST.get('title')
+            report.year = request.POST.get('year') or report.year
+            file = request.FILES.get('file')
+            if file:
+                report.file = file
+            report.save()
+            return redirect('annual_report_list')
+
+        return render(request, "annual_report_update.html", {"report": report})
+    return redirect('login')
+
+
+def annual_report_delete(request, report_id):
+    if 'username' in request.session:
+        report = get_object_or_404(AnnualReport, pk=report_id)
+        report.delete()
+        return redirect('annual_report_list')
+    return redirect('login')
+
+
+# IQAC (Admin CRUD)
+def iqac_member_list(request):
+    if 'username' in request.session:
+        members = IQACMember.objects.all()
+        return render(request, 'iqac_member_list.html', {'members': members})
+    return redirect('login')
+
+
+def iqac_member_create(request):
+    if 'username' in request.session:
+        if request.method == 'POST':
+            name = (request.POST.get('name') or '').strip()
+            department = (request.POST.get('department') or '').strip()
+            role = request.POST.get('role') or IQACMember.ROLE_MEMBER
+            photo = request.FILES.get('photo')
+
+            if not name or not department:
+                return render(
+                    request,
+                    'iqac_member_create.html',
+                    {'error': 'Name and Department are required.'},
+                )
+
+            IQACMember.objects.create(name=name, department=department, role=role, photo=photo)
+            return redirect('iqac_member_list')
+
+        return render(request, 'iqac_member_create.html')
+    return redirect('login')
+
+
+def iqac_member_update(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(IQACMember, pk=member_id)
+
+        if request.method == 'POST':
+            member.name = (request.POST.get('name') or '').strip()
+            member.department = (request.POST.get('department') or '').strip()
+            member.role = request.POST.get('role') or member.role
+            member.is_active = True if request.POST.get('is_active') == 'on' else False
+            photo = request.FILES.get('photo')
+            if photo:
+                member.photo = photo
+
+            if not member.name or not member.department:
+                return render(
+                    request,
+                    'iqac_member_update.html',
+                    {'error': 'Name and Department are required.', 'member': member},
+                )
+
+            member.save()
+            return redirect('iqac_member_list')
+
+        return render(request, 'iqac_member_update.html', {'member': member})
+    return redirect('login')
+
+
+def iqac_member_delete(request, member_id):
+    if 'username' in request.session:
+        member = get_object_or_404(IQACMember, pk=member_id)
+        member.delete()
+        return redirect('iqac_member_list')
+    return redirect('login')
 
 #Employee
 def create_employee(request):
@@ -523,4 +1369,119 @@ def login(request):
 def logout(request):
     if 'username' in request.session:
         request.session.flush()
+    return redirect('login')
+
+
+def campus_life_gallery_list(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+        if page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=page.slug)
+        items = CampusLifeGalleryItem.objects.filter(page=page).order_by('-created_at', '-id')
+        return render(request, 'campus_life_gallery_list.html', {'page': page, 'items': items, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_gallery_create(request, slug):
+    if 'username' in request.session:
+        page = get_object_or_404(CampusLifePage, slug=slug)
+        if page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=page.slug)
+
+        if request.method == 'POST':
+            media_type = request.POST.get('media_type') or CampusLifeGalleryItem.TYPE_IMAGE
+            caption = (request.POST.get('caption') or '').strip()
+            images = request.FILES.getlist('image')
+            video_files = request.FILES.getlist('video_file')
+            is_active = True if request.POST.get('is_active') == 'on' else False
+            batch_id = uuid.uuid4()
+
+            if media_type == CampusLifeGalleryItem.TYPE_IMAGE and not images:
+                return render(
+                    request,
+                    'campus_life_gallery_create.html',
+                    {'page': page, 'error': 'Please upload an image.', 'active_slug': page.slug, 'selected_type': media_type},
+                )
+
+            if media_type == CampusLifeGalleryItem.TYPE_VIDEO and not video_files:
+                return render(
+                    request,
+                    'campus_life_gallery_create.html',
+                    {'page': page, 'error': 'Please upload a video file.', 'active_slug': page.slug, 'selected_type': media_type},
+                )
+
+            if media_type == CampusLifeGalleryItem.TYPE_IMAGE:
+                for img in images:
+                    CampusLifeGalleryItem.objects.create(
+                        page=page,
+                        upload_batch=batch_id,
+                        media_type=media_type,
+                        caption=caption,
+                        image=img,
+                        video_file=None,
+                        video_url='',
+                        is_active=is_active,
+                    )
+            else:
+                for vf in video_files:
+                    CampusLifeGalleryItem.objects.create(
+                        page=page,
+                        upload_batch=batch_id,
+                        media_type=media_type,
+                        caption=caption,
+                        image=None,
+                        video_file=vf,
+                        video_url='',
+                        is_active=is_active,
+                    )
+            return redirect('campus_life_gallery_list', slug=page.slug)
+
+        return render(request, 'campus_life_gallery_create.html', {'page': page, 'active_slug': page.slug})
+    return redirect('login')
+
+
+def campus_life_gallery_update(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(CampusLifeGalleryItem, pk=item_id)
+        if item.page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=item.page.slug)
+
+        if request.method == 'POST':
+            item.caption = (request.POST.get('caption') or '').strip()
+            item.is_active = True if request.POST.get('is_active') == 'on' else False
+            item.media_type = request.POST.get('media_type') or item.media_type
+
+            image = request.FILES.get('image')
+            video_file = request.FILES.get('video_file')
+
+            if item.media_type == CampusLifeGalleryItem.TYPE_IMAGE:
+                if image:
+                    item.image = image
+                item.video_file = None
+                item.video_url = ''
+                if not item.image:
+                    return render(request, 'campus_life_gallery_update.html', {'item': item, 'error': 'Image is required.', 'active_slug': item.page.slug})
+            else:
+                if video_file:
+                    item.video_file = video_file
+                item.video_url = ''
+                item.image = None
+                if not item.video_file:
+                    return render(request, 'campus_life_gallery_update.html', {'item': item, 'error': 'Video file is required.', 'active_slug': item.page.slug})
+
+            item.save()
+            return redirect('campus_life_gallery_list', slug=item.page.slug)
+
+        return render(request, 'campus_life_gallery_update.html', {'item': item, 'active_slug': item.page.slug})
+    return redirect('login')
+
+
+def campus_life_gallery_delete(request, item_id):
+    if 'username' in request.session:
+        item = get_object_or_404(CampusLifeGalleryItem, pk=item_id)
+        if item.page.slug != 'nss':
+            return redirect('campus_life_member_list', slug=item.page.slug)
+        slug = item.page.slug
+        item.delete()
+        return redirect('campus_life_gallery_list', slug=slug)
     return redirect('login')

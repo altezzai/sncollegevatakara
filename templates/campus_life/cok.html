@@ -1,0 +1,107 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container banner">
+    <div class="heading">Campuses Of Kozhikode (COK)</div>
+  </div>
+
+  <div class="container pad-top pad-bottom">
+    <div class="sec-container" style="margin-top: 20px; background-color: transparent; padding: 0;">
+      
+      {% if page.hero_image %}
+        <div class="small-container" style="margin-bottom: 20px; padding: 0; overflow: hidden; border-radius: 12px;">
+          <img src="{{ page.hero_image.url }}" alt="COK" style="width: 100%; height: auto; display: block;" />
+        </div>
+      {% endif %}
+
+      {% if page.content %}
+        <div class="small-container article" style="margin-bottom: 30px; border-radius: 12px; padding: 25px; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);">
+          <article>{{ page.content|safe }}</article>
+        </div>
+      {% endif %}
+
+      <div class="small-container article" style="margin-bottom: 30px; border-radius: 12px; padding: 25px; background: #fff; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);">
+        <p style="margin-bottom: 15px; font-size: 1.05rem; line-height: 1.7; color: #333;">
+          The <strong>Campuses Of Kozhikode (COK)</strong> unit has been functioning in Sree Narayana College since 2023. The unit organizes many programs that help in the overall development of students.
+        </p>
+        <p style="margin: 0; line-height: 1.7; color: #444;">
+          It mainly focuses on developing students' personalities through community services, promoting social welfare, and providing services to society without any bias.
+        </p>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;">
+        
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="bold-head" style="color: var(--primary); margin-bottom: 12px;">Key Activities</div>
+          <p style="margin: 0; color: #444; line-height: 1.6;">
+            The COK unit is actively involved in various social service initiatives, such as:
+          </p>
+          <ul style="margin-left: 20px; margin-top: 10px; color: #444; line-height: 1.6;">
+            <li>Blood donation camps</li>
+            <li>Cleaning drives</li>
+            <li>Charity activities</li>
+            <li>Community service programs</li>
+          </ul>
+        </div>
+
+        <div class="small-container" style="border: 1px solid rgba(15, 60, 113, 0.1); border-top: 4px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px;">
+          <div class="bold-head" style="color: var(--primary); margin-bottom: 12px;">Unit Details</div>
+          <ul style="margin-left: 0; list-style: none; color: #444; line-height: 1.8;">
+            <li><strong style="color: #222;">Teacher Coordinators:</strong> <br/> Amith M A & Navya P P</li>
+            <li style="margin-top: 15px;"><strong style="color: #222;">Location:</strong> <br/> Pathiyarakkara (PO), Vadakara</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="heading" style="margin-bottom: 15px;">Members</div>
+      <div class="small-container" style="padding: 0; background: #fff; border: 1px solid rgba(15, 60, 113, 0.1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; margin-bottom: 30px; overflow: hidden;">
+        <div class="members-table-wrap" style="width: 100%; overflow-x: auto;">
+          <table class="members-table members-table--compact" style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead style="background-color: rgba(15, 60, 113, 0.03); border-bottom: 1px solid rgba(15, 60, 113, 0.1);">
+              <tr>
+                <th style="padding: 16px 24px; font-weight: 600; color: var(--primary); width: 80px;">Photo</th>
+                <th style="padding: 16px 24px; font-weight: 600; color: var(--primary);">Name</th>
+                <th style="padding: 16px 24px; font-weight: 600; color: var(--primary);">Position</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for m in members %}
+                <tr style="border-bottom: 1px solid rgba(15, 60, 113, 0.05);">
+                  <td style="padding: 16px 24px; vertical-align: middle;">
+                    {% if m.photo %}
+                      <img src="{{ m.photo.url }}" alt="" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+                    {% else %}
+                      <img src="{% static 'assets/user.png' %}" alt="" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+                    {% endif %}
+                  </td>
+                  <td style="padding: 16px 24px; vertical-align: middle; font-weight: 500; color: #222;">{{ m.name }}</td>
+                  <td style="padding: 16px 24px; vertical-align: middle; color: #555;">{{ m.position }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3" style="text-align: center; padding: 40px 20px; color: #666;">No members added yet.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {% if page.attachment %}
+        <div class="small-container" style="display: flex; justify-content: flex-start; background: transparent; padding: 0;">
+          <a href="{{ page.attachment.url }}" class="btn fill" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            View / Download Attachment
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}

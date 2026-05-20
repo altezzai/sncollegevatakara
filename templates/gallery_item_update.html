@@ -1,0 +1,91 @@
+{% extends "admin_header.html" %}
+{% block content %}
+  {% load static %}
+  <body class="edit-body">
+    <div class="edit-formcon">
+      <h2>Update Gallery Item</h2>
+
+      {% if error %}
+        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="title">Title:</label>
+        <input class="inp" type="text" id="title" name="title" value="{{ item.title }}" required />
+
+        <label for="media_type">Type:</label>
+        <select class="inp" id="media_type" name="media_type">
+          <option value="image" {% if item.media_type == 'image' %}selected{% endif %}>Photo</option>
+          <option value="video" {% if item.media_type == 'video' %}selected{% endif %}>Media (Video)</option>
+        </select>
+
+        <div id="photoCurrent">
+          <label>Current Photos:</label>
+          {% if item.images.all %}
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0;">
+              {% for img in item.images.all %}
+                <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start;">
+                  <img src="{{ img.image.url }}" alt="" style="max-width: 140px; border-radius: 10px;" />
+                  <a class="btn-delete btn" href="{% url 'gallery_image_delete' item.id img.id %}" style="margin: 0; padding-right: 8vh;">Remove</a>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div id="videoCurrent">
+          <label>Current Media:</label>
+          {% if item.file %}
+            <a class="btn-edit btn" href="{{ item.file.url }}" target="_blank">View current media</a>
+          {% else %}
+            <div class="light">No video uploaded yet.</div>
+          {% endif %}
+        </div>
+
+        <div id="photoFields">
+          <label for="files">Add photos (upload 1 or more):</label>
+          <input class="inp" type="file" id="files" name="files" accept="image/*" multiple />
+        </div>
+
+        <div id="videoFields">
+          <label for="file">Change video file (optional):</label>
+          <input class="inp" type="file" id="file" name="file" accept="video/*" />
+        </div>
+
+        <label for="is_active">Active:</label>
+        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" {% if item.is_active %}checked{% endif %} />
+
+        <button type="submit" class="btn">Update</button>
+      </form>
+
+      <script>
+        (function () {
+          const typeSel = document.getElementById("media_type");
+          const photoFields = document.getElementById("photoFields");
+          const videoFields = document.getElementById("videoFields");
+          const photoCurrent = document.getElementById("photoCurrent");
+          const videoCurrent = document.getElementById("videoCurrent");
+          const photosInput = document.getElementById("files");
+          const videoInput = document.getElementById("file");
+
+          const sync = () => {
+            const isVideo = typeSel.value === "video";
+            if (photoFields) photoFields.style.display = isVideo ? "none" : "block";
+            if (photoCurrent) photoCurrent.style.display = isVideo ? "none" : "block";
+            if (videoFields) videoFields.style.display = isVideo ? "block" : "none";
+            if (videoCurrent) videoCurrent.style.display = isVideo ? "block" : "none";
+            if (photosInput) photosInput.required = false; // optional on update
+            if (videoInput) videoInput.required = false; // optional on update
+          };
+
+          typeSel.addEventListener("change", sync);
+          sync();
+        })();
+      </script>
+
+      <a href="{% url 'gallery_item_list' %}" class="btn-edit btn">Back to List</a>
+    </div>
+  {% endblock %}
+  </body>

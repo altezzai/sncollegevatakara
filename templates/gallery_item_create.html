@@ -1,0 +1,64 @@
+{% extends "admin_header.html" %}
+{% block content %}
+  {% load static %}
+  <body class="edit-body">
+    <div class="edit-formcon">
+      <h2>Create Gallery Item</h2>
+
+      {% if error %}
+        <div style="color: red; margin-bottom: 10px;">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="title">Title:</label>
+        <input class="inp" type="text" id="title" name="title" required />
+
+        <label for="media_type">Type:</label>
+        <select class="inp" id="media_type" name="media_type">
+          <option value="image" selected>Photo</option>
+          <option value="video">Media (Video)</option>
+        </select>
+
+        <div id="photoFields">
+          <label for="files">Photos (upload 1 or more):</label>
+          <input class="inp" type="file" id="files" name="files" accept="image/*" multiple />
+        </div>
+
+        <div id="videoFields">
+          <label for="file">Video file:</label>
+          <input class="inp" type="file" id="file" name="file" accept="video/*" />
+        </div>
+
+        <label for="is_active">Active:</label>
+        <input class="inp" style="height: 20px; width: 20px;" type="checkbox" id="is_active" name="is_active" checked />
+
+        <button type="submit" class="btn">Create</button>
+      </form>
+
+      <script>
+        (function () {
+          const typeSel = document.getElementById("media_type");
+          const photoWrap = document.getElementById("photoFields");
+          const videoWrap = document.getElementById("videoFields");
+          const photosInput = document.getElementById("files");
+          const videoInput = document.getElementById("file");
+
+          const sync = () => {
+            const isVideo = typeSel.value === "video";
+            photoWrap.style.display = isVideo ? "none" : "block";
+            videoWrap.style.display = isVideo ? "block" : "none";
+            if (photosInput) photosInput.required = !isVideo;
+            if (videoInput) videoInput.required = isVideo;
+          };
+
+          typeSel.addEventListener("change", sync);
+          sync();
+        })();
+      </script>
+
+      <a href="{% url 'gallery_item_list' %}" class="btn-edit btn">Back to List</a>
+    </div>
+  {% endblock %}
+  </body>

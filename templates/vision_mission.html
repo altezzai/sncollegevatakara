@@ -1,0 +1,35 @@
+{% extends 'header.html' %}
+{% block content %}
+  <div class="container banner">
+    <div class="heading">Vision &amp; Mission</div>
+  </div>
+  <div class="container">
+    
+    <div class="grid"
+      style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px;">
+
+      <div class="small-container"
+        style="border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px; background: #fff;">
+        <div class="bold-head" style="color: var(--primary); margin-bottom: 12px; font-size: 1.2rem;">Vision</div>
+        <p style="margin: 0; color: #444; line-height: 1.6;">
+          To evolve into a centre of excellence in higher education by fostering academic innovation, holistic
+          development, and ethical values, while responding effectively to the emerging educational and societal needs.
+        </p>
+      </div>
+
+      <div class="small-container"
+        style="border: 1px solid rgba(15, 60, 113, 0.1); border-left: 5px solid var(--primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); border-radius: 12px; padding: 25px; background: #fff;">
+        <div class="bold-head" style="color: var(--primary); margin-bottom: 12px; font-size: 1.2rem;">Mission</div>
+        <ul style="margin-left: 20px; color: #444; line-height: 1.6; margin-bottom: 0;">
+          <li style="margin-bottom: 8px;">To provide quality education through modern teaching-learning practices.</li>
+          <li style="margin-bottom: 8px;">To strengthen research culture and promote interdisciplinary learning.</li>
+          <li style="margin-bottom: 8px;">To enhance student support services and ensure inclusive education.</li>
+          <li style="margin-bottom: 8px;">To upgrade infrastructure and technology to meet global standards.</li>
+          <li>To build strong industry-academia linkages and community engagement.</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+{% endblock %}
