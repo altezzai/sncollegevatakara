@@ -10,6 +10,31 @@
   <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
   <a class="next" onclick="plusSlides(1)">&#10095;</a>
 </section>
+
+  {% if notifications %}
+  <div class="notification-ticker">
+    <div class="ticker-label">
+      <span class="ticker-dot"></span>
+      <span class="ticker-text">Latest Updates</span>
+    </div>
+    <div class="ticker-content-wrapper">
+      <div class="ticker-content">
+        {% for notification in notifications %}
+          <a href="{% url 'notification2' notification.id %}" class="ticker-item">
+            {% if notification.category %}
+              <span class="ticker-category">[{{ notification.category|upper }}]</span>
+            {% endif %}
+            <span class="ticker-title">{{ notification.title }}</span>
+          </a>
+          {% if not forloop.last %}
+            <span class="ticker-separator">•</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <section>
     <div class="detailsbox">
       <div class="image">
